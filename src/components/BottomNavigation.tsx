@@ -197,14 +197,13 @@ const BottomNavigation = () => {
       )}
 
       {/* Bottom Navigation */}
-      {(user?.role === 'ADMIN' && location.pathname.startsWith('/admin')) && (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
         <div className="flex items-center justify-around py-2 px-2 max-w-md mx-auto">
-          {navItems.map((item) => {
+          {(user?.role === 'ADMIN' && location.pathname.startsWith('/admin') ? navItems : getNavItems(!!user, undefined)).map((item) => {
             const active = isActive(item.href);
             
             if (item.hasDropdown) {
-              if (user?.role === 'ADMIN' && item.label === 'Content') {
+              if (user?.role === 'ADMIN' && item.label === 'Content' && location.pathname.startsWith('/admin')) {
                 return (
                   <button
                     key={item.label}
@@ -215,11 +214,7 @@ const BottomNavigation = () => {
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <item.icon
-                      className={`w-5 h-5 transition-transform ${
-                        showAdminContent || isActive('/admin/blogs') || isActive('/admin/courses') || isActive('/admin/contact-forms') ? "scale-110" : ""
-                      }`}
-                    />
+                    <item.icon className={`w-5 h-5 transition-transform ${showAdminContent ? "scale-110" : ""}`} />
                     <span className="text-[10px] font-medium">{item.label}</span>
                   </button>
                 );
@@ -230,16 +225,10 @@ const BottomNavigation = () => {
                   key={item.label}
                   onClick={handleServiceClick}
                   className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-300 ${
-                    showServices || active
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground"
+                    showServices || active ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <item.icon
-                    className={`w-5 h-5 transition-transform ${
-                      showServices || active ? "scale-110" : ""
-                    }`}
-                  />
+                  <item.icon className={`w-5 h-5 transition-transform ${showServices || active ? "scale-110" : ""}`} />
                   <span className="text-[10px] font-medium">{item.label}</span>
                 </button>
               );
@@ -251,25 +240,17 @@ const BottomNavigation = () => {
                 to={item.href}
                 onClick={() => setShowServices(false)}
                 className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-300 ${
-                  active
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground"
+                  active ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <item.icon
-                  className={`w-5 h-5 transition-transform ${
-                    active ? "scale-110" : ""
-                  }`}
-                />
+                <item.icon className={`w-5 h-5 transition-transform ${active ? "scale-110" : ""}`} />
                 <span className="text-[10px] font-medium">{item.label}</span>
               </Link>
             );
           })}
         </div>
-        {/* Safe area for notched phones */}
         <div className="h-safe-area-inset-bottom bg-card" />
       </nav>
-      )}
     </>
   );
 };
