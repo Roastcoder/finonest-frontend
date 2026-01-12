@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Plus, Edit, Trash2, Eye, Calendar, User, Image, Video } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
 
 interface BlogPost {
   id: number;
@@ -49,7 +50,7 @@ const AdminBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/admin/blogs', {
+      const response = await fetch('https://api.finonest.com/api/blogs', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -76,8 +77,8 @@ const AdminBlogs = () => {
     
     try {
       const url = editingBlog 
-        ? `https://api.finonest.com/api/admin/blogs/${editingBlog.id}`
-        : 'https://api.finonest.com/api/admin/blogs';
+        ? `https://api.finonest.com/api/blogs/${editingBlog.id}`
+        : 'https://api.finonest.com/api/blogs';
       
       const method = editingBlog ? 'PUT' : 'POST';
 
@@ -111,7 +112,7 @@ const AdminBlogs = () => {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
     
     try {
-      const response = await fetch(`https://api.finonest.com/api/admin/blogs/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/blogs/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -261,7 +262,19 @@ const AdminBlogs = () => {
                   <div>
                     <label className="block text-sm font-medium mb-2 flex items-center gap-2">
                       <Image className="w-4 h-4" />
-                      Featured Image URL
+                      Featured Image
+                    </label>
+                    <ImageUpload
+                      onImageUploaded={(imageUrl) => setFormData({...formData, image_url: imageUrl})}
+                      currentImage={formData.image_url}
+                      onRemoveImage={() => setFormData({...formData, image_url: ""})}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                      <Image className="w-4 h-4" />
+                      Or Enter Image URL
                     </label>
                     <Input
                       type="url"
