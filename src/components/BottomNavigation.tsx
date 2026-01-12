@@ -1,4 +1,4 @@
-import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn, Users, BarChart3, Settings, MessageSquare } from "lucide-react";
+import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn, Users, BarChart3, Settings, MessageSquare, BookOpen } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,14 +17,20 @@ const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
         href: "/admin/applications",
       },
       {
+        icon: BookOpen,
+        label: "Content",
+        href: "/admin/blogs",
+        hasDropdown: true,
+      },
+      {
         icon: Users,
         label: "Users",
         href: "/admin/users",
       },
       {
-        icon: MessageSquare,
-        label: "Messages",
-        href: "/admin/contact-forms",
+        icon: Settings,
+        label: "Settings",
+        href: "/admin/settings",
       },
     ];
   }
@@ -63,6 +69,12 @@ const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
   ];
 };
 
+const adminContentItems = [
+  { icon: BookOpen, label: "Blog Posts", href: "/admin/blogs" },
+  { icon: GraduationCap, label: "Courses", href: "/admin/courses" },
+  { icon: MessageSquare, label: "Contact Forms", href: "/admin/contact-forms" },
+];
+
 const serviceItems = [
   { icon: Building2, label: "Home Loan", href: "/services/home-loan" },
   { icon: Wallet, label: "Personal Loan", href: "/services/personal-loan" },
@@ -77,6 +89,7 @@ const serviceItems = [
 const BottomNavigation = () => {
   const location = useLocation();
   const [showServices, setShowServices] = useState(false);
+  const [showAdminContent, setShowAdminContent] = useState(false);
   const { user } = useAuth();
 
   const navItems = getNavItems(!!user, user?.role);
@@ -89,10 +102,55 @@ const BottomNavigation = () => {
   const handleServiceClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowServices(!showServices);
+    setShowAdminContent(false);
+  };
+
+  const handleAdminContentClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowAdminContent(!showAdminContent);
+    setShowServices(false);
   };
 
   return (
     <>
+      {/* Admin Content Grid Overlay */}
+      {showAdminContent && (
+        <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setShowAdminContent(false)}>
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          <div 
+            className="absolute bottom-16 left-0 right-0 bg-card border-t border-border rounded-t-2xl p-4 animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Content Management</h3>
+              <button 
+                onClick={() => setShowAdminContent(false)}
+                className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              >
+                <X className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {adminContentItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  onClick={() => setShowAdminContent(false)}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-primary/10 transition-all duration-200 group"
+                >
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <item.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-[10px] font-medium text-center text-foreground leading-tight">
+                    {item.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Services Grid Overlay */}
       {showServices && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setShowServices(false)}>
@@ -145,6 +203,27 @@ const BottomNavigation = () => {
             const active = isActive(item.href);
             
             if (item.hasDropdown) {
+              if (user?.role === 'ADMIN' && item.label === 'Content') {
+                return (
+                  <button
+                    key={item.label}
+                    onClick={handleAdminContentClick}
+                    className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-300 ${
+                      showAdminContent || isActive('/admin/blogs') || isActive('/admin/courses') || isActive('/admin/contact-forms')
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <item.icon
+                      className={`w-5 h-5 transition-transform ${
+                        showAdminContent || isActive('/admin/blogs') || isActive('/admin/courses') || isActive('/admin/contact-forms') ? "scale-110" : ""
+                      }`}
+                    />
+                    <span className="text-[10px] font-medium">{item.label}</span>
+                  </button>
+                );
+              }
+              
               return (
                 <button
                   key={item.label}
