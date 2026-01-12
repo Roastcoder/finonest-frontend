@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -24,10 +24,23 @@ import AdminSettings from "./admin/AdminSettings";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { user, token, logout, isLoading: authLoading } = useAuth();
+
+  // Determine active tab from URL
+  const getActiveTab = () => {
+    const path = location.pathname;
+    if (path.includes('/applications')) return 'applications';
+    if (path.includes('/contact-forms')) return 'contacts';
+    if (path.includes('/users')) return 'users';
+    if (path.includes('/analytics')) return 'dashboard';
+    if (path.includes('/settings')) return 'settings';
+    return 'dashboard';
+  };
+
+  const activeTab = getActiveTab();
 
   useEffect(() => {
     if (!authLoading) {
@@ -111,52 +124,52 @@ const AdminDashboard = () => {
           </div>
           <nav className="px-4 space-y-2 flex-1">
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Management</div>
-            <button 
-              onClick={() => setActiveTab('dashboard')}
+            <Link 
+              to="/admin/analytics"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'dashboard' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <BarChart3 className="w-4 h-4" />
               Dashboard
-            </button>
-            <button 
-              onClick={() => setActiveTab('applications')}
+            </Link>
+            <Link 
+              to="/admin/applications"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'applications' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <FileText className="w-4 h-4" />
               Applications
-            </button>
-            <button 
-              onClick={() => setActiveTab('contacts')}
+            </Link>
+            <Link 
+              to="/admin/contact-forms"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'contacts' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
               Contact Forms
-            </button>
-            <button 
-              onClick={() => setActiveTab('users')}
+            </Link>
+            <Link 
+              to="/admin/users"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'users' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <Users className="w-4 h-4" />
               Users
-            </button>
+            </Link>
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
-            <button 
-              onClick={() => setActiveTab('settings')}
+            <Link 
+              to="/admin/settings"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'settings' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <Settings className="w-4 h-4" />
               System
-            </button>
+            </Link>
           </nav>
           <div className="p-4">
             <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
