@@ -197,7 +197,8 @@ const BottomNavigation = () => {
       )}
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
+      {(user?.role === 'ADMIN' && location.pathname.startsWith('/admin')) && (
+        <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
         <div className="flex items-center justify-around py-2 px-2 max-w-md mx-auto">
           {navItems.map((item) => {
             const active = isActive(item.href);
@@ -268,6 +269,7 @@ const BottomNavigation = () => {
         {/* Safe area for notched phones */}
         <div className="h-safe-area-inset-bottom bg-card" />
       </nav>
+      )}
     </>
   );
 };
