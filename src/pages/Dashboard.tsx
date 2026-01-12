@@ -198,7 +198,7 @@ const Dashboard = () => {
         <title>Dashboard - Finonest | Welcome Back</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-16 md:pb-0">
         <header className="bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <Link to="/">
