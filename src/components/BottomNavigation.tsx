@@ -3,8 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
-  if (userRole === 'ADMIN') {
+const getNavItems = (isLoggedIn: boolean, userRole: string | undefined, isAdminPage: boolean) => {
+  if (userRole === 'ADMIN' && isAdminPage) {
     return [
       {
         icon: BarChart3,
@@ -92,7 +92,7 @@ const BottomNavigation = () => {
   const [showAdminContent, setShowAdminContent] = useState(false);
   const { user } = useAuth();
 
-  const navItems = getNavItems(!!user, user?.role);
+  const navItems = getNavItems(!!user, user?.role, location.pathname.startsWith('/admin'));
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
