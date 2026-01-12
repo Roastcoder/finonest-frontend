@@ -137,7 +137,15 @@ const Contact = () => {
           </div>
 
           {/* Right Side - Form */}
-          <div className="bg-card rounded-xl md:rounded-2xl border border-border p-4 md:p-8 shadow-sm">
+          <div className="bg-card rounded-xl md:rounded-2xl border border-border p-4 md:p-8 shadow-sm w-full">
+            <div className="md:hidden mb-4">
+              <h2 className="font-display text-xl font-bold text-foreground mb-2">
+                Get In Touch
+              </h2>
+              <p className="text-muted-foreground text-sm mb-4">
+                Have questions? We're here to help you with personalized loan solutions.
+              </p>
+            </div>
             <h3 className="font-display text-lg md:text-xl font-semibold text-foreground mb-4 md:mb-6">
               Quick Enquiry
             </h3>
@@ -278,7 +286,7 @@ const Contact = () => {
                 )}
               </div>
 
-              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base" disabled={isSubmitting}>
+              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base py-3" disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
