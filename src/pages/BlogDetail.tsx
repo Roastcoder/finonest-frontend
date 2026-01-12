@@ -35,10 +35,16 @@ const BlogDetail = () => {
 
   const fetchBlog = async (blogId: string) => {
     try {
+      console.log('Fetching blog with ID:', blogId);
       const response = await fetch(`https://api.finonest.com/api/blogs/${blogId}`);
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Blog data:', data);
         setBlog(data.blog);
+      } else {
+        console.error('Failed to fetch blog, status:', response.status);
       }
     } catch (error) {
       console.error('Failed to fetch blog:', error);

@@ -146,7 +146,10 @@ const Blog = () => {
                 {filteredPosts.map((post) => (
                   <article
                     key={post.id}
-                    onClick={() => navigate(`/blog/${post.id}`)}
+                    onClick={() => {
+                      console.log('Card clicked, navigating to blog:', post.id);
+                      navigate(`/blog/${post.id}`);
+                    }}
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
                   >
                     <div className="relative h-48 overflow-hidden">
@@ -201,6 +204,7 @@ const Blog = () => {
                           className="group/btn"
                           onClick={(e) => {
                             e.stopPropagation();
+                            console.log('Navigating to blog:', post.id);
                             navigate(`/blog/${post.id}`);
                           }}
                         >
