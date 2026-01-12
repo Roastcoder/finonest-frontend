@@ -88,7 +88,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-10 md:py-24 bg-gradient-section">
+    <section id="contact" className="py-10 md:py-24 bg-gradient-section pb-20 md:pb-24">
       <div className="container px-4 md:px-6">
         <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-start">
           {/* Left Side - Info (Hidden on mobile) */}
@@ -286,7 +286,7 @@ const Contact = () => {
                 )}
               </div>
 
-              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base py-3" disabled={isSubmitting}>
+              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base py-3 mb-4 md:mb-0" disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
