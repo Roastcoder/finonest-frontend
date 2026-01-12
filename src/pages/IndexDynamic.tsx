@@ -69,7 +69,7 @@ const Index = () => {
       </div>
       
       {/* Banking Partners */}
-      <div className="-mt-24">
+      <div className="mt-0">
         <AnimateOnScroll animation="fade-up">
           <PartnerBanks />
         </AnimateOnScroll>
