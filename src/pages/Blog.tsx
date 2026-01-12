@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -25,7 +25,6 @@ interface BlogPost {
 const categories = ["All", "Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
 
 const Blog = () => {
-  const navigate = useNavigate();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,9 +143,9 @@ const Blog = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                  <a
+                  <Link
                     key={post.id}
-                    href={`/blog/${post.id}`}
+                    to={`/blog/${post.id}`}
                     className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     <div className="relative h-48 overflow-hidden">
@@ -198,17 +197,14 @@ const Blog = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group/btn"
-                          asChild
+                          className="group/btn pointer-events-none"
                         >
-                          <a href={`/blog/${post.id}`}>
-                            Read More
-                            <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                          </a>
+                          Read More
+                          <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
