@@ -74,7 +74,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      
+      // Check if response is JSON
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('API returned non-JSON response:', text);
+        return false;
+      }
 
       if (response.ok && data.success) {
         setToken(data.token);
