@@ -1,22 +1,22 @@
 RewriteEngine On
 
-# Serve static files directly
+# Force correct MIME types before any other rules
+AddType application/javascript .js
+AddType application/javascript .mjs
+AddType text/css .css
+
+# Serve static assets directly - must come first
+RewriteCond %{REQUEST_URI} ^/assets/.*$
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Serve other static files directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
 # Serve directories directly
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
-
-# Set correct MIME types for JavaScript files
-<FilesMatch "\.(js|mjs)$">
-    Header set Content-Type "application/javascript"
-</FilesMatch>
-
-# Set correct MIME types for CSS files
-<FilesMatch "\.css$">
-    Header set Content-Type "text/css"
-</FilesMatch>
 
 # Handle client-side routing - serve index.html for all other requests
 RewriteRule ^ /index.html [L]
