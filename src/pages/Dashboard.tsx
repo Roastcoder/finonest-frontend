@@ -198,8 +198,23 @@ const Dashboard = () => {
         <title>Dashboard - Finonest | Welcome Back</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-16 md:pb-0">
-        <header className="bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-16">
+        <header className="md:hidden bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
+          <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+            <Link to="/">
+              <img src={logo} alt="Finonest" className="h-10 object-contain" />
+            </Link>
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                {user?.name?.charAt(0)?.toUpperCase()}
+              </div>
+              <Button variant="outline" size="sm" onClick={handleLogout} className="border-red-200 text-red-600 hover:bg-red-50">
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </header>
+        <header className="hidden md:block bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <Link to="/">
               <img src={logo} alt="Finonest" className="h-10 object-contain" />
