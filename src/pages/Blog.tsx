@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -25,6 +25,7 @@ interface BlogPost {
 const categories = ["All", "Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
 
 const Blog = () => {
+  const navigate = useNavigate();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -149,11 +150,13 @@ const Blog = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                  <Link
+                  <div
                     key={post.id}
-                    to={`/blog/${post.id}`}
-                    className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
-                    onClick={() => console.log('Link clicked for blog:', post.id)}
+                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
+                    onClick={() => {
+                      console.log('Card clicked, navigating to blog:', post.id);
+                      navigate(`/blog/${post.id}`);
+                    }}
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
@@ -204,14 +207,19 @@ const Blog = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="group/btn pointer-events-none"
+                          className="group/btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log('Read More clicked for blog:', post.id);
+                            navigate(`/blog/${post.id}`);
+                          }}
                         >
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}
