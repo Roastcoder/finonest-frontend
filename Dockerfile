@@ -21,5 +21,5 @@ RUN npm install -g serve
 # Expose port
 EXPOSE 3000
 
-# Start the app
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Start the app with proper static file serving
+CMD ["serve", "dist", "-l", "3000", "--single"]
