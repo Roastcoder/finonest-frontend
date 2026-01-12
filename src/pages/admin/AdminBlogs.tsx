@@ -50,7 +50,7 @@ const AdminBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/blogs', {
+      const response = await fetch('https://api.finonest.com/api/blogs/admin', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
