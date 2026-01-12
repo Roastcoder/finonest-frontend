@@ -5,7 +5,12 @@ AddType application/javascript .js
 AddType application/javascript .mjs
 AddType text/css .css
 
-# Serve static files directly - MUST come before SPA routing
+# Explicitly serve assets directory files
+RewriteCond %{REQUEST_URI} ^/assets/
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Serve other static files directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
