@@ -21,7 +21,7 @@ const Footer = () => {
   return (
     <footer className="bg-foreground text-background">
       <div className="container px-6 pt-16 pb-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="space-y-6">
             <img src={logoImg} alt="Finonest" className="h-12 w-auto object-contain brightness-0 invert" />
@@ -154,11 +154,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <p className="text-sm text-background/60">
             © {new Date().getFullYear()} Finonest. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6 order-2 md:order-none">
             <Link to="/privacy-policy" className="text-sm text-background/60 hover:text-accent transition-colors">
               Privacy Policy
             </Link>
