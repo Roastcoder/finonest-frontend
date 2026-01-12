@@ -268,7 +268,7 @@ const ServiceApply = () => {
       ].join(' | ');
 
       if (user && token) {
-        const response = await fetch('http://api.finonest.com/api/forms', {
+        const response = await fetch('https://api.finonest.com/api/forms', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,

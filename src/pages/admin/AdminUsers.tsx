@@ -27,7 +27,7 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://api.finonest.com/api/admin/users', {
+      const response = await fetch('https://api.finonest.com/api/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const AdminUsers = () => {
 
   const updateUserRole = async (id: number, role: string) => {
     try {
-      const response = await fetch(`http://api.finonest.com/api/admin/users/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -84,7 +84,7 @@ const AdminUsers = () => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
-      const response = await fetch(`http://api.finonest.com/api/admin/users/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
