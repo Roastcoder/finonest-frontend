@@ -20,23 +20,23 @@ const Footer = () => {
 
   return (
     <footer className="bg-foreground text-background">
-      <div className="container px-6 pt-16 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container px-4 md:px-6 pt-8 md:pt-16 pb-4 md:pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
           {/* Company Info */}
-          <div className="space-y-6">
-            <img src={logoImg} alt="Finonest" className="h-12 w-auto object-contain brightness-0 invert" />
-            <p className="text-sm text-background/70 leading-relaxed">
+          <div className="space-y-3 md:space-y-6">
+            <img src={logoImg} alt="Finonest" className="h-10 md:h-12 w-auto object-contain brightness-0 invert" />
+            <p className="text-xs md:text-sm text-background/70 leading-relaxed">
               Finonest is your trusted partner for all financial needs. We simplify the loan process with transparency, speed, and personalized solutions.
             </p>
-            <div className="flex items-start gap-2 text-sm text-background/80 cursor-pointer hover:text-accent transition-colors" onClick={openDirections}>
-              <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-xs md:text-sm text-background/80 cursor-pointer hover:text-accent transition-colors" onClick={openDirections}>
+              <MapPin className="w-3 md:w-4 h-3 md:h-4 flex-shrink-0 mt-0.5" />
               <span>3rd Floor, Besides Jaipur Hospital, BL Tower 1, Tonk Rd, Mahaveer Nagar, Jaipur, Rajasthan 302018</span>
             </div>
-            <div className="mt-4 relative cursor-pointer" onClick={openDirections}>
+            <div className="mt-2 md:mt-4 relative cursor-pointer" onClick={openDirections}>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.0!2d75.79572905600946!3d26.857562851737594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDUxJzI3LjIiTiA3NcKwNDcnNDQuNiJF!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
                 width="100%"
-                height="150"
+                height="120"
                 style={{ border: 0, borderRadius: '8px', pointerEvents: 'none' }}
                 allowFullScreen
                 loading="lazy"
@@ -48,35 +48,35 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Quick Links</h4>
-            <ul className="space-y-3">
+            <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Quick Links</h4>
+            <ul className="space-y-2 md:space-y-3">
               <li>
-                <Link to="/" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/about" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link to="/apply" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/apply" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Apply Now
                 </Link>
               </li>
               <li>
-                <Link to="/banking-partners" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/banking-partners" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Banking Partners
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/contact" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Contact
                 </Link>
               </li>
@@ -85,30 +85,30 @@ const Footer = () => {
 
           {/* Our Services */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Our Services</h4>
-            <ul className="space-y-3">
+            <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Our Services</h4>
+            <ul className="space-y-2 md:space-y-3">
               <li>
-                <Link to="/services/home-loan" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services/home-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Home Loan
                 </Link>
               </li>
               <li>
-                <Link to="/services/personal-loan" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services/personal-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Personal Loan
                 </Link>
               </li>
               <li>
-                <Link to="/services/business-loan" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services/business-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Business Loan
                 </Link>
               </li>
               <li>
-                <Link to="/services/car-loan" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services/car-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Car Loan
                 </Link>
               </li>
               <li>
-                <Link to="/services/credit-cards" className="text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/services/credit-cards" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
                   Credit Cards
                 </Link>
               </li>
@@ -117,13 +117,13 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-6">Contact Us</h4>
-            <ContactWidget variant="vertical" className="mb-6" />
-            <div className="flex items-center gap-2 text-sm text-background/80 mb-6">
+            <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Contact Us</h4>
+            <ContactWidget variant="vertical" className="mb-3 md:mb-6" />
+            <div className="flex items-center gap-2 text-xs md:text-sm text-background/80 mb-3 md:mb-6">
               <span>info@finonest.com</span>
             </div>
             <div>
-              <h5 className="text-sm font-medium mb-4">Follow Us</h5>
+              <h5 className="text-xs md:text-sm font-medium mb-2 md:mb-4">Follow Us</h5>
               <div className="flex gap-3">
                 <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
                   <Facebook className="w-4 h-4" />
@@ -139,30 +139,31 @@ const Footer = () => {
                 </a>
               </div>
             </div>
-            <div className="mt-4">
+            <div className="mt-2 md:mt-4">
               <a 
                 href="https://search.google.com/local/writereview?placeid=ChIJI1TNZRqzbTkRo9RLFM5zasw" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs md:text-sm font-medium"
               >
-                <Star className="w-4 h-4" />
-                Leave a Review on Google
+                <Star className="w-3 md:w-4 h-3 md:h-4" />
+                <span className="hidden sm:inline">Leave a Review on Google</span>
+                <span className="sm:hidden">Review Us</span>
               </a>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-          <p className="text-sm text-background/60">
+        <div className="mt-6 md:mt-12 pt-4 md:pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-center md:text-left">
+          <p className="text-xs md:text-sm text-background/60">
             © {new Date().getFullYear()} Finonest. All rights reserved.
           </p>
-          <div className="flex flex-col md:flex-row items-center gap-6 order-2 md:order-none">
-            <Link to="/privacy-policy" className="text-sm text-background/60 hover:text-accent transition-colors">
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 order-2 md:order-none">
+            <Link to="/privacy-policy" className="text-xs md:text-sm text-background/60 hover:text-accent transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms-and-conditions" className="text-sm text-background/60 hover:text-accent transition-colors">
+            <Link to="/terms-and-conditions" className="text-xs md:text-sm text-background/60 hover:text-accent transition-colors">
               Terms & Conditions
             </Link>
           </div>
