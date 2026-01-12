@@ -15,7 +15,8 @@ import {
   BarChart3,
   Settings,
   MessageSquare,
-  BookOpen
+  BookOpen,
+  GraduationCap
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import AdminApplications from "./admin/AdminApplications";
