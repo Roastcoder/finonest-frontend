@@ -1,40 +1,72 @@
-import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn } from "lucide-react";
+import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn, Users, BarChart3, Settings, MessageSquare } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const getNavItems = (isLoggedIn: boolean) => [
-  {
-    icon: Home,
-    label: "Home",
-    href: "/",
-  },
-  {
-    icon: CreditCard,
-    label: "Services",
-    href: "/services",
-    hasDropdown: true,
-  },
-  {
-    icon: Calculator,
-    label: "EMI",
-    href: "/emi-calculator",
-  },
-  {
-    icon: Phone,
-    label: "Contact",
-    href: "/contact",
-  },
-  isLoggedIn ? {
-    icon: User,
-    label: "Profile",
-    href: "/dashboard",
-  } : {
-    icon: LogIn,
-    label: "Login",
-    href: "/auth",
-  },
-];
+const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
+  if (userRole === 'ADMIN') {
+    return [
+      {
+        icon: BarChart3,
+        label: "Analytics",
+        href: "/admin/analytics",
+      },
+      {
+        icon: FileText,
+        label: "Applications",
+        href: "/admin/applications",
+      },
+      {
+        icon: Users,
+        label: "Users",
+        href: "/admin/users",
+      },
+      {
+        icon: MessageSquare,
+        label: "Messages",
+        href: "/admin/contact-forms",
+      },
+      {
+        icon: User,
+        label: "Dashboard",
+        href: "/admin",
+      },
+    ];
+  }
+  
+  return [
+    {
+      icon: Home,
+      label: "Home",
+      href: "/",
+    },
+    {
+      icon: CreditCard,
+      label: "Services",
+      href: "/services",
+      hasDropdown: true,
+    },
+    {
+      icon: Calculator,
+      label: "EMI",
+      href: "/emi-calculator",
+    },
+    {
+      icon: Phone,
+      label: "Contact",
+      href: "/contact",
+    },
+    isLoggedIn ? {
+      icon: User,
+      label: "Dashboard",
+      href: "/dashboard",
+    } : {
+      icon: LogIn,
+      label: "Login",
+      href: "/auth",
+    },
+  ];
+};
 
 const serviceItems = [
   { icon: Building2, label: "Home Loan", href: "/services/home-loan" },
@@ -52,7 +84,7 @@ const BottomNavigation = () => {
   const [showServices, setShowServices] = useState(false);
   const { user } = useAuth();
 
-  const navItems = getNavItems(!!user);
+  const navItems = getNavItems(!!user, user?.role);
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
