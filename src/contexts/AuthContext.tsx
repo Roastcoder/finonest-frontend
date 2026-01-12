@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (storedToken && storedUser) {
         try {
           // Validate token with backend
-          const response = await fetch('http://api.finonest.com:4000/api/validate', {
+          const response = await fetch('http://api.finonest.com/api/validate', {
             headers: {
               'Authorization': `Bearer ${storedToken}`,
               'Content-Type': 'application/json',

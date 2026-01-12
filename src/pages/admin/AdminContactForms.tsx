@@ -31,7 +31,7 @@ const AdminContactForms = () => {
 
   const fetchContactForms = async () => {
     try {
-      const response = await fetch('http://api.finonest.com:4000/api/admin/contact-forms', {
+      const response = await fetch('http://api.finonest.com/api/admin/contact-forms', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

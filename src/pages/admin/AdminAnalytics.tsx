@@ -28,10 +28,10 @@ const AdminAnalytics = () => {
   const fetchData = async () => {
     try {
       const [appsRes, contactsRes] = await Promise.all([
-        fetch('http://api.finonest.com:4000/api/admin/forms', {
+        fetch('http://api.finonest.com/api/admin/forms', {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch('http://api.finonest.com:4000/api/admin/contact-forms', {
+        fetch('http://api.finonest.com/api/admin/contact-forms', {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);

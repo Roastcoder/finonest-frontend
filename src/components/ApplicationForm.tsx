@@ -41,7 +41,7 @@ export const ApplicationForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://api.finonest.com:4000/api/forms/submit', {
+      const response = await fetch('http://api.finonest.com/api/forms/submit', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -70,7 +70,7 @@ const AdminApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('http://api.finonest.com:4000/api/admin/forms', {
+      const response = await fetch('http://api.finonest.com/api/admin/forms', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const AdminApplications = () => {
 
   const updateStatus = async (id: number, status: string) => {
     try {
-      const response = await fetch(`http://api.finonest.com:4000/api/admin/forms/${id}`, {
+      const response = await fetch(`http://api.finonest.com/api/admin/forms/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
