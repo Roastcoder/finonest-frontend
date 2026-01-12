@@ -8,8 +8,8 @@ const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
     return [
       {
         icon: BarChart3,
-        label: "Analytics",
-        href: "/admin/analytics",
+        label: "Dashboard",
+        href: "/admin",
       },
       {
         icon: FileText,
@@ -25,11 +25,6 @@ const getNavItems = (isLoggedIn: boolean, userRole: string | undefined) => {
         icon: MessageSquare,
         label: "Messages",
         href: "/admin/contact-forms",
-      },
-      {
-        icon: User,
-        label: "Dashboard",
-        href: "/admin",
       },
     ];
   }

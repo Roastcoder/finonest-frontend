@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface Application {
   id: number;
@@ -18,6 +19,7 @@ const AdminAnalytics = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [contactForms, setContactForms] = useState<ContactForm[]>([]);
   const { token } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
@@ -51,17 +53,21 @@ const AdminAnalytics = () => {
   };
 
   const stats = [
-    { title: 'Total Applications', value: applications.length.toString(), change: '+0%' },
-    { title: 'Contact Forms', value: contactForms.length.toString(), change: '+0%' },
-    { title: 'Approved Loans', value: applications.filter(app => app.status === 'APPROVED').length.toString(), change: '+0%' },
-    { title: 'Pending Reviews', value: applications.filter(app => app.status === 'SUBMITTED' || app.status === 'UNDER_REVIEW').length.toString(), change: '+0%' }
+    { title: 'Total Applications', value: applications.length.toString(), change: '+0%', href: '/admin/applications' },
+    { title: 'Contact Forms', value: contactForms.length.toString(), change: '+0%', href: '/admin/contact-forms' },
+    { title: 'Approved Loans', value: applications.filter(app => app.status === 'APPROVED').length.toString(), change: '+0%', href: '/admin/applications' },
+    { title: 'Pending Reviews', value: applications.filter(app => app.status === 'SUBMITTED' || app.status === 'UNDER_REVIEW').length.toString(), change: '+0%', href: '/admin/applications' }
   ];
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <Card key={index}>
+          <Card 
+            key={index} 
+            className="cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105"
+            onClick={() => navigate(stat.href)}
+          >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
