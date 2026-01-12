@@ -1,26 +1,32 @@
+Options -MultiViews
 RewriteEngine On
 
-# Force correct MIME types
-AddType application/javascript .js
-AddType application/javascript .mjs
-AddType text/css .css
-AddType image/png .png
-AddType image/jpeg .jpg
-AddType image/gif .gif
+# Force MIME types at server level
+<FilesMatch "\.(js|mjs)$">
+    ForceType application/javascript
+</FilesMatch>
 
-# Serve assets directory files directly - HIGHEST PRIORITY
-RewriteRule ^assets/ - [L]
+<FilesMatch "\.css$">
+    ForceType text/css
+</FilesMatch>
 
-# Serve other static files directly
+<FilesMatch "\.(png|jpg|jpeg|gif)$">
+    ForceType image/png
+</FilesMatch>
+
+# Block all rewriting for assets
+RewriteRule ^assets/ - [L,QSA]
+
+# Serve existing files
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^ - [L]
+RewriteRule . - [L]
 
-# Serve directories directly
+# Serve existing directories  
 RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+RewriteRule . - [L]
 
-# SPA routing fallback
-RewriteRule ^ index.html [L]
+# Everything else goes to index.html
+RewriteRule . index.html [L]
 
 # --------------------------------------------------
 # Compression
