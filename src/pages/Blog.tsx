@@ -155,7 +155,7 @@ const Blog = () => {
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
                     onClick={() => {
                       console.log('Card clicked, navigating to blog:', post.id);
-                      navigate(`/blog/${post.id}`);
+                      window.location.href = `/blog/${post.id}`;
                     }}
                   >
                     <div className="relative h-48 overflow-hidden">
