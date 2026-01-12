@@ -79,15 +79,15 @@ const AdminContactForms = () => {
                   </div>
                   <div>
                     <div className="space-y-2 text-sm">
-                      <p><strong>Loan Type:</strong> {form.loan_type}</p>
-                      <p><strong>Amount:</strong> ₹{form.amount}</p>
+                      <p><strong>Loan Type:</strong> {form.loan_type || 'Not specified'}</p>
+                      <p><strong>Amount:</strong> {form.amount ? `₹${form.amount}` : 'Not specified'}</p>
                       <div className="mt-3">
                         <p className="text-xs text-muted-foreground mb-1">Consents:</p>
                         <div className="flex flex-wrap gap-1">
-                          {form.consent_terms && <Badge variant="outline" className="text-xs">Terms</Badge>}
-                          {form.consent_data_processing && <Badge variant="outline" className="text-xs">Data</Badge>}
-                          {form.consent_communication && <Badge variant="outline" className="text-xs">Communication</Badge>}
-                          {form.consent_marketing && <Badge variant="outline" className="text-xs">Marketing</Badge>}
+                          {form.consent_terms ? <Badge variant="default" className="text-xs bg-green-500">Terms ✓</Badge> : <Badge variant="outline" className="text-xs">Terms ✗</Badge>}
+                          {form.consent_data_processing ? <Badge variant="default" className="text-xs bg-green-500">Data ✓</Badge> : <Badge variant="outline" className="text-xs">Data ✗</Badge>}
+                          {form.consent_communication ? <Badge variant="default" className="text-xs bg-green-500">Communication ✓</Badge> : <Badge variant="outline" className="text-xs">Communication ✗</Badge>}
+                          {form.consent_marketing ? <Badge variant="default" className="text-xs bg-green-500">Marketing ✓</Badge> : <Badge variant="outline" className="text-xs">Marketing ✗</Badge>}
                         </div>
                       </div>
                     </div>
