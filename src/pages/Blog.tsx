@@ -144,13 +144,10 @@ const Blog = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                  <article
+                  <a
                     key={post.id}
-                    onClick={() => {
-                      console.log('Card clicked, navigating to blog:', post.id);
-                      navigate(`/blog/${post.id}`);
-                    }}
-                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
+                    href={`/blog/${post.id}`}
+                    className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
@@ -202,18 +199,16 @@ const Blog = () => {
                           variant="ghost" 
                           size="sm" 
                           className="group/btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Navigating to blog:', post.id);
-                            navigate(`/blog/${post.id}`);
-                          }}
+                          asChild
                         >
-                          Read More
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                          <a href={`/blog/${post.id}`}>
+                            Read More
+                            <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                          </a>
                         </Button>
                       </div>
                     </div>
-                  </article>
+                  </a>
                 ))}
               </div>
             )}
