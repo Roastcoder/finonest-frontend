@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminContactForms from "./admin/AdminContactForms";
+import BottomNavigation from "@/components/BottomNavigation";
 import { 
   LogOut, 
   Loader2,
@@ -202,6 +203,7 @@ const AdminDashboard = () => {
           </main>
         </div>
       </div>
+      <BottomNavigation />
     </>
   );
 };

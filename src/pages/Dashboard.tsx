@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import BottomNavigation from "@/components/BottomNavigation";
 import { 
   LogOut, 
   Plus, 
@@ -549,6 +550,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+      <BottomNavigation />
     </>
   );
 };
