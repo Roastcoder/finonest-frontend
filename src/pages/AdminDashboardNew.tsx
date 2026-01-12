@@ -86,7 +86,21 @@ const AdminDashboard = () => {
         <title>Admin Dashboard - Finonest</title>
       </Helmet>
 
-      <div className="min-h-screen bg-muted/30 flex">
+      <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
+        {/* Mobile Header */}
+        <header className="md:hidden bg-card border-b border-border p-4 flex items-center justify-between">
+          <Link to="/">
+            <img src={logo} alt="Finonest" className="h-8 object-contain" />
+          </Link>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">
+              {user?.name?.charAt(0) || 'A'}
+            </div>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
+        </header>
         {/* Sidebar */}
         <div className="hidden md:flex w-64 bg-card border-r border-border flex-col">
           <div className="p-6">
@@ -161,7 +175,7 @@ const AdminDashboard = () => {
 
         {/* Main Content */}
         <div className="flex-1 pb-16 md:pb-0">
-          <header className="bg-card border-b border-border p-6">
+          <header className="hidden md:block bg-card border-b border-border p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">
