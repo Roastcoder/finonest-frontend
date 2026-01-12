@@ -23,7 +23,7 @@ const Footer = () => {
       <div className="container px-4 md:px-6 pt-8 md:pt-16 pb-4 md:pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12">
           {/* Company Info */}
-          <div className="space-y-3 md:space-y-6 md:col-span-1 lg:col-span-1">
+          <div className="space-y-3 md:space-y-6 col-span-1 md:col-span-2 lg:col-span-1">
             <img src={logoImg} alt="Finonest" className="h-10 md:h-12 w-auto object-contain brightness-0 invert" />
             <p className="text-xs md:text-sm text-background/70 leading-relaxed">
               Finonest is your trusted partner for all financial needs. We simplify the loan process with transparency, speed, and personalized solutions.
@@ -46,80 +46,77 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Links Section - Combined on Mobile */}
-          <div className="grid grid-cols-2 gap-4 md:contents">
-            {/* Quick Links */}
-            <div>
-              <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Quick Links</h4>
-              <ul className="space-y-2 md:space-y-3">
-                <li>
-                  <Link to="/" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/about" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Our Services
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/apply" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Apply Now
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/banking-partners" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Banking Partners
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          {/* Quick Links */}
+          <div className="md:col-span-1 lg:col-span-1">
+            <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Quick Links</h4>
+            <ul className="space-y-2 md:space-y-3">
+              <li>
+                <Link to="/" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/services" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Our Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/apply" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Apply Now
+                </Link>
+              </li>
+              <li>
+                <Link to="/banking-partners" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Banking Partners
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-            {/* Our Services */}
-            <div>
-              <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Our Services</h4>
-              <ul className="space-y-2 md:space-y-3">
-                <li>
-                  <Link to="/services/home-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Home Loan
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services/personal-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Personal Loan
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services/business-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Business Loan
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services/car-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Car Loan
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/services/credit-cards" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
-                    Credit Cards
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          {/* Our Services */}
+          <div className="md:col-span-1 lg:col-span-1">
+            <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Our Services</h4>
+            <ul className="space-y-2 md:space-y-3">
+              <li>
+                <Link to="/services/home-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Home Loan
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/personal-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Personal Loan
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/business-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Business Loan
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/car-loan" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Car Loan
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/credit-cards" className="text-xs md:text-sm text-background/70 hover:text-accent transition-colors">
+                  Credit Cards
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Contact Us</h4>
             <ContactWidget variant="vertical" className="mb-3 md:mb-6" />
             <div className="flex items-center gap-2 text-xs md:text-sm text-background/80 mb-3 md:mb-6">
