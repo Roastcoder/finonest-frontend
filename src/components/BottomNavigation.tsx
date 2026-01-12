@@ -199,11 +199,11 @@ const BottomNavigation = () => {
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
         <div className="flex items-center justify-around py-2 px-2 max-w-md mx-auto">
-          {(user?.role === 'ADMIN' && location.pathname.startsWith('/admin') ? navItems : getNavItems(!!user, undefined)).map((item) => {
+          {navItems.map((item) => {
             const active = isActive(item.href);
             
             if (item.hasDropdown) {
-              if (user?.role === 'ADMIN' && item.label === 'Content' && location.pathname.startsWith('/admin')) {
+              if (user?.role === 'ADMIN' && item.label === 'Content') {
                 return (
                   <button
                     key={item.label}
