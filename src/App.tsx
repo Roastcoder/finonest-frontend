@@ -97,6 +97,7 @@ const App = () => {
                 <Route path="/admin/applications" element={<AdminDashboard />} />
                 <Route path="/admin/contact-forms" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<AdminDashboard />} />
+                <Route path="/admin/blogs" element={<AdminDashboard />} />
                 <Route path="/admin/settings" element={<AdminDashboard />} />
                 <Route path="/banking-partners" element={<BankingPartnersPage />} />
                 <Route path="/apply" element={<Apply />} />

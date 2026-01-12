@@ -14,13 +14,15 @@ import {
   Users,
   BarChart3,
   Settings,
-  MessageSquare
+  MessageSquare,
+  BookOpen
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import AdminApplications from "./admin/AdminApplications";
 import AdminUsers from "./admin/AdminUsers";
 import AdminAnalytics from "./admin/AdminAnalytics";
 import AdminSettings from "./admin/AdminSettings";
+import AdminBlogs from "./admin/AdminBlogs";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -37,6 +39,7 @@ const AdminDashboard = () => {
     if (path.includes('/users')) return 'users';
     if (path.includes('/analytics')) return 'dashboard';
     if (path.includes('/settings')) return 'settings';
+    if (path.includes('/blogs')) return 'blogs';
     return 'dashboard';
   };
 
@@ -79,6 +82,8 @@ const AdminDashboard = () => {
         return <AdminContactForms />;
       case 'users':
         return <AdminUsers />;
+      case 'blogs':
+        return <AdminBlogs />;
       case 'settings':
         return <AdminSettings />;
       default:
@@ -160,6 +165,15 @@ const AdminDashboard = () => {
               <Users className="w-4 h-4" />
               Users
             </Link>
+            <Link 
+              to="/admin/blogs"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'blogs' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Blog Management
+            </Link>
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
             <Link 
               to="/admin/settings"
@@ -197,6 +211,7 @@ const AdminDashboard = () => {
                   {activeTab === 'applications' && 'Applications Management'}
                   {activeTab === 'contacts' && 'Contact Forms'}
                   {activeTab === 'users' && 'Users Management'}
+                  {activeTab === 'blogs' && 'Blog Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -204,6 +219,7 @@ const AdminDashboard = () => {
                   {activeTab === 'applications' && 'Manage and review loan applications'}
                   {activeTab === 'contacts' && 'Manage contact form submissions'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
+                  {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
               </div>

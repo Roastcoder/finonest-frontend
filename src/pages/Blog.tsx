@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -6,82 +6,46 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, User, ArrowRight, Search, Tag } from "lucide-react";
+import { Calendar, User, ArrowRight, Search, Tag, Image, Video } from "lucide-react";
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "How to Improve Your Credit Score in 2025",
-    excerpt: "Learn the top strategies to boost your credit score and get better loan rates. A good credit score can save you lakhs on interest.",
-    category: "Credit Score",
-    author: "Finonest Team",
-    date: "December 15, 2024",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800",
-    slug: "improve-credit-score-2025",
-  },
-  {
-    id: 2,
-    title: "Used Car Loan: Complete Guide for First-Time Buyers",
-    excerpt: "Everything you need to know about getting a used car loan in India. From documentation to approval, we cover it all.",
-    category: "Car Loan",
-    author: "Surya Mohan Roy",
-    date: "December 10, 2024",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800",
-    slug: "used-car-loan-guide",
-  },
-  {
-    id: 3,
-    title: "Home Loan vs Loan Against Property: Which is Right for You?",
-    excerpt: "Understanding the key differences between home loans and LAP to make the best financial decision for your needs.",
-    category: "Home Loan",
-    author: "CA Prateek Somani",
-    date: "December 5, 2024",
-    readTime: "6 min read",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800",
-    slug: "home-loan-vs-lap",
-  },
-  {
-    id: 4,
-    title: "5 Mistakes to Avoid When Applying for a Personal Loan",
-    excerpt: "Common pitfalls that can hurt your loan application and how to avoid them for a smooth approval process.",
-    category: "Personal Loan",
-    author: "Finonest Team",
-    date: "November 28, 2024",
-    readTime: "4 min read",
-    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800",
-    slug: "personal-loan-mistakes",
-  },
-  {
-    id: 5,
-    title: "Business Loan Interest Rates: What to Expect in 2025",
-    excerpt: "A comprehensive overview of business loan interest rates from various banks and NBFCs for the upcoming year.",
-    category: "Business Loan",
-    author: "Atishay Jain",
-    date: "November 20, 2024",
-    readTime: "7 min read",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
-    slug: "business-loan-rates-2025",
-  },
-  {
-    id: 6,
-    title: "EMI Calculator: How to Plan Your Loan Repayment",
-    excerpt: "Master the EMI calculator to plan your finances better. Understand how loan amount, tenure, and interest affect your monthly payments.",
-    category: "Financial Planning",
-    author: "Sanam Makkar",
-    date: "November 15, 2024",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1554224155-1696413565d3?w=800",
-    slug: "emi-calculator-guide",
-  },
-];
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  status: string;
+  created_at: string;
+  image_url?: string;
+  video_url?: string;
+}
 
 const categories = ["All", "Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
 
 const Blog = () => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/blogs');
+      if (response.ok) {
+        const data = await response.json();
+        setBlogPosts(data.blogs || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch blogs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,6 +53,21 @@ const Blog = () => {
     const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getReadTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(' ').length;
+    const readTime = Math.ceil(wordCount / wordsPerMinute);
+    return `${readTime} min read`;
+  };
 
   return (
     <>
@@ -152,7 +131,11 @@ const Blog = () => {
         {/* Blog Posts */}
         <section className="py-12">
           <div className="container">
-            {filteredPosts.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Loading articles...</p>
+              </div>
+            ) : filteredPosts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">No articles found matching your criteria.</p>
               </div>
@@ -164,17 +147,31 @@ const Blog = () => {
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                      {post.image_url ? (
+                        <img
+                          src={post.image_url}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                          <Tag className="w-12 h-12 text-primary/40" />
+                        </div>
+                      )}
                       <div className="absolute top-4 left-4">
                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
                           <Tag className="w-3 h-3" />
                           {post.category}
                         </span>
                       </div>
+                      {post.video_url && (
+                        <div className="absolute top-4 right-4">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-full">
+                            <Video className="w-3 h-3" />
+                            Video
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="p-6">
                       <h2 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
@@ -190,11 +187,11 @@ const Blog = () => {
                         </div>
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4" />
-                          {post.date}
+                          {formatDate(post.created_at)}
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{post.readTime}</span>
+                        <span className="text-xs text-muted-foreground">{getReadTime(post.content)}</span>
                         <Button variant="ghost" size="sm" className="group/btn">
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
