@@ -23,6 +23,7 @@ import AdminUsers from "./admin/AdminUsers";
 import AdminAnalytics from "./admin/AdminAnalytics";
 import AdminSettings from "./admin/AdminSettings";
 import AdminBlogs from "./admin/AdminBlogs";
+import AdminCourses from "./admin/AdminCourses";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,7 @@ const AdminDashboard = () => {
     if (path.includes('/analytics')) return 'dashboard';
     if (path.includes('/settings')) return 'settings';
     if (path.includes('/blogs')) return 'blogs';
+    if (path.includes('/courses')) return 'courses';
     return 'dashboard';
   };
 
@@ -84,6 +86,8 @@ const AdminDashboard = () => {
         return <AdminUsers />;
       case 'blogs':
         return <AdminBlogs />;
+      case 'courses':
+        return <AdminCourses />;
       case 'settings':
         return <AdminSettings />;
       default:
@@ -174,6 +178,15 @@ const AdminDashboard = () => {
               <BookOpen className="w-4 h-4" />
               Blog Management
             </Link>
+            <Link 
+              to="/admin/courses"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'courses' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4" />
+              Finobizz Learning
+            </Link>
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
             <Link 
               to="/admin/settings"
@@ -212,6 +225,7 @@ const AdminDashboard = () => {
                   {activeTab === 'contacts' && 'Contact Forms'}
                   {activeTab === 'users' && 'Users Management'}
                   {activeTab === 'blogs' && 'Blog Management'}
+                  {activeTab === 'courses' && 'Finobizz Learning Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -220,6 +234,7 @@ const AdminDashboard = () => {
                   {activeTab === 'contacts' && 'Manage contact form submissions'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
+                  {activeTab === 'courses' && 'Manage Finobizz Learning courses and content'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
               </div>

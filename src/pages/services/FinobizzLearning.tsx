@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -7,50 +8,15 @@ import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, Video, Award, Users, Clock, CheckCircle, ArrowRight, Play } from "lucide-react";
 
-const courses = [
-  {
-    title: "Basics of Lending",
-    description: "Learn the fundamentals of lending, types of loans, and how the lending process works.",
-    duration: "4 hours",
-    lessons: 12,
-    level: "Beginner",
-  },
-  {
-    title: "Credit Score Mastery",
-    description: "Understand CIBIL scores, factors affecting credit, and how to improve your credit rating.",
-    duration: "3 hours",
-    lessons: 8,
-    level: "Beginner",
-  },
-  {
-    title: "Home Loan Essentials",
-    description: "Complete guide to home loans - eligibility, documentation, and approval process.",
-    duration: "5 hours",
-    lessons: 15,
-    level: "Intermediate",
-  },
-  {
-    title: "Business Finance",
-    description: "Learn about business loans, working capital, and managing business finances effectively.",
-    duration: "6 hours",
-    lessons: 18,
-    level: "Advanced",
-  },
-  {
-    title: "Investment Basics",
-    description: "Introduction to investments, mutual funds, and building a diversified portfolio.",
-    duration: "4 hours",
-    lessons: 10,
-    level: "Beginner",
-  },
-  {
-    title: "Tax Planning",
-    description: "Master tax-saving strategies and understand how loans affect your tax liability.",
-    duration: "3 hours",
-    lessons: 9,
-    level: "Intermediate",
-  },
-];
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  duration: string;
+  lessons: number;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  status: string;
+}
 
 const features = [
   {
@@ -76,6 +42,35 @@ const features = [
 ];
 
 const FinobizzLearning = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/courses');
+      if (response.ok) {
+        const data = await response.json();
+        setCourses(data.courses || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'Beginner': return 'bg-green-100 text-green-700';
+      case 'Intermediate': return 'bg-yellow-100 text-yellow-700';
+      case 'Advanced': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
   return (
     <>
       <Helmet>
@@ -154,37 +149,43 @@ const FinobizzLearning = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course, index) => (
-                <div key={index} className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group">
-                  <div className="h-40 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                    <BookOpen className="w-16 h-16 text-primary/50" />
-                  </div>
-                  <div className="p-6">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${
-                      course.level === 'Beginner' ? 'bg-green-100 text-green-700' :
-                      course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
-                      {course.level}
-                    </span>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">{course.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-4">{course.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {course.duration}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <BookOpen className="w-4 h-4" />
-                        {course.lessons} lessons
-                      </span>
-                    </div>
-                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      Start Course
-                    </Button>
-                  </div>
+              {loading ? (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-muted-foreground">Loading courses...</p>
                 </div>
-              ))}
+              ) : courses.length === 0 ? (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-muted-foreground">No courses available at the moment.</p>
+                </div>
+              ) : (
+                courses.map((course) => (
+                  <div key={course.id} className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group">
+                    <div className="h-40 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                      <BookOpen className="w-16 h-16 text-primary/50" />
+                    </div>
+                    <div className="p-6">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${getLevelColor(course.level)}`}>
+                        {course.level}
+                      </span>
+                      <h3 className="text-xl font-semibold text-foreground mb-2">{course.title}</h3>
+                      <p className="text-muted-foreground text-sm mb-4">{course.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {course.duration}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-4 h-4" />
+                          {course.lessons} lessons
+                        </span>
+                      </div>
+                      <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        Start Course
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>

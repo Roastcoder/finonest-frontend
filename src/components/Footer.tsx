@@ -118,40 +118,38 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1">
             <h4 className="font-display text-base md:text-lg font-semibold mb-3 md:mb-6">Contact Us</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6">
-              <div>
-                <ContactWidget variant="vertical" className="mb-3 md:mb-6" />
-                <div className="flex items-center gap-2 text-xs md:text-sm text-background/80 mb-3 md:mb-6">
-                  <span>info@finonest.com</span>
-                </div>
-              </div>
-              <div>
-                <h5 className="text-xs md:text-sm font-medium mb-2 md:mb-4">Follow Us</h5>
-                <div className="flex gap-3 mb-3">
-                  <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <Facebook className="w-4 h-4" />
-                  </a>
-                  <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <Twitter className="w-4 h-4" />
-                  </a>
-                  <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                  <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
-                    <Youtube className="w-4 h-4" />
-                  </a>
-                </div>
-                <a 
-                  href="https://search.google.com/local/writereview?placeid=ChIJI1TNZRqzbTkRo9RLFM5zasw" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs md:text-sm font-medium"
-                >
-                  <Star className="w-3 md:w-4 h-3 md:h-4" />
-                  <span className="hidden sm:inline">Leave a Review on Google</span>
-                  <span className="sm:hidden">Review Us</span>
+            <ContactWidget variant="vertical" className="mb-3 md:mb-6" />
+            <div className="flex items-center gap-2 text-xs md:text-sm text-background/80 mb-3 md:mb-6">
+              <span>info@finonest.com</span>
+            </div>
+            <div>
+              <h5 className="text-xs md:text-sm font-medium mb-2 md:mb-4">Follow Us</h5>
+              <div className="flex gap-3">
+                <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <Twitter className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <Linkedin className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-9 h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <Youtube className="w-4 h-4" />
                 </a>
               </div>
+            </div>
+            <div className="mt-2 md:mt-4">
+              <a 
+                href="https://search.google.com/local/writereview?placeid=ChIJI1TNZRqzbTkRo9RLFM5zasw" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs md:text-sm font-medium"
+              >
+                <Star className="w-3 md:w-4 h-3 md:h-4" />
+                <span className="hidden sm:inline">Leave a Review on Google</span>
+                <span className="sm:hidden">Review Us</span>
+              </a>
             </div>
           </div>
         </div>
