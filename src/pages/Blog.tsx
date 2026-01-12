@@ -36,10 +36,16 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
+      console.log('Fetching blogs from API...');
       const response = await fetch('https://api.finonest.com/api/blogs');
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Fetched blogs:', data);
         setBlogPosts(data.blogs || []);
+      } else {
+        console.error('Failed to fetch blogs, status:', response.status);
       }
     } catch (error) {
       console.error('Failed to fetch blogs:', error);
@@ -147,6 +153,7 @@ const Blog = () => {
                     key={post.id}
                     to={`/blog/${post.id}`}
                     className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
+                    onClick={() => console.log('Link clicked for blog:', post.id)}
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
