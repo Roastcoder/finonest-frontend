@@ -4,19 +4,22 @@ RewriteEngine On
 AddType application/javascript .js
 AddType application/javascript .mjs
 AddType text/css .css
+AddType image/png .png
+AddType image/jpeg .jpg
+AddType image/gif .gif
 
-# --------------------------------------------------
-# Serve real files & folders directly
-# --------------------------------------------------
+# Serve assets directory files directly - HIGHEST PRIORITY
+RewriteRule ^assets/ - [L]
+
+# Serve other static files directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
+# Serve directories directly
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# --------------------------------------------------
-# React SPA fallback (only when file doesn't exist)
-# --------------------------------------------------
+# SPA routing fallback
 RewriteRule ^ index.html [L]
 
 # --------------------------------------------------
