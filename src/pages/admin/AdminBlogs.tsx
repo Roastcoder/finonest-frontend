@@ -60,6 +60,13 @@ const AdminBlogs = () => {
       if (response.ok) {
         const data = await response.json();
         setBlogs(data.blogs || []);
+      } else {
+        const data = await response.json();
+        toast({
+          title: "Error",
+          description: data.error || "Failed to fetch blogs",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({

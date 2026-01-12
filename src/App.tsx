@@ -22,6 +22,7 @@ import CibilCheck from "./pages/CibilCheck";
 import ServiceApply from "./pages/ServiceApply";
 import FormSuccess from "./pages/FormSuccess";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
@@ -85,6 +86,7 @@ const App = () => {
                 <Route path="/credit-score" element={<CibilCheck />} />
                 <Route path="/cibil-check" element={<CibilCheck />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogDetail />} />
                 <Route path="/terms" element={<TermsAndConditions />} />
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />

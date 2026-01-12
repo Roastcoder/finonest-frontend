@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -24,6 +25,7 @@ interface BlogPost {
 const categories = ["All", "Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
 
 const Blog = () => {
+  const navigate = useNavigate();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,7 +146,8 @@ const Blog = () => {
                 {filteredPosts.map((post) => (
                   <article
                     key={post.id}
-                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group"
+                    onClick={() => navigate(`/blog/${post.id}`)}
+                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
@@ -192,7 +195,15 @@ const Blog = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{getReadTime(post.content)}</span>
-                        <Button variant="ghost" size="sm" className="group/btn">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="group/btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/blog/${post.id}`);
+                          }}
+                        >
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                         </Button>
