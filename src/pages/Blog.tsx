@@ -149,6 +149,9 @@ const Blog = () => {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div style={{padding: '20px', background: 'red', color: 'white'}}>
+                  <a href="/blog/1" style={{display: 'block', padding: '10px', background: 'blue', color: 'white', textDecoration: 'none'}}>TEST LINK - CLICK ME</a>
+                </div>
                 {filteredPosts.map((post) => (
                   <a
                     key={post.id}
