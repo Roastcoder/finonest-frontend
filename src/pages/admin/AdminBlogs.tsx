@@ -50,6 +50,9 @@ const AdminBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
+      console.log('Fetching blogs from admin endpoint...');
+      console.log('Token:', token);
+      
       const response = await fetch('https://api.finonest.com/api/blogs/admin', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -57,11 +60,15 @@ const AdminBlogs = () => {
         },
       });
 
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
+
       if (response.ok) {
-        const data = await response.json();
         setBlogs(data.blogs || []);
+        console.log('Blogs set:', data.blogs?.length || 0);
       } else {
-        const data = await response.json();
+        console.error('Error response:', data);
         toast({
           title: "Error",
           description: data.error || "Failed to fetch blogs",
@@ -69,6 +76,7 @@ const AdminBlogs = () => {
         });
       }
     } catch (error) {
+      console.error('Fetch error:', error);
       toast({
         title: "Error",
         description: "Failed to fetch blogs",
