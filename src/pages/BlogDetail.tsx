@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import DOMPurify from "isomorphic-dompurify";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -26,32 +27,27 @@ const BlogDetail = () => {
   const navigate = useNavigate();
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
-      fetchBlog(id);
-    }
-  }, [id]);
+    if (!id) return;
 
-  const fetchBlog = async (blogId: string) => {
-    try {
-      console.log('Fetching blog with ID:', blogId);
-      const response = await fetch(`https://api.finonest.com/api/blogs/${blogId}`);
-      console.log('Response status:', response.status);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Blog data:', data);
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`https://api.finonest.com/api/blogs/${id}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
         setBlog(data.blog);
-      } else {
-        console.error('Failed to fetch blog, status:', response.status);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load blog post.');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to fetch blog:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchBlog();
+  }, [id]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -61,11 +57,18 @@ const BlogDetail = () => {
     });
   };
 
-  const getReadTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const wordCount = content.split(' ').length;
-    const readTime = Math.ceil(wordCount / wordsPerMinute);
-    return `${readTime} min read`;
+  const handleShare = async () => {
+    if (navigator.share && blog) {
+      try {
+        await navigator.share({
+          title: blog.title,
+          text: blog.excerpt,
+          url: window.location.href
+        });
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    }
   };
 
   if (loading) {
@@ -73,19 +76,20 @@ const BlogDetail = () => {
       <>
         <Navbar />
         <div className="min-h-screen flex items-center justify-center">
-          <p className="text-muted-foreground">Loading article...</p>
+          <div className="animate-pulse text-muted-foreground">Loading article...</div>
         </div>
       </>
     );
   }
 
-  if (!blog) {
+  if (error || !blog) {
     return (
       <>
         <Navbar />
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
+            <p className="text-muted-foreground mb-6">{error || 'This blog post does not exist.'}</p>
             <Button onClick={() => navigate('/blog')}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Blog
@@ -96,12 +100,47 @@ const BlogDetail = () => {
     );
   }
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.excerpt,
+    "image": blog.image_url,
+    "author": {
+      "@type": "Person",
+      "name": blog.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Finonest",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://finonest.com/logo.png"
+      }
+    },
+    "datePublished": blog.created_at,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://finonest.com/blog/${blog.id}`
+    }
+  };
+
   return (
     <>
       <Helmet>
-        <title>{blog.title} - Finonest Blog</title>
+        <title>{blog.title} | Finonest Blog</title>
         <meta name="description" content={blog.excerpt} />
+        <meta property="og:title" content={blog.title} />
+        <meta property="og:description" content={blog.excerpt} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://finonest.com/blog/${blog.id}`} />
+        {blog.image_url && <meta property="og:image" content={blog.image_url} />}
+        <meta property="article:published_time" content={blog.created_at} />
+        <meta property="article:author" content={blog.author} />
         <link rel="canonical" href={`https://finonest.com/blog/${blog.id}`} />
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
 
       <Navbar />
@@ -109,7 +148,6 @@ const BlogDetail = () => {
       <main className="min-h-screen bg-background">
         <article className="pt-24 pb-12">
           <div className="container max-w-4xl">
-            {/* Back Button */}
             <Button 
               variant="ghost" 
               onClick={() => navigate('/blog')}
@@ -119,7 +157,6 @@ const BlogDetail = () => {
               Back to Blog
             </Button>
 
-            {/* Article Header */}
             <header className="mb-8">
               <div className="flex items-center gap-2 mb-4">
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
@@ -128,11 +165,11 @@ const BlogDetail = () => {
                 </span>
               </div>
               
-              <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 {blog.title}
               </h1>
               
-              <div className="flex items-center justify-between text-sm text-muted-foreground mb-6">
+              <div className="flex items-center justify-between text-sm text-muted-foreground mb-6 flex-wrap gap-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
@@ -142,32 +179,32 @@ const BlogDetail = () => {
                     <Calendar className="w-4 h-4" />
                     {formatDate(blog.created_at)}
                   </div>
-                  <span>{getReadTime(blog.content)}</span>
                 </div>
-                <Button variant="outline" size="sm">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
+                {navigator.share && (
+                  <Button variant="outline" size="sm" onClick={handleShare}>
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Share
+                  </Button>
+                )}
               </div>
             </header>
 
-            {/* Featured Image */}
             {blog.image_url && (
               <div className="mb-8">
                 <img
                   src={blog.image_url}
                   alt={blog.title}
+                  loading="eager"
                   className="w-full h-64 md:h-96 object-cover rounded-xl"
                 />
               </div>
             )}
 
-            {/* Article Content */}
-            <div className="prose prose-lg max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-            </div>
+            <div 
+              className="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
+            />
 
-            {/* Video */}
             {blog.video_url && (
               <div className="mt-8">
                 <video
