@@ -45,6 +45,9 @@ const Blog = () => {
 
       <main style={{ minHeight: '100vh', paddingTop: '100px', paddingBottom: '40px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ marginBottom: '20px', padding: '20px', backgroundColor: 'yellow' }}>
+            <a href="/blog/1" style={{ color: 'blue', textDecoration: 'underline' }}>TEST LINK - Right click me</a>
+          </div>
           <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '40px', textAlign: 'center' }}>
             Financial Insights & Expert Advice
           </h1>
@@ -59,6 +62,8 @@ const Blog = () => {
                 <a
                   key={post.id}
                   href={`/blog/${post.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     display: 'block',
                     backgroundColor: 'white',
