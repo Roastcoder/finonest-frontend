@@ -150,14 +150,10 @@ const Blog = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                  <div
+                  <a
                     key={post.id}
-                    className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
-                    style={{ pointerEvents: 'auto' }}
-                    onMouseDown={() => {
-                      alert(`Clicked blog ${post.id}`);
-                      window.location.href = `/blog/${post.id}`;
-                    }}
+                    href={`/blog/${post.id}`}
+                    className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group no-underline"
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
@@ -205,23 +201,15 @@ const Blog = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{getReadTime(post.content)}</span>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="group/btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            alert(`Read More clicked for blog ${post.id}`);
-                            console.log('Read More clicked for blog:', post.id);
-                            window.location.href = `/blog/${post.id}`;
-                          }}
+                        <button 
+                          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
                         >
                           Read More
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </Button>
+                          <ArrowRight className="w-4 h-4 ml-1 inline" />
+                        </button>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             )}
