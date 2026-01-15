@@ -153,14 +153,14 @@ const Blog = () => {
                   <a
                     key={post.id}
                     href={`/blog/${post.id}`}
-                    className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group no-underline"
+                    className="block bg-card rounded-xl border border-border overflow-hidden"
                   >
                     <div className="relative h-48 overflow-hidden">
                       {post.image_url ? (
                         <img
                           src={post.image_url}
                           alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
@@ -183,7 +183,7 @@ const Blog = () => {
                       )}
                     </div>
                     <div className="p-6">
-                      <h2 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      <h2 className="text-xl font-semibold text-foreground mb-2">
                         {post.title}
                       </h2>
                       <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
@@ -202,7 +202,7 @@ const Blog = () => {
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">{getReadTime(post.content)}</span>
                         <button 
-                          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium"
                         >
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1 inline" />
