@@ -153,9 +153,9 @@ const Blog = () => {
                   <div
                     key={post.id}
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
-                    onClick={() => {
+                    style={{ pointerEvents: 'auto' }}
+                    onMouseDown={() => {
                       alert(`Clicked blog ${post.id}`);
-                      console.log('Card clicked, navigating to blog:', post.id);
                       window.location.href = `/blog/${post.id}`;
                     }}
                   >
