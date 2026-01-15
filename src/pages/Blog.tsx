@@ -154,6 +154,7 @@ const Blog = () => {
                     key={post.id}
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
                     onClick={() => {
+                      alert(`Clicked blog ${post.id}`);
                       console.log('Card clicked, navigating to blog:', post.id);
                       window.location.href = `/blog/${post.id}`;
                     }}
@@ -210,6 +211,7 @@ const Blog = () => {
                           className="group/btn"
                           onClick={(e) => {
                             e.stopPropagation();
+                            alert(`Read More clicked for blog ${post.id}`);
                             console.log('Read More clicked for blog:', post.id);
                             window.location.href = `/blog/${post.id}`;
                           }}
