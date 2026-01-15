@@ -155,7 +155,12 @@ const Blog = () => {
                     className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
                     onClick={() => {
                       console.log('Card clicked, navigating to blog:', post.id);
-                      navigate(`/blog/${post.id}`);
+                      // Try React Router first, fallback to new tab
+                      try {
+                        navigate(`/blog/${post.id}`);
+                      } catch (error) {
+                        window.open(`/blog/${post.id}`, '_blank');
+                      }
                     }}
                   >
                     <div className="relative h-48 overflow-hidden">
@@ -211,7 +216,12 @@ const Blog = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log('Read More clicked for blog:', post.id);
-                            navigate(`/blog/${post.id}`);
+                            // Try React Router first, fallback to new tab
+                            try {
+                              navigate(`/blog/${post.id}`);
+                            } catch (error) {
+                              window.open(`/blog/${post.id}`, '_blank');
+                            }
                           }}
                         >
                           Read More
