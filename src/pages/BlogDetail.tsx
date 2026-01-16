@@ -34,7 +34,13 @@ const BlogDetail = () => {
 
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`https://api.finonest.com/api/blogs/slug/${id}`);
+        // Check if id is numeric - use ID endpoint, otherwise use slug endpoint
+        const isNumeric = /^\d+$/.test(id);
+        const url = isNumeric 
+          ? `https://api.finonest.com/api/blogs/${id}`
+          : `https://api.finonest.com/api/blogs/slug/${id}`;
+        
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBlog(data.blog);
