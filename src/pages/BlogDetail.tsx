@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import DOMPurify from "isomorphic-dompurify";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -200,10 +199,42 @@ const BlogDetail = () => {
               </div>
             )}
 
-            <div 
-              className="prose prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-strong:font-semibold prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 prose-li:text-muted-foreground prose-li:mb-2"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
-            />
+            <div className="space-y-4 text-base leading-relaxed">
+              {blog.content.split('\n').map((line, index) => {
+                line = line.trim();
+                if (!line) return null;
+                
+                // Numbered list items with bold headings
+                const numberedMatch = line.match(/^(\d+)\.\s+\*\*(.*?)\*\*:?\s*(.*)/);
+                if (numberedMatch) {
+                  return (
+                    <div key={index} className="mb-4">
+                      <h3 className="text-lg font-bold text-foreground mb-2">
+                        {numberedMatch[1]}. {numberedMatch[2]}
+                      </h3>
+                      {numberedMatch[3] && (
+                        <p className="text-muted-foreground ml-6">{numberedMatch[3]}</p>
+                      )}
+                    </div>
+                  );
+                }
+                
+                // Bold text
+                if (line.includes('**')) {
+                  const parts = line.split(/\*\*(.*?)\*\*/);
+                  return (
+                    <p key={index} className="text-muted-foreground">
+                      {parts.map((part, i) => 
+                        i % 2 === 1 ? <strong key={i} className="text-foreground font-semibold">{part}</strong> : part
+                      )}
+                    </p>
+                  );
+                }
+                
+                // Regular paragraph
+                return <p key={index} className="text-muted-foreground">{line}</p>;
+              })}
+            </div>
 
             {blog.video_url && (
               <div className="mt-8">
