@@ -201,7 +201,7 @@ const BlogDetail = () => {
             )}
 
             <div 
-              className="prose prose-lg max-w-none"
+              className="prose prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-strong:font-semibold prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 prose-li:text-muted-foreground prose-li:mb-2"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
             />
 

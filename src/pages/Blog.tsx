@@ -5,7 +5,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
-import { Calendar, User, ArrowRight, Tag } from "lucide-react";
+import { Calendar, User, ArrowRight, Tag, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface BlogPost {
   id: number;
@@ -24,6 +26,8 @@ const Blog = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -50,6 +54,15 @@ const Blog = () => {
     });
   };
 
+  const categories = ["All", ...Array.from(new Set(blogPosts.map(post => post.category)))];
+
+  const filteredPosts = blogPosts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <>
       <Helmet>
@@ -75,6 +88,32 @@ const Blog = () => {
             </p>
           </div>
 
+          {/* Search and Filter */}
+          <div className="mb-8 space-y-4">
+            <div className="relative max-w-md mx-auto">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Search articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {categories.map(category => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+          </div>
+
           {loading && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map(i => (
@@ -95,16 +134,16 @@ const Blog = () => {
             </div>
           )}
 
-          {!loading && !error && blogPosts.length === 0 && (
+          {!loading && !error && filteredPosts.length === 0 && (
             <div className="text-center py-20">
-              <h2 className="text-2xl font-semibold mb-2">No blog posts yet</h2>
-              <p className="text-muted-foreground">Check back soon for financial insights!</p>
+              <h2 className="text-2xl font-semibold mb-2">No articles found</h2>
+              <p className="text-muted-foreground">Try adjusting your search or filter</p>
             </div>
           )}
 
-          {!loading && !error && blogPosts.length > 0 && (
+          {!loading && !error && filteredPosts.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogPosts.map((post) => (
+              {filteredPosts.map((post) => (
                 <article key={post.id}>
                   <Link
                     to={`/blog/${post.id}`}
