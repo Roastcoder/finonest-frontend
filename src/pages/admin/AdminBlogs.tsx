@@ -107,6 +107,8 @@ const AdminBlogs = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         toast({
           title: "Success",
@@ -114,6 +116,12 @@ const AdminBlogs = () => {
         });
         fetchBlogs();
         resetForm();
+      } else {
+        toast({
+          title: "Error",
+          description: data.error || `Failed to ${editingBlog ? 'update' : 'create'} blog`,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
