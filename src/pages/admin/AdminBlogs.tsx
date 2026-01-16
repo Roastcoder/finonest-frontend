@@ -39,7 +39,8 @@ const AdminBlogs = () => {
     category: "",
     status: "draft" as "draft" | "published",
     image_url: "",
-    video_url: ""
+    video_url: "",
+    meta_tags: ""
   });
 
   const categories = ["Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
@@ -159,7 +160,8 @@ const AdminBlogs = () => {
       category: "",
       status: "draft",
       image_url: "",
-      video_url: ""
+      video_url: "",
+      meta_tags: ""
     });
     setEditingBlog(null);
     setShowForm(false);
@@ -173,7 +175,8 @@ const AdminBlogs = () => {
       category: blog.category,
       status: blog.status,
       image_url: blog.image_url || "",
-      video_url: blog.video_url || ""
+      video_url: blog.video_url || "",
+      meta_tags: ""
     });
     setEditingBlog(blog);
     setShowForm(true);
@@ -309,6 +312,15 @@ const AdminBlogs = () => {
                       value={formData.video_url}
                       onChange={(e) => setFormData({...formData, video_url: e.target.value})}
                       placeholder="https://youtube.com/watch?v=..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Meta Tags (SEO Keywords)</label>
+                    <Input
+                      value={formData.meta_tags}
+                      onChange={(e) => setFormData({...formData, meta_tags: e.target.value})}
+                      placeholder="credit score, loans, finance (comma separated)"
                     />
                   </div>
 
