@@ -20,6 +20,7 @@ interface BlogPost {
   created_at: string;
   image_url?: string;
   video_url?: string;
+  slug?: string;
 }
 
 const Blog = () => {
@@ -148,7 +149,7 @@ const Blog = () => {
               {filteredPosts.map((post) => (
                 <article key={post.id}>
                   <Link
-                    to={`/blog/${post.id}`}
+                    to={`/blog/${post.slug || post.id}`}
                     className="block bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
                     aria-label={`Read article: ${post.title}`}
                   >

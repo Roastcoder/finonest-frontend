@@ -19,6 +19,7 @@ interface BlogPost {
   created_at: string;
   image_url?: string;
   video_url?: string;
+  slug?: string;
 }
 
 const BlogDetail = () => {
@@ -33,7 +34,7 @@ const BlogDetail = () => {
 
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`https://api.finonest.com/api/blogs/${id}`);
+        const res = await fetch(`https://api.finonest.com/api/blogs/slug/${id}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBlog(data.blog);
@@ -120,7 +121,7 @@ const BlogDetail = () => {
     "datePublished": blog.created_at,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://finonest.com/blog/${blog.id}`
+      "@id": `https://finonest.com/blog/${blog.slug || blog.id}`
     }
   };
 
@@ -132,11 +133,11 @@ const BlogDetail = () => {
         <meta property="og:title" content={blog.title} />
         <meta property="og:description" content={blog.excerpt} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://finonest.com/blog/${blog.id}`} />
+        <meta property="og:url" content={`https://finonest.com/blog/${blog.slug || blog.id}`} />
         {blog.image_url && <meta property="og:image" content={blog.image_url} />}
         <meta property="article:published_time" content={blog.created_at} />
         <meta property="article:author" content={blog.author} />
-        <link rel="canonical" href={`https://finonest.com/blog/${blog.id}`} />
+        <link rel="canonical" href={`https://finonest.com/blog/${blog.slug || blog.id}`} />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>
