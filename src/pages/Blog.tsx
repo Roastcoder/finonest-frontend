@@ -100,18 +100,20 @@ const Blog = () => {
                 className="pl-10"
               />
             </div>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {categories.map(category => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
+            {!loading && categories.length > 0 && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {categories.map(category => (
+                  <Button
+                    key={category}
+                    variant={selectedCategory === category ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
 
           {loading && (
@@ -177,9 +179,11 @@ const Blog = () => {
                       <h2 className="text-xl font-semibold text-foreground mb-2 line-clamp-2">
                         {post.title}
                       </h2>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                        {post.excerpt}
-                      </p>
+                      {post.excerpt && (
+                        <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                          {post.excerpt}
+                        </p>
+                      )}
                       <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4" />
