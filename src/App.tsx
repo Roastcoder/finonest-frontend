@@ -32,8 +32,8 @@ import IndexDynamic from "./pages/IndexDynamic";
 import Apply from "./pages/Apply";
 import ErrorBoundary from "./components/ErrorBoundary";
 import BankingPartnersPage from "./pages/BankingPartnersPage";
+import OurBranches from "./pages/OurBranches";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
-import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -101,8 +101,10 @@ const App = () => {
                 <Route path="/admin/users" element={<AdminDashboard />} />
                 <Route path="/admin/blogs" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<AdminDashboard />} />
+                <Route path="/admin/branches" element={<AdminDashboard />} />
                 <Route path="/admin/settings" element={<AdminDashboard />} />
-                <Route path="/banking-partners" element={<BankingPartnersPage />} />
+                <Route path="/branches" element={<OurBranches />} />
+                <Route path="/our-branches" element={<OurBranches />} />
                 <Route path="/apply" element={<Apply />} />
                 <Route path="/emi-calculator" element={<EMICalculatorPage />} />
                 <Route path="*" element={<NotFound />} />

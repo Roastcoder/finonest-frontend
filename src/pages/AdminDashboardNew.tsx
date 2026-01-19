@@ -16,7 +16,8 @@ import {
   Settings,
   MessageSquare,
   BookOpen,
-  GraduationCap
+  GraduationCap,
+  MapPin
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import AdminApplications from "./admin/AdminApplications";
@@ -25,6 +26,7 @@ import AdminAnalytics from "./admin/AdminAnalytics";
 import AdminSettings from "./admin/AdminSettings";
 import AdminBlogs from "./admin/AdminBlogs";
 import AdminCourses from "./admin/AdminCourses";
+import AdminBranches from "./admin/AdminBranches";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -43,6 +45,7 @@ const AdminDashboard = () => {
     if (path.includes('/settings')) return 'settings';
     if (path.includes('/blogs')) return 'blogs';
     if (path.includes('/courses')) return 'courses';
+    if (path.includes('/branches')) return 'branches';
     return 'dashboard';
   };
 
@@ -89,6 +92,8 @@ const AdminDashboard = () => {
         return <AdminBlogs />;
       case 'courses':
         return <AdminCourses />;
+      case 'branches':
+        return <AdminBranches />;
       case 'settings':
         return <AdminSettings />;
       default:
@@ -188,6 +193,15 @@ const AdminDashboard = () => {
               <GraduationCap className="w-4 h-4" />
               Finobizz Learning
             </Link>
+            <Link 
+              to="/admin/branches"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'branches' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <MapPin className="w-4 h-4" />
+              Branch Management
+            </Link>
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
             <Link 
               to="/admin/settings"
@@ -227,6 +241,7 @@ const AdminDashboard = () => {
                   {activeTab === 'users' && 'Users Management'}
                   {activeTab === 'blogs' && 'Blog Management'}
                   {activeTab === 'courses' && 'Finobizz Learning Management'}
+                  {activeTab === 'branches' && 'Branch Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -236,6 +251,7 @@ const AdminDashboard = () => {
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
                   {activeTab === 'courses' && 'Manage Finobizz Learning courses and content'}
+                  {activeTab === 'branches' && 'Manage branch locations and information'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
               </div>

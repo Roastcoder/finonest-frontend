@@ -66,6 +66,9 @@ const Navbar = () => {
     name: "Blog",
     href: "/blog"
   }, {
+    name: "Our Branches",
+    href: "/branches"
+  }, {
     name: "About",
     href: "/about"
   }, {
