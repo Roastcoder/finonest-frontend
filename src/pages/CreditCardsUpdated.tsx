@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { CreditCard, Phone, Mail, User, CheckCircle } from "lucide-react";
+import { CreditCard } from "lucide-react";
 
 interface Product {
   id: number;
@@ -172,83 +170,6 @@ const CreditCards = () => {
             ))}
           </div>
         </div>
-
-        {/* Application Form Modal */}
-        {showForm && selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50">
-            <Card className="w-full max-w-sm sm:max-w-md mx-4">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-center text-base sm:text-lg">
-                  Apply for {selectedProduct.name}
-                </CardTitle>
-                <p className="text-center text-sm text-muted-foreground">{selectedProduct.variant}</p>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={submitLead} className="space-y-3 sm:space-y-4">
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-2">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                      Full Name *
-                    </label>
-                    <Input
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Enter your full name"
-                      className="text-sm"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-2">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                      Mobile Number *
-                    </label>
-                    <Input
-                      type="tel"
-                      value={formData.mobile}
-                      onChange={(e) => setFormData({...formData, mobile: e.target.value})}
-                      placeholder="9876543210"
-                      className="text-sm"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-2">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                      Email Address *
-                    </label>
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      placeholder="your@email.com"
-                      className="text-sm"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-2 pt-3 sm:pt-4">
-                    <Button type="submit" className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-700 text-sm" size="sm">
-                      Submit Application
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      className="w-full sm:flex-1 text-sm"
-                      size="sm"
-                      onClick={() => {
-                        setShowForm(false);
-                        setSelectedProduct(null);
-                        setFormData({ name: "", mobile: "", email: "" });
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </div>
       <Footer />
     </>
