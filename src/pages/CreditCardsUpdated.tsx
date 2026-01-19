@@ -106,6 +106,7 @@ const CreditCards = () => {
     if (!selectedProduct) return;
     
     try {
+      // Try external API first
       const response = await fetch('https://cards.finonest.com/api/leads', {
         method: 'POST',
         headers: {
@@ -116,6 +117,33 @@ const CreditCards = () => {
           ...formData,
           product_id: selectedProduct.id,
           channel_code: 'PARTNER_001'
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && (data.success || data.status === 201)) {
+        setFormData({ name: "", mobile: "", email: "" });
+        setShowForm(false);
+        setShowThankYou(true);
+        return;
+      }
+    } catch (error) {
+      console.error('External API failed:', error);
+    }
+    
+    // Fallback to local API if external fails
+    try {
+      const response = await fetch('https://api.finonest.com/api/leads', {
+        method: 'POST',
+        headers: {
+          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          product_id: selectedProduct.id,
+          channel_code: 'FINONEST_WEBSITE'
         })
       });
       
@@ -210,16 +238,15 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-32 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg flex items-center justify-center relative overflow-hidden">
+                  <div className="w-full h-32 rounded-t-lg overflow-hidden">
                     <img 
                       src={product.card_image} 
                       alt={product.name}
-                      className="h-20 object-contain z-10"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
                       }}
                     />
-                    <CreditCard className="w-16 h-16 text-white opacity-30 absolute" />
                   </div>
                   <div className="p-4">
                     <h3 className="font-semibold text-sm mb-1">{product.name}</h3>
@@ -238,16 +265,15 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-32 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-lg flex items-center justify-center relative overflow-hidden">
+                  <div className="w-full h-32 rounded-t-lg overflow-hidden">
                     <img 
                       src={product.card_image} 
                       alt={product.name}
-                      className="h-20 object-contain z-10"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
                       }}
                     />
-                    <CreditCard className="w-16 h-16 text-white opacity-30 absolute" />
                   </div>
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-2">
