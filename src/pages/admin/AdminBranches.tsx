@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Plus, Edit, Trash2, MapPin, Phone, Mail, Clock, User } from "lucide-react";
@@ -142,8 +143,6 @@ const AdminBranches = () => {
   };
 
   const deleteBranch = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this branch?')) return;
-    
     try {
       const response = await fetch(`https://api.finonest.com/api/branches/${id}`, {
         method: 'DELETE',
@@ -152,12 +151,18 @@ const AdminBranches = () => {
           'Content-Type': 'application/json',
         },
       });
-
+      
       if (response.ok) {
         setBranches(branches => branches.filter(branch => branch.id !== id));
         toast({
           title: "Success",
           description: "Branch deleted successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to delete branch",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -170,6 +175,8 @@ const AdminBranches = () => {
   };
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!selectedBranch) return;
+    
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -472,39 +479,36 @@ const AdminBranches = () => {
               </div>
               
               <div 
-                className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 cursor-crosshair border rounded-lg"
+                className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 cursor-crosshair border rounded-lg overflow-hidden"
                 onClick={handleMapClick}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <img 
-                    src="/india.svg" 
-                    alt="India Map" 
-                    className="w-full h-full object-contain pointer-events-none"
-                  />
-                </div>
+                {/* India SVG Map */}
+                <img 
+                  src="/india.svg" 
+                  alt="India Map" 
+                  className="w-full h-full object-contain pointer-events-none"
+                />
                 
-                {/* Existing branch pins */}
-                <div className="absolute inset-0">
-                  {branches.filter(b => b.x_position && b.y_position).map((branch) => (
-                    <div
-                      key={branch.id}
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                      style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
-                    >
-                      <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-500' : 'text-red-500'} drop-shadow-lg`} />
-                    </div>
-                  ))}
-                  
-                  {/* New position preview */}
-                  {selectedPosition && selectedBranch && (
-                    <div
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce"
-                      style={{ left: `${selectedPosition.x}%`, top: `${selectedPosition.y}%` }}
-                    >
-                      <MapPin className="w-6 h-6 text-green-500 drop-shadow-lg" />
-                    </div>
-                  )}
-                </div>
+                {/* Branch pins overlay */}
+                {branches.filter(b => b.x_position && b.y_position).map((branch) => (
+                  <div
+                    key={branch.id}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                  >
+                    <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-500' : 'text-red-500'} drop-shadow-lg`} />
+                  </div>
+                ))}
+                
+                {/* New position preview */}
+                {selectedPosition && selectedBranch && (
+                  <div
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce pointer-events-none"
+                    style={{ left: `${selectedPosition.x}%`, top: `${selectedPosition.y}%` }}
+                  >
+                    <MapPin className="w-6 h-6 text-green-500 drop-shadow-lg" />
+                  </div>
+                )}
                 
                 {/* Position controls */}
                 {selectedPosition && selectedBranch && (
@@ -582,9 +586,27 @@ const AdminBranches = () => {
                       <Button variant="outline" size="sm" onClick={() => editBranch(branch)}>
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => deleteBranch(branch.id)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Branch</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete "{branch.name}"? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => deleteBranch(branch.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
