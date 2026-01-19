@@ -299,19 +299,6 @@ const AdminBlogs = () => {
 
                   <div>
                     <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                      <Image className="w-4 h-4" />
-                      Or Enter Image URL
-                    </label>
-                    <Input
-                      type="url"
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2 flex items-center gap-2">
                       <Video className="w-4 h-4" />
                       Video URL (Optional)
                     </label>

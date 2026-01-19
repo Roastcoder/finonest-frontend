@@ -110,6 +110,8 @@ const App = () => {
                 <Route path="/our-branches" element={<OurBranches />} />
                 <Route path="/apply" element={<Apply />} />
                 <Route path="/emi-calculator" element={<EMICalculatorPage />} />
+                <Route path="/banking-partners" element={<BankingPartnersPage />} />
+                <Route path="/partners" element={<BankingPartnersPage />} />
                 <Route path="/banker-form" element={<BankerForm />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
