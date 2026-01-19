@@ -180,7 +180,7 @@ const CreditCardApply = () => {
           {/* Back Button */}
           <Button 
             variant="ghost" 
-            onClick={() => window.history.back()}
+            onClick={() => navigate(-1)}
             className="mb-6 flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
