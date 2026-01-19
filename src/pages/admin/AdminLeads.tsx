@@ -84,10 +84,8 @@ const AdminLeads = () => {
         created_at: new Date(Date.now() - 86400000).toISOString()
       }
     ]);
-  } finally {
     setLoading(false);
-  }
-};
+  };
 
   const updateLeadStatus = async (leadId: number, status: string) => {
     try {
