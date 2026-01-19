@@ -158,10 +158,18 @@ const AdminBranches = () => {
           title: "Success",
           description: "Branch deleted successfully",
         });
+      } else if (response.status === 404) {
+        // Branch already deleted, remove from frontend state
+        setBranches(branches => branches.filter(branch => branch.id !== id));
+        toast({
+          title: "Info",
+          description: "Branch was already deleted",
+        });
       } else {
+        const data = await response.json();
         toast({
           title: "Error",
-          description: "Failed to delete branch",
+          description: data.error || "Failed to delete branch",
           variant: "destructive",
         });
       }
@@ -487,26 +495,41 @@ const AdminBranches = () => {
                   src="/india.svg" 
                   alt="India Map" 
                   className="w-full h-full object-contain pointer-events-none"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                  }}
                 />
+                
+                {/* Fallback if SVG doesn't load */}
+                <div className="hidden w-full h-full items-center justify-center text-muted-foreground">
+                  India Map (SVG not available)
+                </div>
                 
                 {/* Branch pins overlay */}
                 {branches.filter(b => b.x_position && b.y_position).map((branch) => (
                   <div
                     key={branch.id}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
                     style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                    title={`${branch.name} - ${branch.city}`}
                   >
-                    <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-500' : 'text-red-500'} drop-shadow-lg`} />
+                    <div className="relative">
+                      <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-600' : 'text-red-600'} drop-shadow-lg`} fill="currentColor" />
+                      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
+                        {branch.name}
+                      </div>
+                    </div>
                   </div>
                 ))}
                 
                 {/* New position preview */}
                 {selectedPosition && selectedBranch && (
                   <div
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce pointer-events-none"
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce z-20"
                     style={{ left: `${selectedPosition.x}%`, top: `${selectedPosition.y}%` }}
                   >
-                    <MapPin className="w-6 h-6 text-green-500 drop-shadow-lg" />
+                    <MapPin className="w-6 h-6 text-green-600 drop-shadow-lg" fill="currentColor" />
                   </div>
                 )}
                 

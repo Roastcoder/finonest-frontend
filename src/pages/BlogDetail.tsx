@@ -140,7 +140,7 @@ const BlogDetail = () => {
         <meta property="og:description" content={blog.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://finonest.com/blog/${blog.slug || blog.id}`} />
-        {blog.image_url && <meta property="og:image" content={blog.image_url} />}
+        {blog.image_url && <meta property="og:image" content={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`} />}
         <meta property="article:published_time" content={blog.created_at} />
         <meta property="article:author" content={blog.author} />
         <link rel="canonical" href={`https://finonest.com/blog/${blog.slug || blog.id}`} />
@@ -198,10 +198,13 @@ const BlogDetail = () => {
             {blog.image_url && (
               <div className="mb-8">
                 <img
-                  src={blog.image_url}
+                  src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
                   alt={blog.title}
                   loading="eager"
                   className="w-full h-64 md:h-96 object-cover rounded-xl"
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
+                  }}
                 />
               </div>
             )}
@@ -248,7 +251,7 @@ const BlogDetail = () => {
                 <video
                   controls
                   className="w-full rounded-xl"
-                  poster={blog.image_url}
+                  poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
                 >
                   <source src={blog.video_url} type="video/mp4" />
                   Your browser does not support the video tag.
