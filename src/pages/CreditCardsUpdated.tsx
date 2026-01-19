@@ -42,7 +42,6 @@ const CreditCards = () => {
         throw new Error('API returned error');
       }
     } catch (error) {
-      // console.error('Failed to fetch products:', error);
       // Fallback data if API fails
       setProducts([
         {
@@ -118,20 +117,8 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
-                    <img 
-                      src={product.variant_image || product.card_image} 
-                      alt={product.name}
-                      className="w-full h-full object-contain bg-gray-50"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        if (target.src !== product.card_image && product.card_image) {
-                          target.src = product.card_image;
-                        } else {
-                          target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
-                        }
-                      }}
-                    />
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+                    <CreditCard className="w-16 h-16 text-gray-400" />
                   </div>
                   <div className="p-4">
                     <h3 className="font-semibold text-sm mb-1">{product.name}</h3>
@@ -150,20 +137,8 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
-                    <img 
-                      src={product.variant_image || product.card_image} 
-                      alt={product.name}
-                      className="w-full h-full object-contain bg-gray-50"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        if (target.src !== product.card_image && product.card_image) {
-                          target.src = product.card_image;
-                        } else {
-                          target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
-                        }
-                      }}
-                    />
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden bg-gray-50 flex items-center justify-center">
+                    <CreditCard className="w-16 h-16 text-gray-400" />
                   </div>
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-2">

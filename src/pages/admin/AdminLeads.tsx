@@ -38,11 +38,15 @@ const AdminLeads = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('API Response:', data);
         if (data.status === 200 && data.data && Array.isArray(data.data)) {
+          console.log('Setting leads:', data.data);
           setLeads(data.data);
         } else if (Array.isArray(data)) {
           setLeads(data);
         }
+      } else {
+        console.log('Response not OK:', response.status);
       }
     } catch (error) {
       // console.error('External cards API failed:', error);
