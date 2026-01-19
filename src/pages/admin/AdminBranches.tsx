@@ -20,6 +20,8 @@ interface Branch {
   email?: string;
   latitude: number;
   longitude: number;
+  x_position?: number;
+  y_position?: number;
   manager_name?: string;
   working_hours: string;
   status: 'active' | 'inactive';
@@ -32,6 +34,8 @@ const AdminBranches = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<{x: number, y: number} | null>(null);
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -45,6 +49,8 @@ const AdminBranches = () => {
     email: "",
     latitude: "",
     longitude: "",
+    x_position: "",
+    y_position: "",
     manager_name: "",
     working_hours: "9:00 AM - 6:00 PM",
     status: "active" as "active" | "inactive"
@@ -104,7 +110,9 @@ const AdminBranches = () => {
         body: JSON.stringify({
           ...formData,
           latitude: parseFloat(formData.latitude),
-          longitude: parseFloat(formData.longitude)
+          longitude: parseFloat(formData.longitude),
+          x_position: formData.x_position ? parseFloat(formData.x_position) : null,
+          y_position: formData.y_position ? parseFloat(formData.y_position) : null
         }),
       });
 
@@ -161,6 +169,48 @@ const AdminBranches = () => {
     }
   };
 
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    setSelectedPosition({ x, y });
+  };
+
+  const updateBranchPosition = async () => {
+    if (!selectedBranch || !selectedPosition) return;
+    
+    try {
+      const response = await fetch(`https://api.finonest.com/api/branches/${selectedBranch.id}/position`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          x_position: selectedPosition.x,
+          y_position: selectedPosition.y
+        })
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Branch position updated successfully",
+        });
+        fetchBranches();
+        setSelectedPosition(null);
+        setSelectedBranch(null);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update branch position",
+        variant: "destructive",
+      });
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -172,6 +222,8 @@ const AdminBranches = () => {
       email: "",
       latitude: "",
       longitude: "",
+      x_position: "",
+      y_position: "",
       manager_name: "",
       working_hours: "9:00 AM - 6:00 PM",
       status: "active"
@@ -191,6 +243,8 @@ const AdminBranches = () => {
       email: branch.email || "",
       latitude: branch.latitude.toString(),
       longitude: branch.longitude.toString(),
+      x_position: branch.x_position?.toString() || "",
+      y_position: branch.y_position?.toString() || "",
       manager_name: branch.manager_name || "",
       working_hours: branch.working_hours,
       status: branch.status
@@ -338,6 +392,29 @@ const AdminBranches = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
+                      <label className="block text-sm font-medium mb-2">Map X Position (%)</label>
+                      <Input
+                        type="number"
+                        step="any"
+                        value={formData.x_position}
+                        onChange={(e) => setFormData({...formData, x_position: e.target.value})}
+                        placeholder="Click on map to set"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Map Y Position (%)</label>
+                      <Input
+                        type="number"
+                        step="any"
+                        value={formData.y_position}
+                        onChange={(e) => setFormData({...formData, y_position: e.target.value})}
+                        placeholder="Click on map to set"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
                       <label className="block text-sm font-medium mb-2">Manager Name</label>
                       <Input
                         value={formData.manager_name}
@@ -365,6 +442,92 @@ const AdminBranches = () => {
               </CardContent>
             </Card>
           )}
+
+          {/* Interactive Map for Pin Positioning */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Branch Map Positioning</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Select a branch and click on the map to set its position
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <Select value={selectedBranch?.id.toString() || ""} onValueChange={(value) => {
+                  const branch = branches.find(b => b.id === parseInt(value));
+                  setSelectedBranch(branch || null);
+                  setSelectedPosition(null);
+                }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select branch to position" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {branches.map(branch => (
+                      <SelectItem key={branch.id} value={branch.id.toString()}>
+                        {branch.name} - {branch.city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div 
+                className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 cursor-crosshair border rounded-lg"
+                onClick={handleMapClick}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img 
+                    src="/india.svg" 
+                    alt="India Map" 
+                    className="w-full h-full object-contain pointer-events-none"
+                  />
+                </div>
+                
+                {/* Existing branch pins */}
+                <div className="absolute inset-0">
+                  {branches.filter(b => b.x_position && b.y_position).map((branch) => (
+                    <div
+                      key={branch.id}
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                      style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                    >
+                      <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-500' : 'text-red-500'} drop-shadow-lg`} />
+                    </div>
+                  ))}
+                  
+                  {/* New position preview */}
+                  {selectedPosition && selectedBranch && (
+                    <div
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce"
+                      style={{ left: `${selectedPosition.x}%`, top: `${selectedPosition.y}%` }}
+                    >
+                      <MapPin className="w-6 h-6 text-green-500 drop-shadow-lg" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Position controls */}
+                {selectedPosition && selectedBranch && (
+                  <div className="absolute top-4 right-4 bg-white p-3 rounded-lg shadow-lg">
+                    <p className="text-sm mb-2">
+                      {selectedBranch.name}: {selectedPosition.x.toFixed(1)}%, {selectedPosition.y.toFixed(1)}%
+                    </p>
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={updateBranchPosition}>
+                        Save Position
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => {
+                        setSelectedPosition(null);
+                        setSelectedBranch(null);
+                      }}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
           {branches.length === 0 ? (
             <p>No branches found.</p>
@@ -407,6 +570,12 @@ const AdminBranches = () => {
                           <Clock className="w-3 h-3" />
                           {branch.working_hours}
                         </p>
+                        {branch.x_position && branch.y_position && (
+                          <p className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            Map Position: {branch.x_position.toFixed(1)}%, {branch.y_position.toFixed(1)}%
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex gap-2">

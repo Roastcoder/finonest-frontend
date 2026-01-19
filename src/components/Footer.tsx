@@ -56,6 +56,11 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link to="/banker-form" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
+                  Banker Form
+                </Link>
+              </li>
             </ul>
           </div>
 
