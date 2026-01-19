@@ -22,10 +22,10 @@ const services = [
   },
   {
     icon: Car,
-    title: "New Car Loan",
+    title: "Used Car Loan",
     badge: "Lowest EMI Ride",
     description: "Drive away your dream car today.",
-    href: "/services/car-loan",
+    href: "/services/used-car-loan",
     badgeColor: "bg-purple-500 text-white",
   },
   {
