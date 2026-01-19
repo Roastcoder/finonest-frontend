@@ -8,17 +8,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Users, Phone, Mail, CreditCard, ExternalLink, Calendar } from "lucide-react";
 
 interface Lead {
-  id: number;
-  name: string;
-  mobile: string;
+  lead_id: string;
+  customer_name: string;
   email: string;
-  product_id: number;
-  product_name: string;
-  product_variant: string;
-  product_highlights: string;
-  bank_redirect_url: string;
-  channel_code: string;
-  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected';
+  mobile: string;
+  status: string;
   created_at: string;
 }
 
@@ -35,7 +29,7 @@ const AdminLeads = () => {
   const fetchLeads = async () => {
     try {
       // Fetch from external cards API
-      const response = await fetch('https://cards.finonest.com/api/leads', {
+      const response = await fetch('https://cards.finonest.com/api/leads?channel_code=PARTNER_001', {
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
           'Content-Type': 'application/json'
@@ -44,20 +38,20 @@ const AdminLeads = () => {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.data && Array.isArray(data.data)) {
+        if (data.status === 200 && data.data && Array.isArray(data.data)) {
           setLeads(data.data);
         } else if (Array.isArray(data)) {
           setLeads(data);
         }
       }
     } catch (error) {
-      console.error('External cards API failed:', error);
+      // console.error('External cards API failed:', error);
     }
     
     setLoading(false);
   };
 
-  const updateLeadStatus = async (leadId: number, status: string) => {
+  const updateLeadStatus = async (leadId: string, status: string) => {
     try {
       const response = await fetch(`https://cards.finonest.com/api/leads/${leadId}/status`, {
         method: 'PUT',
@@ -70,7 +64,7 @@ const AdminLeads = () => {
 
       if (response.ok) {
         setLeads(leads.map(lead => 
-          lead.id === leadId ? { ...lead, status: status as any } : lead
+          lead.lead_id === leadId ? { ...lead, status } : lead
         ));
         toast({
           title: "Success",
@@ -124,12 +118,12 @@ const AdminLeads = () => {
         ) : (
           <div className="space-y-4">
             {leads.map((lead) => (
-              <div key={lead.id} className="border rounded-lg p-4">
+              <div key={lead.lead_id} className="border rounded-lg p-4">
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold">{lead.name}</h3>
-                      <span className="text-xs text-muted-foreground">#{lead.id}</span>
+                      <h3 className="font-semibold">{lead.customer_name}</h3>
+                      <span className="text-xs text-muted-foreground">#{lead.lead_id}</span>
                       <Badge className={getStatusColor(lead.status)}>
                         {lead.status}
                       </Badge>
@@ -145,52 +139,10 @@ const AdminLeads = () => {
                         {lead.email}
                       </div>
                       <div className="flex items-center gap-1">
-                        <CreditCard className="w-3 h-3" />
-                        {lead.product_name} - {lead.product_variant}
-                      </div>
-                      <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {new Date(lead.created_at).toLocaleDateString()}
                       </div>
                     </div>
-
-                    {lead.product_highlights && (
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {lead.product_highlights}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="flex flex-col gap-2">
-                    <Select 
-                      value={lead.status} 
-                      onValueChange={(value) => updateLeadStatus(lead.id, value)}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="new">New</SelectItem>
-                        <SelectItem value="contacted">Contacted</SelectItem>
-                        <SelectItem value="qualified">Qualified</SelectItem>
-                        <SelectItem value="converted">Converted</SelectItem>
-                        <SelectItem value="rejected">Rejected</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    {lead.bank_redirect_url && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => {
-                          const urlWithLeadId = `${lead.bank_redirect_url}?lead_id=${lead.id}`;
-                          window.open(urlWithLeadId, '_blank');
-                        }}
-                      >
-                        <ExternalLink className="w-3 h-3 mr-1" />
-                        Bank
-                      </Button>
-                    )}
                   </div>
                 </div>
               </div>
