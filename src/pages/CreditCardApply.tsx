@@ -180,7 +180,7 @@ const CreditCardApply = () => {
           {/* Back Button */}
           <Button 
             variant="ghost" 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/credit-cards')}
             className="mb-6 flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
