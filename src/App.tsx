@@ -16,6 +16,7 @@ import UsedCarLoan from "./pages/services/UsedCarLoan";
 import PersonalLoan from "./pages/services/PersonalLoan";
 import BusinessLoan from "./pages/services/BusinessLoan";
 import CreditCards from "./pages/services/CreditCards";
+import CreditCardsStandalone from "./pages/CreditCardsUpdated";
 import LoanAgainstProperty from "./pages/services/LoanAgainstProperty";
 import FinobizzLearning from "./pages/services/FinobizzLearning";
 import CibilCheck from "./pages/CibilCheck";
@@ -80,6 +81,7 @@ const App = () => {
                 <Route path="/services/personal-loan" element={<PersonalLoan />} />
                 <Route path="/services/business-loan" element={<BusinessLoan />} />
                 <Route path="/services/credit-cards" element={<CreditCards />} />
+                <Route path="/credit-cards" element={<CreditCardsStandalone />} />
                 <Route path="/services/loan-against-property" element={<LoanAgainstProperty />} />
                 <Route path="/services/lap" element={<LoanAgainstProperty />} />
                 <Route path="/services/finobizz-learning" element={<FinobizzLearning />} />

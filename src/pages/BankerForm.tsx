@@ -24,6 +24,13 @@ const BankerForm = () => {
     reporting_to: ""
   });
 
+  const [newManager, setNewManager] = useState({
+    name: "",
+    mobile: "",
+    email: "",
+    profile: ""
+  });
+
   const [territories, setTerritories] = useState([{
     id: 1,
     name: "",
@@ -123,6 +130,7 @@ const BankerForm = () => {
     
     const submitData = {
       ...formData,
+      newManager: formData.reporting_to === "new" ? newManager : null,
       territories: territories.map(t => ({
         ...t,
         caseTypes: t.caseTypes.filter(ct => ct.enabled)
@@ -153,6 +161,12 @@ const BankerForm = () => {
           official_email: "",
           profile: "",
           reporting_to: ""
+        });
+        setNewManager({
+          name: "",
+          mobile: "",
+          email: "",
+          profile: ""
         });
         setTerritories([{
           id: 1,
@@ -292,6 +306,59 @@ const BankerForm = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  
+                  {/* New Manager Form */}
+                  {formData.reporting_to === "new" && (
+                    <div className="md:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                      <h4 className="font-medium mb-4">Add New Manager Details</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Manager Name *</label>
+                          <Input
+                            value={newManager.name}
+                            onChange={(e) => setNewManager({...newManager, name: e.target.value})}
+                            placeholder="Enter manager name"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Manager Profile *</label>
+                          <Select value={newManager.profile} onValueChange={(value) => setNewManager({...newManager, profile: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Profile" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {profiles.map(profile => (
+                                <SelectItem key={profile} value={profile}>
+                                  {profile.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Mobile Number *</label>
+                          <Input
+                            type="tel"
+                            value={newManager.mobile}
+                            onChange={(e) => setNewManager({...newManager, mobile: e.target.value})}
+                            placeholder="+91 98765 43210"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Email ID *</label>
+                          <Input
+                            type="email"
+                            value={newManager.email}
+                            onChange={(e) => setNewManager({...newManager, email: e.target.value})}
+                            placeholder="Enter email address"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
