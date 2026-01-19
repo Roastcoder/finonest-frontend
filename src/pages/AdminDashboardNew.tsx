@@ -27,6 +27,7 @@ import AdminSettings from "./admin/AdminSettings";
 import AdminBlogs from "./admin/AdminBlogs";
 import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
+import AdminLeads from "./admin/AdminLeads";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ const AdminDashboard = () => {
   const getActiveTab = () => {
     const path = location.pathname;
     if (path.includes('/applications')) return 'applications';
+    if (path.includes('/leads')) return 'leads';
     if (path.includes('/contact-forms')) return 'contacts';
     if (path.includes('/users')) return 'users';
     if (path.includes('/analytics')) return 'dashboard';
@@ -84,6 +86,8 @@ const AdminDashboard = () => {
         return <AdminAnalytics />;
       case 'applications':
         return <AdminApplications />;
+      case 'leads':
+        return <AdminLeads />;
       case 'contacts':
         return <AdminContactForms />;
       case 'users':
@@ -156,6 +160,15 @@ const AdminDashboard = () => {
             >
               <FileText className="w-4 h-4" />
               Applications
+            </Link>
+            <Link 
+              to="/admin/leads"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'leads' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              Credit Card Leads
             </Link>
             <Link 
               to="/admin/contact-forms"
@@ -237,6 +250,7 @@ const AdminDashboard = () => {
                 <h1 className="text-2xl font-bold">
                   {activeTab === 'dashboard' && 'Admin Dashboard'}
                   {activeTab === 'applications' && 'Applications Management'}
+                  {activeTab === 'leads' && 'Credit Card Leads'}
                   {activeTab === 'contacts' && 'Contact Forms'}
                   {activeTab === 'users' && 'Users Management'}
                   {activeTab === 'blogs' && 'Blog Management'}
@@ -247,6 +261,7 @@ const AdminDashboard = () => {
                 <p className="text-muted-foreground">
                   {activeTab === 'dashboard' && 'Overview of system performance and statistics'}
                   {activeTab === 'applications' && 'Manage and review loan applications'}
+                  {activeTab === 'leads' && 'Manage credit card application leads and track status'}
                   {activeTab === 'contacts' && 'Manage contact form submissions'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}

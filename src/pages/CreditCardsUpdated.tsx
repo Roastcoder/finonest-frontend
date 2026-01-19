@@ -22,16 +22,7 @@ interface Product {
 const CreditCards = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [showThankYou, setShowThankYou] = useState(false);
   const { toast } = useToast();
-  
-  const [formData, setFormData] = useState({
-    name: "",
-    mobile: "",
-    email: ""
-  });
 
   useEffect(() => {
     fetchProducts();
@@ -96,120 +87,11 @@ const CreditCards = () => {
   };
 
   const handleApply = (product: Product) => {
-    setSelectedProduct(product);
-    setShowForm(true);
+    // Create URL with product data
+    const productData = encodeURIComponent(JSON.stringify(product));
+    const url = `/credit-card-apply?product=${productData}`;
+    window.open(url, '_blank');
   };
-
-  const submitLead = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!selectedProduct) return;
-    
-    try {
-      // Try external API first
-      const response = await fetch('https://cards.finonest.com/api/leads', {
-        method: 'POST',
-        headers: {
-          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...formData,
-          product_id: selectedProduct.id,
-          channel_code: 'PARTNER_001'
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok && (data.success || data.status === 201)) {
-        setFormData({ name: "", mobile: "", email: "" });
-        setShowForm(false);
-        setShowThankYou(true);
-        return;
-      }
-    } catch (error) {
-      console.error('External API failed:', error);
-    }
-    
-    // Fallback to local API if external fails
-    try {
-      const response = await fetch('https://api.finonest.com/api/leads', {
-        method: 'POST',
-        headers: {
-          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...formData,
-          product_id: selectedProduct.id,
-          channel_code: 'FINONEST_WEBSITE'
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
-        setFormData({ name: "", mobile: "", email: "" });
-        setShowForm(false);
-        setShowThankYou(true);
-      } else {
-        toast({
-          title: "Error",
-          description: data.error || "Failed to submit application",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Network error occurred",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Thank You Page
-  if (showThankYou && selectedProduct) {
-    return (
-      <>
-        <Navbar />
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-          <Card className="w-full max-w-md text-center">
-            <CardContent className="pt-8 pb-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-green-600 mb-2">Thank You!</h1>
-              <p className="text-muted-foreground mb-6">
-                Your application for <strong>{selectedProduct.name}</strong> has been submitted successfully.
-                We'll contact you within 24 hours.
-              </p>
-              <div className="space-y-3">
-                <Button 
-                  onClick={() => window.open(selectedProduct.bank_redirect_url, '_blank')}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                >
-                  Visit {selectedProduct.variant} Website
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setShowThankYou(false);
-                    setSelectedProduct(null);
-                  }}
-                  className="w-full"
-                >
-                  Apply for Another Card
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <Footer />
-      </>
-    );
-  }
 
   if (loading) {
     return (
@@ -238,13 +120,13 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-32 rounded-t-lg overflow-hidden">
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
                     <img 
-                      src={product.card_image} 
+                      src={product.variant_image || product.card_image} 
                       alt={product.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain bg-gray-50"
                       onError={(e) => {
-                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
+                        e.currentTarget.src = product.card_image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
                       }}
                     />
                   </div>
@@ -265,13 +147,13 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-32 rounded-t-lg overflow-hidden">
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
                     <img 
-                      src={product.card_image} 
+                      src={product.variant_image || product.card_image} 
                       alt={product.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain bg-gray-50"
                       onError={(e) => {
-                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
+                        e.currentTarget.src = product.card_image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
                       }}
                     />
                   </div>

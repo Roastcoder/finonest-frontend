@@ -17,6 +17,7 @@ import PersonalLoan from "./pages/services/PersonalLoan";
 import BusinessLoan from "./pages/services/BusinessLoan";
 import CreditCards from "./pages/services/CreditCards";
 import CreditCardsStandalone from "./pages/CreditCardsUpdated";
+import CreditCardApply from "./pages/CreditCardApply";
 import LoanAgainstProperty from "./pages/services/LoanAgainstProperty";
 import FinobizzLearning from "./pages/services/FinobizzLearning";
 import CibilCheck from "./pages/CibilCheck";
@@ -82,6 +83,7 @@ const App = () => {
                 <Route path="/services/business-loan" element={<BusinessLoan />} />
                 <Route path="/services/credit-cards" element={<CreditCards />} />
                 <Route path="/credit-cards" element={<CreditCardsStandalone />} />
+                <Route path="/credit-card-apply" element={<CreditCardApply />} />
                 <Route path="/services/loan-against-property" element={<LoanAgainstProperty />} />
                 <Route path="/services/lap" element={<LoanAgainstProperty />} />
                 <Route path="/services/finobizz-learning" element={<FinobizzLearning />} />
@@ -101,6 +103,7 @@ const App = () => {
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/analytics" element={<AdminDashboard />} />
                 <Route path="/admin/applications" element={<AdminDashboard />} />
+                <Route path="/admin/leads" element={<AdminDashboard />} />
                 <Route path="/admin/contact-forms" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<AdminDashboard />} />
                 <Route path="/admin/blogs" element={<AdminDashboard />} />

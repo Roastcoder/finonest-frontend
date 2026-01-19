@@ -53,9 +53,6 @@ const Navbar = () => {
       name: "Credit Cards",
       href: "/credit-cards"
     }, {
-      name: "Credit Cards (Service)",
-      href: "/services/credit-cards"
-    }, {
       name: "Finobizz Learning",
       href: "/services/finobizz-learning"
     }]
