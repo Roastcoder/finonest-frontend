@@ -156,13 +156,17 @@ const Blog = () => {
                     <div className="relative h-48 overflow-hidden bg-muted">
                       {post.image_url ? (
                         <img
-                          src={post.image_url}
+                          src={post.image_url.startsWith('http') ? post.image_url : `https://api.finonest.com${post.image_url}`}
                           alt={`Featured image for ${post.title}`}
                           loading="lazy"
                           decoding="async"
                           width="400"
                           height="200"
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#f3f4f6"/><text x="200" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
+                          }}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">

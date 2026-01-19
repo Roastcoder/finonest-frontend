@@ -4,11 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Plus, Trash2 } from "lucide-react";
+import { MapPin, Plus, Trash2, Users } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const BankerForm = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [lenders, setLenders] = useState([]);
+  const [managers, setManagers] = useState([]);
+  const { toast } = useToast();
+  
   const [formData, setFormData] = useState({
     lender_id: "",
     banker_name: "",
@@ -25,16 +31,43 @@ const BankerForm = () => {
     latitude: "",
     longitude: "",
     address: "",
-    caseTypes: []
+    caseTypes: [
+      { type: 'sale-purchase', enabled: false, remarks: '', loan_capping: '' },
+      { type: 'normal-refinance', enabled: false, remarks: '', loan_capping: '' },
+      { type: 'balance-transfer', enabled: false, remarks: '', loan_capping: '' }
+    ]
   }]);
 
-  const lenders = [
-    { id: 1, name: 'HDFC Bank', code: 'hdfc', email_domain: '@hdfcbank.com' },
-    { id: 2, name: 'ICICI Bank', code: 'icici', email_domain: '@icicibank.com' },
-    { id: 3, name: 'State Bank of India', code: 'sbi', email_domain: '@sbi.co.in' },
-    { id: 4, name: 'Axis Bank', code: 'axis', email_domain: '@axisbank.com' },
-    { id: 5, name: 'Kotak Mahindra Bank', code: 'kotak', email_domain: '@kotak.com' }
-  ];
+  useEffect(() => {
+    fetchLenders();
+    if (formData.lender_id) {
+      fetchManagers();
+    }
+  }, [formData.lender_id]);
+
+  const fetchLenders = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/bankers/lenders');
+      const data = await response.json();
+      if (data.success) {
+        setLenders(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch lenders:', error);
+    }
+  };
+
+  const fetchManagers = async () => {
+    try {
+      const response = await fetch(`https://api.finonest.com/api/bankers?lender_id=${formData.lender_id}`);
+      const data = await response.json();
+      if (data.success) {
+        setManagers(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch managers:', error);
+    }
+  };
 
   const profiles = [
     'sales-executive',
@@ -54,8 +87,25 @@ const BankerForm = () => {
       latitude: "",
       longitude: "",
       address: "",
-      caseTypes: []
+      caseTypes: [
+        { type: 'sale-purchase', enabled: false, remarks: '', loan_capping: '' },
+        { type: 'normal-refinance', enabled: false, remarks: '', loan_capping: '' },
+        { type: 'balance-transfer', enabled: false, remarks: '', loan_capping: '' }
+      ]
     }]);
+  };
+
+  const updateCaseType = (territoryId: number, caseIndex: number, field: string, value: any) => {
+    setTerritories(territories.map(t => 
+      t.id === territoryId 
+        ? {
+            ...t, 
+            caseTypes: t.caseTypes.map((ct, idx) => 
+              idx === caseIndex ? { ...ct, [field]: value } : ct
+            )
+          }
+        : t
+    ));
   };
 
   const removeTerritory = (id: number) => {
@@ -73,11 +123,14 @@ const BankerForm = () => {
     
     const submitData = {
       ...formData,
-      territories: territories
+      territories: territories.map(t => ({
+        ...t,
+        caseTypes: t.caseTypes.filter(ct => ct.enabled)
+      }))
     };
 
     try {
-      const response = await fetch('https://api.finonest.com/api/banker-form', {
+      const response = await fetch('https://api.finonest.com/process-banker-form.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,8 +138,13 @@ const BankerForm = () => {
         body: JSON.stringify(submitData)
       });
 
-      if (response.ok) {
-        alert('Banker information submitted successfully!');
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        toast({
+          title: "Success",
+          description: "Banker information submitted successfully!",
+        });
         // Reset form
         setFormData({
           lender_id: "",
@@ -103,13 +161,26 @@ const BankerForm = () => {
           latitude: "",
           longitude: "",
           address: "",
-          caseTypes: []
+          caseTypes: [
+            { type: 'sale-purchase', enabled: false, remarks: '', loan_capping: '' },
+            { type: 'normal-refinance', enabled: false, remarks: '', loan_capping: '' },
+            { type: 'balance-transfer', enabled: false, remarks: '', loan_capping: '' }
+          ]
         }]);
+        setCurrentStep(1);
       } else {
-        alert('Error submitting form');
+        toast({
+          title: "Error",
+          description: data.error || "Error submitting form",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      alert('Network error occurred');
+      toast({
+        title: "Error",
+        description: "Network error occurred",
+        variant: "destructive",
+      });
     }
   };
 
@@ -137,18 +208,18 @@ const BankerForm = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-3">Lender Name *</label>
-                    <Select value={formData.lender_id} onValueChange={(value) => setFormData({...formData, lender_id: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Lender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {lenders.map(lender => (
-                          <SelectItem key={lender.id} value={lender.id.toString()}>
-                            {lender.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      <Select value={formData.lender_id} onValueChange={(value) => setFormData({...formData, lender_id: value})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Lender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {lenders.map(lender => (
+                            <SelectItem key={lender.id} value={lender.id.toString()}>
+                              {lender.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-3">Name *</label>
@@ -200,6 +271,22 @@ const BankerForm = () => {
                         {profiles.map(profile => (
                           <SelectItem key={profile} value={profile}>
                             {profile.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-3">Reporting Manager</label>
+                    <Select value={formData.reporting_to} onValueChange={(value) => setFormData({...formData, reporting_to: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Manager or Add New" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">+ Add New Manager</SelectItem>
+                        {managers.map(manager => (
+                          <SelectItem key={manager.id} value={manager.id.toString()}>
+                            {manager.banker_name} - {manager.profile}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -294,16 +381,34 @@ const BankerForm = () => {
                         <h4 className="text-lg font-semibold">Type of Cases Open</h4>
                         
                         <div className="space-y-4">
-                          {['Sale Purchase', 'Normal Refinance', 'Balance Transfer'].map((caseType) => (
-                            <div key={caseType} className="border border-gray-200 rounded-lg p-4">
+                          {territory.caseTypes.map((caseType, caseIndex) => (
+                            <div key={caseType.type} className="border border-gray-200 rounded-lg p-4">
                               <label className="flex items-center mb-3">
-                                <input type="checkbox" className="mr-3" />
-                                <span className="font-medium">{caseType}</span>
+                                <input 
+                                  type="checkbox" 
+                                  className="mr-3" 
+                                  checked={caseType.enabled}
+                                  onChange={(e) => updateCaseType(territory.id, caseIndex, 'enabled', e.target.checked)}
+                                />
+                                <span className="font-medium">
+                                  {caseType.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </span>
                               </label>
-                              <div className="ml-6 space-y-3">
-                                <Input placeholder="Remarks" />
-                                <Input type="number" placeholder="Loan Amount Capping" />
-                              </div>
+                              {caseType.enabled && (
+                                <div className="ml-6 space-y-3">
+                                  <Input 
+                                    placeholder="Remarks" 
+                                    value={caseType.remarks}
+                                    onChange={(e) => updateCaseType(territory.id, caseIndex, 'remarks', e.target.value)}
+                                  />
+                                  <Input 
+                                    type="number" 
+                                    placeholder="Loan Amount Capping" 
+                                    value={caseType.loan_capping}
+                                    onChange={(e) => updateCaseType(territory.id, caseIndex, 'loan_capping', e.target.value)}
+                                  />
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>

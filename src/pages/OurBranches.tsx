@@ -35,6 +35,7 @@ const OurBranches = () => {
       const response = await fetch('https://api.finonest.com/api/branches');
       const data = await response.json();
       if (response.ok) {
+        console.log('Fetched branches:', data.branches);
         setBranches(data.branches || []);
       }
     } catch (error) {
@@ -78,26 +79,29 @@ const OurBranches = () => {
                   />
                   
                   {/* Branch Pins */}
-                  {branches.filter(branch => branch.x_position && branch.y_position).map((branch) => (
-                    <div
-                      key={branch.id}
-                      className="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-transform group"
-                      style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
-                      onMouseEnter={() => setHoveredBranch(branch)}
-                      onMouseLeave={() => setHoveredBranch(null)}
-                      onClick={() => openInMaps(branch)}
-                    >
-                      <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" />
-                      
-                      {hoveredBranch?.id === branch.id && (
-                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
-                          <p className="font-semibold text-sm text-gray-900">{branch.name}</p>
-                          <p className="text-xs text-gray-600 mb-1">{branch.city}, {branch.state}</p>
-                          <p className="text-xs text-blue-600 font-medium">Click for directions</p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  {branches.filter(branch => branch.x_position && branch.y_position).map((branch) => {
+                    console.log('Rendering pin for:', branch.name, 'at', branch.x_position, branch.y_position);
+                    return (
+                      <div
+                        key={branch.id}
+                        className="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-transform group z-10"
+                        style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                        onMouseEnter={() => setHoveredBranch(branch)}
+                        onMouseLeave={() => setHoveredBranch(null)}
+                        onClick={() => openInMaps(branch)}
+                      >
+                        <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" />
+                        
+                        {hoveredBranch?.id === branch.id && (
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
+                            <p className="font-semibold text-sm text-gray-900">{branch.name}</p>
+                            <p className="text-xs text-gray-600 mb-1">{branch.city}, {branch.state}</p>
+                            <p className="text-xs text-blue-600 font-medium">Click for directions</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -105,7 +109,7 @@ const OurBranches = () => {
 
           {/* Branch List */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {branches.map((branch) => (
+            {branches.filter(branch => !branch.x_position || !branch.y_position).map((branch) => (
               <Card key={branch.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg">{branch.name}</CardTitle>
