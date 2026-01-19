@@ -34,7 +34,7 @@ const AdminLeads = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/admin/leads', {
+      const response = await fetch('/api/admin/leads', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const AdminLeads = () => {
 
   const updateLeadStatus = async (leadId: number, status: string) => {
     try {
-      const response = await fetch(`https://api.finonest.com/api/admin/leads/${leadId}/status`, {
+      const response = await fetch(`/api/admin/leads/${leadId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

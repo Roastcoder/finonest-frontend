@@ -39,17 +39,55 @@ const CreditCards = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/products', {
+      const response = await fetch('https://yoursite.com/api/products', {
         headers: {
-          'X-API-Key': import.meta.env.VITE_API_KEY || 'FINONEST_API_KEY_2024'
+          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681'
         }
       });
       const data = await response.json();
       if (data.status === 200) {
         setProducts(data.data);
+      } else {
+        throw new Error('API returned error');
       }
     } catch (error) {
       console.error('Failed to fetch products:', error);
+      // Fallback data if API fails
+      setProducts([
+        {
+          id: 1,
+          name: 'Classic Credit Card',
+          category: 'Credit Card',
+          variant: 'IDFC First Bank',
+          commission_rate: '1400.00',
+          card_image: 'https://via.placeholder.com/300x200/1e40af/ffffff?text=IDFC+Classic',
+          variant_image: 'assets/cards/variant_idfc.jpg',
+          product_highlights: 'Lifetime Free: No joining or annual fees. Cashback on all purchases. Fuel surcharge waiver. Welcome bonus points.',
+          bank_redirect_url: 'https://www.idfcfirstbank.com/credit-card/classic'
+        },
+        {
+          id: 2,
+          name: 'Premium Credit Card',
+          category: 'Credit Card',
+          variant: 'HDFC Bank',
+          commission_rate: '2500.00',
+          card_image: 'https://via.placeholder.com/300x200/dc2626/ffffff?text=HDFC+Premium',
+          variant_image: 'assets/cards/variant_hdfc.jpg',
+          product_highlights: 'Premium benefits with airport lounge access. High reward points on dining and shopping. Complimentary insurance coverage.',
+          bank_redirect_url: 'https://www.hdfcbank.com/credit-card/premium'
+        },
+        {
+          id: 3,
+          name: 'Business Credit Card',
+          category: 'Credit Card',
+          variant: 'Axis Bank',
+          commission_rate: '1800.00',
+          card_image: 'https://via.placeholder.com/300x200/059669/ffffff?text=Axis+Business',
+          variant_image: 'assets/cards/variant_axis.jpg',
+          product_highlights: 'Designed for business expenses. Higher credit limits. Business reward points. Expense management tools.',
+          bank_redirect_url: 'https://www.axisbank.com/credit-card/business'
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -66,16 +104,16 @@ const CreditCards = () => {
     if (!selectedProduct) return;
     
     try {
-      const response = await fetch('https://api.finonest.com/api/leads', {
+      const response = await fetch('https://yoursite.com/api/leads', {
         method: 'POST',
         headers: {
-          'X-API-Key': import.meta.env.VITE_API_KEY || 'FINONEST_API_KEY_2024',
+          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...formData,
           product_id: selectedProduct.id,
-          channel_code: 'FINONEST_WEBSITE'
+          channel_code: 'PARTNER_001'
         })
       });
       
