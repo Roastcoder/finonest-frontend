@@ -106,64 +106,70 @@ const OurBranches = () => {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200">
-                  {/* India Map Background */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative w-80 h-80 opacity-20">
-                      <svg viewBox="0 0 400 400" className="w-full h-full">
-                        <path d="M100 50 L300 50 L350 100 L350 300 L300 350 L100 350 L50 300 L50 100 Z" 
-                              fill="currentColor" stroke="currentColor" strokeWidth="2" />
-                      </svg>
+                  {/* Interactive Map with better styling */}
+                  <div className="absolute inset-0">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15076.353462893982!2d72.8776559!3d19.0760!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c9c676b6b5c7%3A0x4c2b3d1c5e1a8b9c!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1234567890"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="rounded-b-lg"
+                    ></iframe>
+                    
+                    {/* Branch markers overlay */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {branches.map((branch, index) => {
+                        const positions = [
+                          { left: '25%', top: '40%' }, // Mumbai
+                          { left: '45%', top: '25%' }, // Delhi
+                          { left: '55%', top: '65%' }, // Bangalore
+                          { left: '65%', top: '75%' }, // Chennai
+                          { left: '35%', top: '50%' }, // Pune
+                          { left: '60%', top: '45%' }, // Hyderabad
+                          { left: '70%', top: '35%' }, // Kolkata
+                          { left: '20%', top: '30%' }  // Ahmedabad
+                        ];
+                        const position = positions[index] || { left: '50%', top: '50%' };
+                        
+                        return (
+                          <div
+                            key={branch.id}
+                            className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 pointer-events-auto ${
+                              hoveredBranch?.id === branch.id ? 'scale-125 z-20' : 'z-10'
+                            }`}
+                            style={position}
+                            onMouseEnter={() => setHoveredBranch(branch)}
+                            onMouseLeave={() => setHoveredBranch(null)}
+                            onClick={() => openInMaps(branch)}
+                          >
+                            <div className="relative">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg transition-all duration-300 animate-pulse ${
+                                hoveredBranch?.id === branch.id ? 'bg-red-600 shadow-xl w-10 h-10' : 'bg-red-500'
+                              }`}>
+                                {index + 1}
+                              </div>
+                              
+                              {hoveredBranch?.id === branch.id && (
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-2 rounded-lg shadow-xl border min-w-48 z-30 animate-fade-in">
+                                  <p className="font-semibold text-sm text-gray-900">{branch.name}</p>
+                                  <p className="text-xs text-gray-600 mb-1">{branch.city}, {branch.state}</p>
+                                  <p className="text-xs text-blue-600 font-medium">Click for directions</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                   
-                  {/* Branch markers overlay */}
-                  <div className="absolute inset-0">
-                    {branches.map((branch, index) => {
-                      const positions = [
-                        { left: '25%', top: '40%' }, // Mumbai
-                        { left: '45%', top: '25%' }, // Delhi
-                        { left: '55%', top: '65%' }, // Bangalore
-                        { left: '65%', top: '75%' }, // Chennai
-                        { left: '35%', top: '50%' }, // Pune
-                        { left: '60%', top: '45%' }  // Hyderabad
-                      ];
-                      const position = positions[index] || { left: '50%', top: '50%' };
-                      
-                      return (
-                        <div
-                          key={branch.id}
-                          className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${hoveredBranch?.id === branch.id ? 'scale-125 z-20' : 'z-10'}`}
-                          style={position}
-                          onMouseEnter={() => setHoveredBranch(branch)}
-                          onMouseLeave={() => setHoveredBranch(null)}
-                          onClick={() => openInMaps(branch)}
-                        >
-                          <div className="relative">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg transition-all duration-300 ${
-                              hoveredBranch?.id === branch.id ? 'bg-red-600 shadow-xl' : 'bg-red-500'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-red-500"></div>
-                            
-                            {hoveredBranch?.id === branch.id && (
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white p-3 rounded-lg shadow-xl border min-w-64 z-30">
-                                <p className="font-semibold text-sm text-gray-900">{branch.name}</p>
-                                <p className="text-xs text-gray-600 mb-1">{branch.city}, {branch.state}</p>
-                                <p className="text-xs text-blue-600 font-medium">Click to view on Google Maps</p>
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  
                   {/* Map Instructions */}
-                  <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg">
-                    <p className="text-sm font-medium text-gray-800 mb-1">Interactive Map View</p>
-                    <p className="text-xs text-gray-600">Hover over markers for details • Click to open in Google Maps</p>
+                  <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border">
+                    <p className="text-sm font-medium text-gray-800 mb-1">🗺️ Interactive Map</p>
+                    <p className="text-xs text-gray-600">Click markers for directions</p>
                   </div>
                 </div>
               </CardContent>
