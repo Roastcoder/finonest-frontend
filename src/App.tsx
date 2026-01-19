@@ -34,6 +34,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import BankingPartnersPage from "./pages/BankingPartnersPage";
 import OurBranches from "./pages/OurBranches";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
