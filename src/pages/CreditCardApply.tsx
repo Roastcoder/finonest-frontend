@@ -38,7 +38,7 @@ const CreditCardApply = () => {
         const productData = JSON.parse(decodeURIComponent(productParam));
         setProduct(productData);
       } catch (error) {
-        console.error('Failed to parse product data:', error);
+        // console.error('Failed to parse product data:', error);
       }
     }
   }, [searchParams]);
@@ -78,7 +78,7 @@ const CreditCardApply = () => {
         const responseText = await response.text();
         // Check if response is valid JSON
         if (responseText.includes('Parse error') || responseText.includes('<b>')) {
-          console.error('API returned PHP error:', responseText);
+          // console.error('API returned PHP error:', responseText);
           throw new Error('Server error');
         }
         const data = JSON.parse(responseText);
@@ -99,12 +99,12 @@ const CreditCardApply = () => {
               if (match) leadId = match[1];
             }
           } catch (e) {
-            console.error('Failed to parse error response:', e);
+            // console.error('Failed to parse error response:', e);
           }
         }
       }
     } catch (error) {
-      console.error('External cards API failed:', error);
+      // console.error('External cards API failed:', error);
     }
     
     setLeadId(leadId || Date.now().toString());

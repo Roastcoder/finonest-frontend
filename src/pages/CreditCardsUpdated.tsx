@@ -42,7 +42,7 @@ const CreditCards = () => {
         throw new Error('API returned error');
       }
     } catch (error) {
-      console.error('Failed to fetch products:', error);
+      // console.error('Failed to fetch products:', error);
       // Fallback data if API fails
       setProducts([
         {
