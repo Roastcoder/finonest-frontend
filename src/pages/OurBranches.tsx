@@ -22,101 +22,29 @@ interface Branch {
 }
 
 const OurBranches = () => {
-  const [branches, setBranches] = useState<Branch[]>([
-    {
-      id: 1,
-      name: "Finonest Mumbai Central",
-      address: "123 Business District, Nariman Point",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400001",
-      phone: "+91-22-12345678",
-      email: "mumbai@finonest.com",
-      latitude: 18.9220,
-      longitude: 72.8347,
-      manager_name: "Rajesh Kumar",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    },
-    {
-      id: 2,
-      name: "Finonest Delhi Branch",
-      address: "456 Connaught Place, Central Delhi",
-      city: "New Delhi",
-      state: "Delhi",
-      pincode: "110001",
-      phone: "+91-11-87654321",
-      email: "delhi@finonest.com",
-      latitude: 28.6315,
-      longitude: 77.2167,
-      manager_name: "Priya Sharma",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    },
-    {
-      id: 3,
-      name: "Finonest Bangalore Tech Hub",
-      address: "789 MG Road, Brigade Road",
-      city: "Bangalore",
-      state: "Karnataka",
-      pincode: "560001",
-      phone: "+91-80-11223344",
-      email: "bangalore@finonest.com",
-      latitude: 12.9716,
-      longitude: 77.5946,
-      manager_name: "Suresh Reddy",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    },
-    {
-      id: 4,
-      name: "Finonest Chennai Branch",
-      address: "101 Anna Salai, T. Nagar",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      pincode: "600017",
-      phone: "+91-44-55667788",
-      email: "chennai@finonest.com",
-      latitude: 13.0827,
-      longitude: 80.2707,
-      manager_name: "Lakshmi Iyer",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    },
-    {
-      id: 5,
-      name: "Finonest Pune Office",
-      address: "202 FC Road, Shivajinagar",
-      city: "Pune",
-      state: "Maharashtra",
-      pincode: "411005",
-      phone: "+91-20-99887766",
-      email: "pune@finonest.com",
-      latitude: 18.5204,
-      longitude: 73.8567,
-      manager_name: "Amit Patil",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    },
-    {
-      id: 6,
-      name: "Finonest Hyderabad Center",
-      address: "303 Banjara Hills, Road No. 12",
-      city: "Hyderabad",
-      state: "Telangana",
-      pincode: "500034",
-      phone: "+91-40-44332211",
-      email: "hyderabad@finonest.com",
-      latitude: 17.3850,
-      longitude: 78.4867,
-      manager_name: "Venkat Rao",
-      working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
-    }
-  ]);
-  const [loading, setLoading] = useState(false);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [hoveredBranch, setHoveredBranch] = useState<Branch | null>(null);
+
+  useEffect(() => {
+    fetchBranches();
+  }, []);
+
+  const fetchBranches = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/branches');
+      const data = await response.json();
+
+      if (response.ok) {
+        setBranches(data.branches || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch branches:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openInMaps = (branch: Branch) => {
     const url = `https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`;
@@ -135,6 +63,23 @@ const OurBranches = () => {
     acc[branch.state].push(branch);
     return acc;
   }, {} as Record<string, Branch[]>);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-20">
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Branches</h1>
+              <p className="text-xl text-gray-600">Loading branches...</p>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
