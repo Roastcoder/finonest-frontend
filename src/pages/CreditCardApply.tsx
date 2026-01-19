@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "react-router-dom";
-import { CreditCard, Phone, Mail, User, CheckCircle, Star, Shield, Gift } from "lucide-react";
+import { CreditCard, Phone, Mail, User, CheckCircle, Star, Shield, Gift, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -24,6 +25,7 @@ const CreditCardApply = () => {
   const [showThankYou, setShowThankYou] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     name: "",
