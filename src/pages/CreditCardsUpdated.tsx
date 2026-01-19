@@ -11,8 +11,8 @@ interface Product {
   category: string;
   variant: string;
   commission_rate: string;
-  card_image: string;
-  variant_image: string;
+  card_image: string | null;
+  variant_image: string | null;
   product_highlights: string;
   bank_redirect_url: string;
 }
@@ -34,60 +34,33 @@ const CreditCards = () => {
         }
       });
       const data = await response.json();
+      console.log('API Response:', data);
       if (data.status === 200) {
-        // Filter only credit cards
         const creditCards = data.data.filter(product => product.category === 'Credit Card');
+        console.log('Credit Cards found:', creditCards.length);
         setProducts(creditCards);
       } else {
         throw new Error('API returned error');
       }
     } catch (error) {
-      // Fallback data if API fails
-      setProducts([
-        {
-          id: 1,
-          name: 'Classic Credit Card',
-          category: 'Credit Card',
-          variant: 'IDFC First Bank',
-          commission_rate: '1400.00',
-          card_image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop',
-          variant_image: 'assets/cards/variant_idfc.jpg',
-          product_highlights: 'Lifetime Free: No joining or annual fees. Cashback on all purchases. Fuel surcharge waiver. Welcome bonus points.',
-          bank_redirect_url: 'https://www.idfcfirstbank.com/credit-card/classic'
-        },
-        {
-          id: 2,
-          name: 'Premium Credit Card',
-          category: 'Credit Card',
-          variant: 'HDFC Bank',
-          commission_rate: '2500.00',
-          card_image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=200&fit=crop',
-          variant_image: 'assets/cards/variant_hdfc.jpg',
-          product_highlights: 'Premium benefits with airport lounge access. High reward points on dining and shopping. Complimentary insurance coverage.',
-          bank_redirect_url: 'https://www.hdfcbank.com/credit-card/premium'
-        },
-        {
-          id: 3,
-          name: 'Business Credit Card',
-          category: 'Credit Card',
-          variant: 'Axis Bank',
-          commission_rate: '1800.00',
-          card_image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=300&h=200&fit=crop',
-          variant_image: 'assets/cards/variant_axis.jpg',
-          product_highlights: 'Designed for business expenses. Higher credit limits. Business reward points. Expense management tools.',
-          bank_redirect_url: 'https://www.axisbank.com/credit-card/business'
-        }
-      ]);
+      console.error('API Error:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleApply = (product: Product) => {
-    // Create URL with product data
     const productData = encodeURIComponent(JSON.stringify(product));
     const url = `/credit-card-apply?product=${productData}`;
     window.open(url, '_blank');
+  };
+
+  const getImageSrc = (product: Product) => {
+    if (product.card_image && product.card_image !== 'null') {
+      return product.card_image;
+    }
+    return "/assets/service-credit-cards.jpg";
   };
 
   if (loading) {
@@ -105,7 +78,6 @@ const CreditCards = () => {
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-20">
-        {/* Products Grid */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Credit Cards</h1>
@@ -119,16 +91,12 @@ const CreditCards = () => {
                 <CardContent className="p-0">
                   <div className="w-full h-48 rounded-t-lg overflow-hidden">
                     <img 
-                      src={product.variant_image || product.card_image} 
+                      src={getImageSrc(product)} 
                       alt={product.name}
                       className="w-full h-full object-contain bg-gray-50"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.classList.add('flex', 'items-center', 'justify-center', 'bg-gray-50');
-                          parent.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>';
-                        }
+                        console.log('Image failed to load:', product.card_image);
+                        e.currentTarget.src = "/assets/service-credit-cards.jpg";
                       }}
                     />
                   </div>
@@ -151,16 +119,12 @@ const CreditCards = () => {
                 <CardContent className="p-0">
                   <div className="w-full h-48 rounded-t-lg overflow-hidden">
                     <img 
-                      src={product.variant_image || product.card_image} 
+                      src={getImageSrc(product)} 
                       alt={product.name}
                       className="w-full h-full object-contain bg-gray-50"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.classList.add('flex', 'items-center', 'justify-center', 'bg-gray-50');
-                          parent.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>';
-                        }
+                        console.log('Image failed to load:', product.card_image);
+                        e.currentTarget.src = "/assets/service-credit-cards.jpg";
                       }}
                     />
                   </div>
