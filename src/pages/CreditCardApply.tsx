@@ -64,8 +64,8 @@ const CreditCardApply = () => {
     let leadId = null;
 
     try {
-      // Save to internal API first
-      const internalResponse = await fetch('https://api.finonest.com/api/leads', {
+      // Save to external cards API
+      const response = await fetch('https://cards.finonest.com/api/leads', {
         method: 'POST',
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
@@ -74,30 +74,9 @@ const CreditCardApply = () => {
         body: JSON.stringify(leadData)
       });
       
-      if (internalResponse.ok) {
-        const internalData = await internalResponse.json();
-        leadId = internalData.lead_id || internalData.id;
-      }
-    } catch (error) {
-      console.error('Internal API failed:', error);
-    }
-
-    try {
-      // Also save to external cards API
-      const externalResponse = await fetch('https://cards.finonest.com/api/leads', {
-        method: 'POST',
-        headers: {
-          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(leadData)
-      });
-      
-      if (externalResponse.ok) {
-        const externalData = await externalResponse.json();
-        if (!leadId) {
-          leadId = externalData.lead_id || externalData.id;
-        }
+      if (response.ok) {
+        const data = await response.json();
+        leadId = data.data?.lead_id || data.lead_id || data.id;
       }
     } catch (error) {
       console.error('External cards API failed:', error);

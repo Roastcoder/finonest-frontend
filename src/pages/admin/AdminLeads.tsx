@@ -34,8 +34,8 @@ const AdminLeads = () => {
 
   const fetchLeads = async () => {
     try {
-      // Fetch from internal API
-      const response = await fetch('https://api.finonest.com/api/leads', {
+      // Fetch from external cards API
+      const response = await fetch('https://cards.finonest.com/api/leads', {
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
           'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const AdminLeads = () => {
         }
       }
     } catch (error) {
-      console.error('Internal API failed:', error);
+      console.error('External cards API failed:', error);
     }
     
     setLoading(false);
@@ -59,7 +59,7 @@ const AdminLeads = () => {
 
   const updateLeadStatus = async (leadId: number, status: string) => {
     try {
-      const response = await fetch(`https://api.finonest.com/api/leads/${leadId}/status`, {
+      const response = await fetch(`https://cards.finonest.com/api/leads/${leadId}/status`, {
         method: 'PUT',
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
