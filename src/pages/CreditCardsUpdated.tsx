@@ -117,8 +117,20 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-48 rounded-t-lg overflow-hidden bg-gray-50 flex items-center justify-center">
-                    <CreditCard className="w-16 h-16 text-gray-400" />
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
+                    <img 
+                      src={product.variant_image || product.card_image} 
+                      alt={product.name}
+                      className="w-full h-full object-contain bg-gray-50"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          parent.classList.add('flex', 'items-center', 'justify-center', 'bg-gray-50');
+                          parent.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>';
+                        }
+                      }}
+                    />
                   </div>
                   <div className="p-4">
                     <h3 className="font-semibold text-sm mb-1">{product.name}</h3>
@@ -137,8 +149,20 @@ const CreditCards = () => {
             {products.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleApply(product)}>
                 <CardContent className="p-0">
-                  <div className="w-full h-48 rounded-t-lg overflow-hidden bg-gray-50 flex items-center justify-center">
-                    <CreditCard className="w-16 h-16 text-gray-400" />
+                  <div className="w-full h-48 rounded-t-lg overflow-hidden">
+                    <img 
+                      src={product.variant_image || product.card_image} 
+                      alt={product.name}
+                      className="w-full h-full object-contain bg-gray-50"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          parent.classList.add('flex', 'items-center', 'justify-center', 'bg-gray-50');
+                          parent.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>';
+                        }
+                      }}
+                    />
                   </div>
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-2">
