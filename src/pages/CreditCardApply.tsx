@@ -65,7 +65,7 @@ const CreditCardApply = () => {
 
     try {
       // Save to external cards API
-      const response = await fetch('https://cards.finonest.com/api/leads', {
+      const response = await fetch('https://cards.finonest.com/api/leads.php', {
         method: 'POST',
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
@@ -75,8 +75,33 @@ const CreditCardApply = () => {
       });
       
       if (response.ok) {
-        const data = await response.json();
+        const responseText = await response.text();
+        // Check if response is valid JSON
+        if (responseText.includes('Parse error') || responseText.includes('<b>')) {
+          console.error('API returned PHP error:', responseText);
+          throw new Error('Server error');
+        }
+        const data = JSON.parse(responseText);
         leadId = data.data?.lead_id || data.lead_id || data.id;
+        // Handle duplicate case - extract lead_id from message
+        if (data.status === 409 && data.message && data.message.includes('Lead ID:')) {
+          const match = data.message.match(/Lead ID: ([A-Z0-9]+)/);
+          if (match) leadId = match[1];
+        }
+      } else {
+        // Handle non-200 responses that might still contain lead_id
+        const responseText = await response.text();
+        if (!responseText.includes('Parse error') && !responseText.includes('<b>')) {
+          try {
+            const data = JSON.parse(responseText);
+            if (data.message && data.message.includes('Lead ID:')) {
+              const match = data.message.match(/Lead ID: ([A-Z0-9]+)/);
+              if (match) leadId = match[1];
+            }
+          } catch (e) {
+            console.error('Failed to parse error response:', e);
+          }
+        }
       }
     } catch (error) {
       console.error('External cards API failed:', error);
@@ -120,8 +145,13 @@ const CreditCardApply = () => {
             <div className="space-y-3">
               <Button 
                 onClick={() => {
-                  const urlWithLeadId = `${product.bank_redirect_url}?lead_id=${leadId}`;
-                  window.open(urlWithLeadId, '_blank');
+                  let redirectUrl = product.bank_redirect_url;
+                  if (redirectUrl.includes('{lead_id}')) {
+                    redirectUrl = redirectUrl.replace('{lead_id}', leadId || '');
+                  } else {
+                    redirectUrl = `${redirectUrl}?lead_id=${leadId}`;
+                  }
+                  window.open(redirectUrl, '_blank');
                 }}
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
