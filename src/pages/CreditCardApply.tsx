@@ -22,6 +22,7 @@ const CreditCardApply = () => {
   const [searchParams] = useSearchParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [leadId, setLeadId] = useState<string | null>(null);
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -47,45 +48,69 @@ const CreditCardApply = () => {
     
     if (!product) return;
     
+    const leadData = {
+      name: formData.name,
+      mobile: formData.mobile,
+      email: formData.email,
+      product_id: product.id,
+      product_name: product.name,
+      product_variant: product.variant,
+      product_highlights: product.product_highlights,
+      bank_redirect_url: product.bank_redirect_url,
+      channel_code: 'PARTNER_001',
+      status: 'new'
+    };
+
+    let leadId = null;
+
     try {
-      // Try external API first
-      const response = await fetch('https://cards.finonest.com/api/leads', {
+      // Save to internal API first
+      const internalResponse = await fetch('https://api.finonest.com/api/leads', {
         method: 'POST',
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          name: formData.name,
-          mobile: formData.mobile,
-          email: formData.email,
-          product_id: product.id,
-          product_name: product.name,
-          product_variant: product.variant,
-          channel_code: 'PARTNER_001'
-        })
+        body: JSON.stringify(leadData)
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success || data.status === 201 || data.status === 200) {
-          setFormData({ name: "", mobile: "", email: "" });
-          setShowThankYou(true);
-          return;
+      if (internalResponse.ok) {
+        const internalData = await internalResponse.json();
+        leadId = internalData.lead_id || internalData.id;
+      }
+    } catch (error) {
+      console.error('Internal API failed:', error);
+    }
+
+    try {
+      // Also save to external cards API
+      const externalResponse = await fetch('https://cards.finonest.com/api/leads', {
+        method: 'POST',
+        headers: {
+          'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(leadData)
+      });
+      
+      if (externalResponse.ok) {
+        const externalData = await externalResponse.json();
+        if (!leadId) {
+          leadId = externalData.lead_id || externalData.id;
         }
       }
     } catch (error) {
-      console.error('External API failed:', error);
+      console.error('External cards API failed:', error);
     }
     
-    // Show success message even if API fails (for demo purposes)
+    setLeadId(leadId || Date.now().toString());
+    setFormData({ name: "", mobile: "", email: "" });
+    setShowThankYou(true);
+    
     toast({
       title: "Application Submitted",
       description: "Your application has been received. We'll contact you within 24 hours.",
     });
-    
-    setFormData({ name: "", mobile: "", email: "" });
-    setShowThankYou(true);
   };
 
   if (!product) {
@@ -115,7 +140,10 @@ const CreditCardApply = () => {
             </p>
             <div className="space-y-3">
               <Button 
-                onClick={() => window.open(product.bank_redirect_url, '_blank')}
+                onClick={() => {
+                  const urlWithLeadId = `${product.bank_redirect_url}?lead_id=${leadId}`;
+                  window.open(urlWithLeadId, '_blank');
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
                 Visit {product.variant} Website

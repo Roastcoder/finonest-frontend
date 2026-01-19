@@ -34,11 +34,11 @@ const AdminLeads = () => {
 
   const fetchLeads = async () => {
     try {
-      // Try external API first
-      const response = await fetch('https://cards.finonest.com/api/leads', {
+      // Fetch from internal API
+      const response = await fetch('https://api.finonest.com/api/leads', {
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
       });
 
@@ -46,51 +46,20 @@ const AdminLeads = () => {
         const data = await response.json();
         if (data.data && Array.isArray(data.data)) {
           setLeads(data.data);
-          return;
+        } else if (Array.isArray(data)) {
+          setLeads(data);
         }
       }
     } catch (error) {
-      console.error('External API failed:', error);
+      console.error('Internal API failed:', error);
     }
     
-    // Show sample data for demonstration
-    setLeads([
-      {
-        id: 1,
-        name: 'John Doe',
-        mobile: '+91 9876543210',
-        email: 'john@example.com',
-        product_id: 1,
-        product_name: 'Classic Credit Card',
-        product_variant: 'IDFC First Bank',
-        product_highlights: 'Lifetime Free: No joining or annual fees. Cashback on all purchases.',
-        bank_redirect_url: 'https://www.idfcfirstbank.com/credit-card/classic',
-        channel_code: 'PARTNER_001',
-        status: 'new',
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 2,
-        name: 'Jane Smith',
-        mobile: '+91 9876543211',
-        email: 'jane@example.com',
-        product_id: 2,
-        product_name: 'Premium Credit Card',
-        product_variant: 'HDFC Bank',
-        product_highlights: 'Premium benefits with airport lounge access. High reward points.',
-        bank_redirect_url: 'https://www.hdfcbank.com/credit-card/premium',
-        channel_code: 'FINONEST_WEBSITE',
-        status: 'contacted',
-        created_at: new Date(Date.now() - 86400000).toISOString()
-      }
-    ]);
     setLoading(false);
   };
 
   const updateLeadStatus = async (leadId: number, status: string) => {
     try {
-      // Try external API first
-      const response = await fetch(`https://cards.finonest.com/api/leads/${leadId}/status`, {
+      const response = await fetch(`https://api.finonest.com/api/leads/${leadId}/status`, {
         method: 'PUT',
         headers: {
           'X-API-Key': 'lms_8188272ffd90118df860b5e768fe6681',
@@ -99,8 +68,7 @@ const AdminLeads = () => {
         body: JSON.stringify({ status })
       });
 
-      if (response.ok || response.status === 404) {
-        // Update local state regardless of API response
+      if (response.ok) {
         setLeads(leads.map(lead => 
           lead.id === leadId ? { ...lead, status: status as any } : lead
         ));
@@ -110,13 +78,10 @@ const AdminLeads = () => {
         });
       }
     } catch (error) {
-      // Still update local state for demo purposes
-      setLeads(leads.map(lead => 
-        lead.id === leadId ? { ...lead, status: status as any } : lead
-      ));
       toast({
-        title: "Status Updated",
-        description: "Lead status updated locally",
+        title: "Error",
+        description: "Failed to update lead status",
+        variant: "destructive",
       });
     }
   };
@@ -164,6 +129,7 @@ const AdminLeads = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="font-semibold">{lead.name}</h3>
+                      <span className="text-xs text-muted-foreground">#{lead.id}</span>
                       <Badge className={getStatusColor(lead.status)}>
                         {lead.status}
                       </Badge>
@@ -216,7 +182,10 @@ const AdminLeads = () => {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => window.open(lead.bank_redirect_url, '_blank')}
+                        onClick={() => {
+                          const urlWithLeadId = `${lead.bank_redirect_url}?lead_id=${lead.id}`;
+                          window.open(urlWithLeadId, '_blank');
+                        }}
                       >
                         <ExternalLink className="w-3 h-3 mr-1" />
                         Bank
