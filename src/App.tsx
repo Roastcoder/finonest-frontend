@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import LoadingScreen from "./components/LoadingScreen";
 import NotFound from "./pages/NotFound";
@@ -81,7 +81,7 @@ const App = () => {
                 <Route path="/services/used-car-loan" element={<UsedCarLoan />} />
                 <Route path="/services/personal-loan" element={<PersonalLoan />} />
                 <Route path="/services/business-loan" element={<BusinessLoan />} />
-                <Route path="/services/credit-cards" element={<CreditCards />} />
+                <Route path="/services/credit-cards" element={<Navigate to="/credit-cards" replace />} />
                 <Route path="/credit-cards" element={<CreditCardsStandalone />} />
                 <Route path="/credit-card-apply" element={<CreditCardApply />} />
                 <Route path="/services/loan-against-property" element={<LoanAgainstProperty />} />

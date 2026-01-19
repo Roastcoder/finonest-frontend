@@ -82,7 +82,7 @@ const serviceItems = [
   { icon: Car, label: "Car Loan", href: "/services/car-loan" },
   { icon: CarFront, label: "Used Car Loan", href: "/services/used-car-loan" },
   { icon: FileText, label: "Loan Against Property", href: "/services/loan-against-property" },
-  { icon: CreditCard, label: "Credit Cards", href: "/services/credit-cards" },
+  { icon: CreditCard, label: "Credit Cards", href: "/credit-cards" },
   { icon: GraduationCap, label: "Finobizz Learning", href: "/services/finobizz-learning" },
 ];
 

@@ -45,7 +45,7 @@ const services = [{
   rate: "0% EMI",
   highlight: false,
   image: serviceCreditCards,
-  link: "/services/credit-cards"
+  link: "/credit-cards"
 }, {
   icon: Landmark,
   title: "Loan Against Property",

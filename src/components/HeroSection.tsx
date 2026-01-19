@@ -77,7 +77,7 @@ const services = [{
   title: "Credit Card",
   badge: "Rewards Unlimited",
   description: "Choose cards from all top banks",
-  href: "/services/credit-cards"
+  href: "/credit-cards"
 }];
 const rotatingWords = ["Credit Card", "Home Loan", "Personal Loan", "Car Loan"];
 const HeroSection = () => {

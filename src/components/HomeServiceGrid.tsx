@@ -33,7 +33,7 @@ const services = [
     title: "Credit Card",
     badge: "Rewards Unlimited",
     description: "Choose cards from all top banks",
-    href: "/services/credit-cards",
+    href: "/credit-cards",
     badgeColor: "bg-orange-500 text-white",
   },
   {

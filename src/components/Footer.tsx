@@ -89,7 +89,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/services/credit-cards" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
+                <Link to="/credit-cards" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
                   Credit Cards
                 </Link>
               </li>

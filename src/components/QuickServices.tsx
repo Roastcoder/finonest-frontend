@@ -31,7 +31,7 @@ const quickServices = [
     title: "Credit Card",
     badge: "Rewards Unlimited",
     description: "Cards from all top banks",
-    href: "/services/credit-cards",
+    href: "/credit-cards",
     color: "from-purple-500 to-purple-600",
   },
 ];
