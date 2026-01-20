@@ -36,6 +36,8 @@ const CreditCardApply = () => {
   useEffect(() => {
     const productParam = searchParams.get('product');
     console.log('Product param:', productParam);
+    console.log('All search params:', Object.fromEntries(searchParams.entries()));
+    
     if (productParam) {
       try {
         const productData = JSON.parse(decodeURIComponent(productParam));
@@ -43,6 +45,22 @@ const CreditCardApply = () => {
         setProduct(productData);
       } catch (error) {
         console.error('Failed to parse product data:', error);
+        console.error('Raw param was:', productParam);
+      }
+    } else {
+      // Try to get from URL hash or window.location
+      const urlParams = new URLSearchParams(window.location.search);
+      const hashProductParam = urlParams.get('product');
+      console.log('Fallback product param from window.location:', hashProductParam);
+      
+      if (hashProductParam) {
+        try {
+          const productData = JSON.parse(decodeURIComponent(hashProductParam));
+          console.log('Parsed fallback product data:', productData);
+          setProduct(productData);
+        } catch (error) {
+          console.error('Failed to parse fallback product data:', error);
+        }
       }
     }
   }, [searchParams]);
