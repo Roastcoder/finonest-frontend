@@ -35,12 +35,14 @@ const CreditCardApply = () => {
 
   useEffect(() => {
     const productParam = searchParams.get('product');
+    console.log('Product param:', productParam);
     if (productParam) {
       try {
         const productData = JSON.parse(decodeURIComponent(productParam));
+        console.log('Parsed product data:', productData);
         setProduct(productData);
       } catch (error) {
-        // console.error('Failed to parse product data:', error);
+        console.error('Failed to parse product data:', error);
       }
     }
   }, [searchParams]);
@@ -125,6 +127,14 @@ const CreditCardApply = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Invalid Product</h1>
           <p className="text-muted-foreground">Product information not found.</p>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/credit-cards')}
+            className="mt-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Credit Cards
+          </Button>
         </div>
       </div>
     );
