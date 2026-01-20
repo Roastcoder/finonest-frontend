@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CreditCard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
   id: number;
@@ -21,6 +22,7 @@ const CreditCards = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -53,7 +55,7 @@ const CreditCards = () => {
   const handleApply = (product: Product) => {
     const productData = encodeURIComponent(JSON.stringify(product));
     const url = `/credit-card-apply?product=${productData}`;
-    window.open(url, '_blank');
+    navigate(url);
   };
 
   const getImageSrc = (product: Product) => {
