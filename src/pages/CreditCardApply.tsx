@@ -34,34 +34,56 @@ const CreditCardApply = () => {
   });
 
   useEffect(() => {
-    const productParam = searchParams.get('product');
-    console.log('Product param:', productParam);
-    console.log('All search params:', Object.fromEntries(searchParams.entries()));
+    // Get product parameter from multiple sources
+    let productParam = searchParams.get('product');
+    
+    // Fallback to window.location if searchParams is empty
+    if (!productParam) {
+      const urlParams = new URLSearchParams(window.location.search);
+      productParam = urlParams.get('product');
+    }
+    
+    // Fallback to hash-based routing
+    if (!productParam && window.location.hash) {
+      const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+      productParam = hashParams.get('product');
+    }
+    
+    console.log('Product param found:', productParam);
     
     if (productParam) {
       try {
-        const productData = JSON.parse(decodeURIComponent(productParam));
+        // Handle double encoding
+        let decoded = decodeURIComponent(productParam);
+        if (decoded.startsWith('%7B')) {
+          decoded = decodeURIComponent(decoded);
+        }
+        
+        const productData = JSON.parse(decoded);
         console.log('Parsed product data:', productData);
         setProduct(productData);
       } catch (error) {
         console.error('Failed to parse product data:', error);
         console.error('Raw param was:', productParam);
-      }
-    } else {
-      // Try to get from URL hash or window.location
-      const urlParams = new URLSearchParams(window.location.search);
-      const hashProductParam = urlParams.get('product');
-      console.log('Fallback product param from window.location:', hashProductParam);
-      
-      if (hashProductParam) {
-        try {
-          const productData = JSON.parse(decodeURIComponent(hashProductParam));
-          console.log('Parsed fallback product data:', productData);
-          setProduct(productData);
-        } catch (error) {
-          console.error('Failed to parse fallback product data:', error);
+        
+        // Try to extract from URL manually as last resort
+        const urlString = window.location.href;
+        const productMatch = urlString.match(/product=([^&]+)/);
+        if (productMatch) {
+          try {
+            const manualDecoded = decodeURIComponent(productMatch[1]);
+            const productData = JSON.parse(manualDecoded);
+            console.log('Manual parsing successful:', productData);
+            setProduct(productData);
+          } catch (e) {
+            console.error('Manual parsing also failed:', e);
+          }
         }
       }
+    } else {
+      console.log('No product parameter found in URL');
+      console.log('Current URL:', window.location.href);
+      console.log('Search params:', window.location.search);
     }
   }, [searchParams]);
 
