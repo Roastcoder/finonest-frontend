@@ -211,10 +211,17 @@ const CreditCardApply = () => {
               </Button>
               <Button 
                 variant="outline"
-                onClick={() => window.close()}
+                onClick={() => {
+                  // Try to close window first, fallback to navigation
+                  if (window.opener) {
+                    window.close();
+                  } else {
+                    navigate('/credit-cards');
+                  }
+                }}
                 className="w-full"
               >
-                Close Window
+                Close
               </Button>
             </div>
           </CardContent>
