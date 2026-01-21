@@ -196,7 +196,15 @@ const OurBranches = () => {
                       {branch.phone && (
                         <div className="flex items-center gap-2 md:gap-3">
                           <Phone className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
-                          <span className="truncate">{branch.phone}</span>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`tel:${branch.phone}`);
+                            }}
+                            className="text-blue-600 hover:text-blue-700 font-medium text-xs md:text-sm"
+                          >
+                            Call Branch
+                          </button>
                         </div>
                       )}
                       <div className="flex items-center gap-2 md:gap-3">
@@ -242,10 +250,13 @@ const OurBranches = () => {
                   {selectedBranch.phone && (
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Contact</h4>
-                      <p className="text-gray-600 flex items-center gap-2">
+                      <button 
+                        onClick={() => window.open(`tel:${selectedBranch.phone}`)}
+                        className="text-gray-600 flex items-center gap-2 hover:text-blue-600 transition-colors"
+                      >
                         <Phone className="w-4 h-4 text-gray-400" />
-                        {selectedBranch.phone}
-                      </p>
+                        Call Branch
+                      </button>
                     </div>
                   )}
                   
