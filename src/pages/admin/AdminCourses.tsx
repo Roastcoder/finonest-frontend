@@ -103,7 +103,8 @@ const AdminCourses = () => {
         ? `https://api.finonest.com/api/courses/${editingCourse.id}`
         : 'https://api.finonest.com/api/courses';
       
-      const method = editingCourse ? 'PUT' : 'POST';
+      // Use POST for both create and update to handle FormData properly
+      const method = 'POST';
       
       // Create FormData for file upload
       const formDataToSend = new FormData();
@@ -113,6 +114,11 @@ const AdminCourses = () => {
       formDataToSend.append('lessons', formData.lessons.toString());
       formDataToSend.append('level', formData.level);
       formDataToSend.append('status', formData.status);
+      
+      // Add method override for updates
+      if (editingCourse) {
+        formDataToSend.append('_method', 'PUT');
+      }
       
       if (imageFile) {
         formDataToSend.append('image', imageFile);
