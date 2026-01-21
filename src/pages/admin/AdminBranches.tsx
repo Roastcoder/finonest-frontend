@@ -71,12 +71,12 @@ const AdminBranches = () => {
       
       // Initialize admin map
       adminMapRef.current = window.L.map('admin-map', {
-        // Remove bounds restriction for admin
+        attributionControl: false
       }).fitBounds(indiaBounds);
       
       // OpenStreetMap tiles
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '',
+        attribution: '© OpenStreetMap',
         maxZoom: 18,
         minZoom: 2
       }).addTo(adminMapRef.current);
