@@ -46,7 +46,7 @@ const OurBranches = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedState) {
+    if (selectedState && selectedState !== "all") {
       setFilteredBranches(branches.filter(branch => branch.state === selectedState));
     } else {
       setFilteredBranches(branches);
@@ -159,13 +159,13 @@ const OurBranches = () => {
                     <SelectValue placeholder="Filter by State" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All States</SelectItem>
+                    <SelectItem value="all">All States</SelectItem>
                     {getUniqueStates().map(state => (
                       <SelectItem key={state} value={state}>{state}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {selectedState && (
+                {selectedState && selectedState !== "all" && (
                   <Button variant="outline" size="sm" onClick={() => setSelectedState("")}>
                     <X className="w-4 h-4 mr-1" /> Clear
                   </Button>
