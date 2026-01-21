@@ -63,10 +63,11 @@ const AdminBranches = () => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/branches/admin', {
+      const response = await fetch(`https://api.finonest.com/api/branches/admin?t=${Date.now()}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
         },
       });
 
@@ -153,13 +154,14 @@ const AdminBranches = () => {
       });
       
       if (response.ok) {
+        // Immediately remove from state and refetch to ensure consistency
         setBranches(branches => branches.filter(branch => branch.id !== id));
+        setTimeout(() => fetchBranches(), 500); // Refetch after a short delay
         toast({
           title: "Success",
           description: "Branch deleted successfully",
         });
       } else if (response.status === 404) {
-        // Branch already deleted, remove from frontend state
         setBranches(branches => branches.filter(branch => branch.id !== id));
         toast({
           title: "Info",
