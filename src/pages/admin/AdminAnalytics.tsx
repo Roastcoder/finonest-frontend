@@ -296,9 +296,9 @@ const AdminAnalytics = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 p-3">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-2">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -307,15 +307,15 @@ const AdminAnalytics = () => {
               className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-0 shadow-sm"
               onClick={() => navigate(stat.href)}
             >
-              <CardContent className="p-6">
+              <CardContent className="p-3">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                    <p className="text-3xl font-bold">{stat.value}</p>
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <p className="text-xs font-medium text-muted-foreground truncate">{stat.title}</p>
+                    <p className="text-lg font-bold">{stat.value}</p>
                     <Badge variant="secondary" className="text-xs">{stat.change}</Badge>
                   </div>
-                  <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                    <Icon className={`w-6 h-6 ${stat.color}`} />
+                  <div className={`p-2 rounded-full ${stat.bgColor} ml-2`}>
+                    <Icon className={`w-4 h-4 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
@@ -326,18 +326,18 @@ const AdminAnalytics = () => {
 
       {/* Performance Overview */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="w-5 h-5" />
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Zap className="w-4 h-4" />
             Performance Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-3">
             {performanceData.map((item, index) => (
               <div key={index} className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="font-medium">{item.category}</span>
+                <div className="flex justify-between text-xs">
+                  <span className="font-medium truncate">{item.category}</span>
                   <span className="text-muted-foreground">{item.current}/{item.target}</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-2">
@@ -354,21 +354,21 @@ const AdminAnalytics = () => {
       </Card>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="space-y-3">
         {/* Monthly Trends */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5" />
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Activity className="w-4 h-4" />
               Monthly Growth Trends
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis dataKey="month" fontSize={10} />
+                <YAxis fontSize={10} />
                 <Tooltip />
                 <Area type="monotone" dataKey="applications" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
                 <Area type="monotone" dataKey="users" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
@@ -381,21 +381,21 @@ const AdminAnalytics = () => {
 
         {/* Application Status Distribution */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
-              Application Status Distribution
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <CheckCircle className="w-4 h-4" />
+              Application Status
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={applicationStatusData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={30}
+                  outerRadius={60}
                   paddingAngle={5}
                   dataKey="value"
                 >
@@ -406,11 +406,11 @@ const AdminAnalytics = () => {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
-            <div className="flex justify-center gap-4 mt-4">
+            <div className="flex flex-wrap justify-center gap-2 mt-3">
               {applicationStatusData.map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className="text-sm">{item.name}: {item.value}</span>
+                <div key={index} className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }}></div>
+                  <span className="text-xs">{item.name}: {item.value}</span>
                 </div>
               ))}
             </div>
@@ -420,16 +420,16 @@ const AdminAnalytics = () => {
 
       {/* System Overview */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <DollarSign className="w-5 h-5" />
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <DollarSign className="w-4 h-4" />
             System Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart data={[
-              { name: 'Applications', value: totalApplications },
+              { name: 'Apps', value: totalApplications },
               { name: 'Users', value: activeUsers },
               { name: 'Blogs', value: publishedBlogs },
               { name: 'Courses', value: activeCourses },
@@ -438,8 +438,8 @@ const AdminAnalytics = () => {
               { name: 'Contacts', value: contactForms.length }
             ]}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" fontSize={10} />
+              <YAxis fontSize={10} />
               <Tooltip />
               <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             </BarChart>
@@ -448,94 +448,89 @@ const AdminAnalytics = () => {
       </Card>
 
       {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="space-y-3">
         {/* Quick Actions */}
         <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-2">
             <Button 
               variant="outline" 
-              className="w-full justify-start" 
+              className="w-full justify-start text-xs h-8" 
               onClick={() => navigate('/admin/applications')}
             >
-              <FileText className="w-4 h-4 mr-2" />
-              Review Applications ({pendingApplications} pending)
+              <FileText className="w-3 h-3 mr-2" />
+              <span className="truncate">Applications ({pendingApplications})</span>
             </Button>
             <Button 
               variant="outline" 
-              className="w-full justify-start" 
+              className="w-full justify-start text-xs h-8" 
               onClick={() => navigate('/admin/users')}
             >
-              <Users className="w-4 h-4 mr-2" />
-              Manage Users ({activeUsers} active)
+              <Users className="w-3 h-3 mr-2" />
+              <span className="truncate">Users ({activeUsers})</span>
             </Button>
             <Button 
               variant="outline" 
-              className="w-full justify-start" 
+              className="w-full justify-start text-xs h-8" 
               onClick={() => navigate('/admin/contact-forms')}
             >
-              <MessageSquare className="w-4 h-4 mr-2" />
-              View Contact Forms ({contactForms.length} total)
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full justify-start" 
-              onClick={() => navigate('/admin/blogs')}
-            >
-              <BookOpen className="w-4 h-4 mr-2" />
-              Manage Blogs ({publishedBlogs} published)
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full justify-start" 
-              onClick={() => navigate('/admin/courses')}
-            >
-              <GraduationCap className="w-4 h-4 mr-2" />
-              Manage Courses ({activeCourses} active)
+              <MessageSquare className="w-3 h-3 mr-2" />
+              <span className="truncate">Contact Forms ({contactForms.length})</span>
             </Button>
           </CardContent>
         </Card>
 
         {/* Recent Activity */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Clock className="w-4 h-4" />
               Recent Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="text-sm font-medium">Application Approved</p>
-                  <p className="text-xs text-muted-foreground">Personal loan for ₹5,00,000</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Card className="p-2 bg-green-50 border-green-200">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium">Application Approved</p>
+                    <p className="text-xs text-muted-foreground truncate">Personal loan</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <Users className="w-5 h-5 text-blue-600" />
-                <div>
-                  <p className="text-sm font-medium">New User Registration</p>
-                  <p className="text-xs text-muted-foreground">user@example.com joined</p>
+              </Card>
+              
+              <Card className="p-2 bg-blue-50 border-blue-200">
+                <div className="flex items-center gap-2">
+                  <Users className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium">New User</p>
+                    <p className="text-xs text-muted-foreground truncate">user@example.com</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                <BookOpen className="w-5 h-5 text-purple-600" />
-                <div>
-                  <p className="text-sm font-medium">New Blog Published</p>
-                  <p className="text-xs text-muted-foreground">"Financial Planning Tips" is now live</p>
+              </Card>
+              
+              <Card className="p-2 bg-purple-50 border-purple-200">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-3 h-3 text-purple-600 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium">Blog Published</p>
+                    <p className="text-xs text-muted-foreground truncate">Financial Tips</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                <GraduationCap className="w-5 h-5 text-orange-600" />
-                <div>
-                  <p className="text-sm font-medium">Course Enrollment</p>
-                  <p className="text-xs text-muted-foreground">5 new students enrolled today</p>
+              </Card>
+              
+              <Card className="p-2 bg-orange-50 border-orange-200">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-3 h-3 text-orange-600 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium">Course Enrollment</p>
+                    <p className="text-xs text-muted-foreground truncate">5 new students</p>
+                  </div>
                 </div>
-              </div>
+              </Card>
             </div>
           </CardContent>
         </Card>
