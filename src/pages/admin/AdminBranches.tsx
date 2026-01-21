@@ -517,16 +517,16 @@ const AdminBranches = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="mb-4">
+              <div className="mb-4 relative z-50">
                 <Select value={selectedBranch?.id.toString() || ""} onValueChange={(value) => {
                   const branch = branches.find(b => b.id === parseInt(value));
                   setSelectedBranch(branch || null);
                   setSelectedPosition(null);
                 }}>
-                  <SelectTrigger>
+                  <SelectTrigger className="relative z-50">
                     <SelectValue placeholder="Select branch to position" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="relative z-50">
                     {branches.map(branch => (
                       <SelectItem key={branch.id} value={branch.id.toString()}>
                         {branch.name} - {branch.city}
