@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, User, Filter, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -32,7 +35,9 @@ interface Branch {
 
 const OurBranches = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
-  const [hoveredBranch, setHoveredBranch] = useState<Branch | null>(null);
+  const [filteredBranches, setFilteredBranches] = useState<Branch[]>([]);
+  const [selectedState, setSelectedState] = useState<string>("");
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<any>(null);
 
@@ -41,7 +46,15 @@ const OurBranches = () => {
   }, []);
 
   useEffect(() => {
-    if (branches.length > 0 && mapRef.current && window.L && !leafletMapRef.current) {
+    if (selectedState) {
+      setFilteredBranches(branches.filter(branch => branch.state === selectedState));
+    } else {
+      setFilteredBranches(branches);
+    }
+  }, [branches, selectedState]);
+
+  useEffect(() => {
+    if (filteredBranches.length > 0 && mapRef.current && window.L && !leafletMapRef.current) {
       // India geographic bounds
       const indiaBounds = [[6.4627, 68.1097], [35.5137, 97.3953]];
       
@@ -59,8 +72,8 @@ const OurBranches = () => {
         minZoom: 3
       }).addTo(leafletMapRef.current);
       
-      // Add markers for branches
-      branches.forEach(branch => {
+      // Add markers for filtered branches
+      filteredBranches.forEach(branch => {
         if (branch.latitude && branch.longitude) {
           const marker = window.L.marker([branch.latitude, branch.longitude])
             .addTo(leafletMapRef.current)
@@ -77,7 +90,7 @@ const OurBranches = () => {
         }
       });
     }
-  }, [branches]);
+  }, [filteredBranches]);
 
   const fetchBranches = async () => {
     try {
@@ -90,6 +103,11 @@ const OurBranches = () => {
     } catch (error) {
       console.error('Failed to fetch branches:', error);
     }
+  };
+
+  const getUniqueStates = () => {
+    const states = [...new Set(branches.map(branch => branch.state))];
+    return states.sort();
   };
 
   const openInMaps = (branch: Branch) => {
@@ -132,53 +150,66 @@ const OurBranches = () => {
           <div className="container mx-auto">
             <div className="text-center mb-8 md:mb-12">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">All Branch Locations</h2>
-              <p className="text-gray-600 text-sm md:text-base">Complete details of our branch network</p>
+              <p className="text-gray-600 text-sm md:text-base mb-6">Complete details of our branch network</p>
+              
+              <div className="flex justify-center items-center gap-4 mb-6">
+                <Filter className="w-5 h-5 text-gray-600" />
+                <Select value={selectedState} onValueChange={setSelectedState}>
+                  <SelectTrigger className="w-64">
+                    <SelectValue placeholder="Filter by State" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All States</SelectItem>
+                    {getUniqueStates().map(state => (
+                      <SelectItem key={state} value={state}>{state}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedState && (
+                  <Button variant="outline" size="sm" onClick={() => setSelectedState("")}>
+                    <X className="w-4 h-4 mr-1" /> Clear
+                  </Button>
+                )}
+              </div>
             </div>
             
-            <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-              {branches.map((branch) => (
-                <div key={branch.id} className="group">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-6 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
-                    <div className="flex items-start justify-between mb-3 md:mb-4">
-                      <div className="bg-gray-100 p-2 md:p-3 rounded-lg md:rounded-xl">
-                        <MapPin className="w-4 h-4 md:w-6 md:h-6 text-gray-700" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {filteredBranches.map((branch) => (
+                <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-6 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-4 md:mb-6">
+                      <div className="bg-gray-100 p-3 md:p-4 rounded-lg md:rounded-xl">
+                        <MapPin className="w-6 h-6 md:w-8 md:h-8 text-gray-700" />
                       </div>
-                      <div className="bg-green-100 text-green-800 px-2 md:px-3 py-1 rounded-full text-xs font-medium">
+                      <div className="bg-green-100 text-green-800 px-3 md:px-4 py-1 md:py-2 rounded-full text-sm font-medium">
                         Active
                       </div>
                     </div>
                     
-                    <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2">{branch.name}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">{branch.name}</h3>
                     
-                    <div className="space-y-2 md:space-y-3 text-xs md:text-sm text-gray-600 mb-4 md:mb-6">
-                      <div className="flex items-start gap-2">
-                        <MapPin className="w-3 h-3 md:w-4 md:h-4 mt-0.5 text-gray-400 flex-shrink-0" />
-                        <span className="line-clamp-2">{branch.address}, {branch.city}, {branch.state} - {branch.pincode}</span>
+                    <div className="space-y-3 md:space-y-4 text-sm md:text-base text-gray-600 mb-6 md:mb-8">
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-4 h-4 md:w-5 md:h-5 mt-0.5 text-gray-400 flex-shrink-0" />
+                        <span className="line-clamp-2">{branch.city}, {branch.state}</span>
                       </div>
                       {branch.phone && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400">📞</span>
+                        <div className="flex items-center gap-3">
+                          <Phone className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
                           <span className="truncate">{branch.phone}</span>
                         </div>
                       )}
-                      {branch.manager_name && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400">👤</span>
-                          <span className="truncate">Manager: {branch.manager_name}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-400">🕒</span>
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
                         <span className="truncate">{branch.working_hours}</span>
                       </div>
                     </div>
                     
-                    <button
-                      onClick={() => openInMaps(branch)}
-                      className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-2 md:py-3 px-3 md:px-4 rounded-lg md:rounded-xl text-sm md:text-base font-medium hover:from-gray-900 hover:to-black transition-all duration-200 group-hover:shadow-lg"
-                    >
-                      Get Directions →
-                    </button>
+                    <div className="text-center">
+                      <span className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                        View Details →
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -186,6 +217,100 @@ const OurBranches = () => {
           </div>
         </div>
       </div>
+
+      {/* Branch Details Modal */}
+      <Dialog open={!!selectedBranch} onOpenChange={() => setSelectedBranch(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              {selectedBranch?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedBranch && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Address</h4>
+                    <p className="text-gray-600 flex items-start gap-2">
+                      <MapPin className="w-4 h-4 mt-0.5 text-gray-400 flex-shrink-0" />
+                      {selectedBranch.address}, {selectedBranch.city}, {selectedBranch.state} - {selectedBranch.pincode}
+                    </p>
+                  </div>
+                  
+                  {selectedBranch.phone && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Contact</h4>
+                      <p className="text-gray-600 flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-gray-400" />
+                        {selectedBranch.phone}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {selectedBranch.email && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Email</h4>
+                      <p className="text-gray-600 flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-gray-400" />
+                        {selectedBranch.email}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Working Hours</h4>
+                    <p className="text-gray-600 flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      {selectedBranch.working_hours}
+                    </p>
+                  </div>
+                  
+                  {selectedBranch.manager_name && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Branch Manager</h4>
+                      <p className="text-gray-600 flex items-center gap-2">
+                        <User className="w-4 h-4 text-gray-400" />
+                        {selectedBranch.manager_name}
+                      </p>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Status</h4>
+                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium inline-block">
+                      Active
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex gap-3 pt-4 border-t">
+                <Button 
+                  onClick={() => openInMaps(selectedBranch)}
+                  className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Get Directions
+                </Button>
+                {selectedBranch.phone && (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => window.open(`tel:${selectedBranch.phone}`)}
+                    className="flex-1"
+                  >
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call Branch
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       <Footer />
     </>
   );
