@@ -98,49 +98,97 @@ const OurBranches = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-20">
-        <div className="container mx-auto px-4 py-12">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Branches</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Find our nearest branch and visit us for personalized financial solutions.
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* Hero Section */}
+        <div className="relative pt-20 pb-16">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10"></div>
+          <div className="relative container mx-auto px-4 text-center">
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <MapPin className="w-4 h-4" />
+              Branch Network
+            </div>
+            <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              Visit Our <span className="text-blue-600">Branches</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+              Experience personalized financial services at our conveniently located branches across India.
             </p>
           </div>
+        </div>
 
-          {/* Interactive Map Section */}
-          <div className="mb-12">
-            <div className="relative">
-              <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Find Our Branches</h2>
-              {/* Leaflet Map */}
-              <div ref={mapRef} className="w-full h-[600px] rounded-2xl shadow-2xl border-4 border-white/20 backdrop-blur-sm" style={{ zIndex: 1 }}></div>
+        {/* Map Section */}
+        <div className="relative px-4 pb-16">
+          <div className="container mx-auto">
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Locate Our Branches</h2>
+                <p className="text-gray-600">Click on any marker to get directions</p>
+              </div>
+              
+              <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                <div ref={mapRef} className="w-full h-[500px]" style={{ zIndex: 1 }}></div>
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-blue-900/5 to-transparent"></div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Branch List */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {branches.map((branch) => (
-              <Card key={branch.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg">{branch.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-gray-600">{branch.address}</p>
-                    <p className="text-gray-600">{branch.city}, {branch.state} - {branch.pincode}</p>
-                    {branch.phone && <p className="text-gray-600">📞 {branch.phone}</p>}
-                    {branch.manager_name && <p className="text-gray-600">👤 {branch.manager_name}</p>}
-                    <p className="text-gray-600">🕒 {branch.working_hours}</p>
+        {/* Branch Cards Section */}
+        <div className="px-4 pb-20">
+          <div className="container mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">All Branch Locations</h2>
+              <p className="text-gray-600">Complete details of our branch network</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {branches.map((branch) => (
+                <div key={branch.id} className="group">
+                  <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 p-6 hover:shadow-xl hover:bg-white/80 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="bg-blue-100 p-3 rounded-xl">
+                        <MapPin className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                        Active
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{branch.name}</h3>
+                    
+                    <div className="space-y-3 text-sm text-gray-600 mb-6">
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
+                        <span>{branch.address}, {branch.city}, {branch.state} - {branch.pincode}</span>
+                      </div>
+                      {branch.phone && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400">📞</span>
+                          <span>{branch.phone}</span>
+                        </div>
+                      )}
+                      {branch.manager_name && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400">👤</span>
+                          <span>Manager: {branch.manager_name}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-400">🕒</span>
+                        <span>{branch.working_hours}</span>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => openInMaps(branch)}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 group-hover:shadow-lg"
+                    >
+                      Get Directions →
+                    </button>
                   </div>
-                  <button
-                    onClick={() => openInMaps(branch)}
-                    className="mt-3 text-blue-600 hover:text-blue-800 font-medium text-sm"
-                  >
-                    Get Directions →
-                  </button>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
