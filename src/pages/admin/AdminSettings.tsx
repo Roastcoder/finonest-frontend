@@ -1,73 +1,229 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Save, Key, CreditCard } from "lucide-react";
+
+interface SystemSetting {
+  setting_key: string;
+  setting_value: string;
+  description: string;
+  updated_at: string;
+}
 
 const AdminSettings = () => {
-  const [settings, setSettings] = useState({
-    siteName: 'Finonest',
-    maintenanceMode: false,
-    emailNotifications: true,
-    autoApproval: false
-  });
+  const [settings, setSettings] = useState<SystemSetting[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const { token } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/settings', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data.settings || []);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to fetch settings",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch settings",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateSetting = async (key: string, value: string) => {
+    setSaving(true);
+    try {
+      const response = await fetch(`https://api.finonest.com/api/settings/${key}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ value }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Setting updated successfully",
+        });
+        fetchSettings(); // Refresh settings
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update setting",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update setting",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const getSettingValue = (key: string) => {
+    const setting = settings.find(s => s.setting_key === key);
+    return setting?.setting_value || '';
+  };
+
+  const handleSettingChange = (key: string, value: string) => {
+    setSettings(prev => prev.map(setting => 
+      setting.setting_key === key 
+        ? { ...setting, setting_value: value }
+        : setting
+    ));
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>System Settings</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Loading settings...</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">
+      {/* Payment Gateway Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            Payment Gateway Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="razorpay_key">Razorpay API Key</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                id="razorpay_key"
+                type="text"
+                value={getSettingValue('razorpay_key')}
+                onChange={(e) => handleSettingChange('razorpay_key', e.target.value)}
+                placeholder="rzp_test_xxxxxxxxxx"
+              />
+              <Button 
+                onClick={() => updateSetting('razorpay_key', getSettingValue('razorpay_key'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Your Razorpay API key for processing payments
+            </p>
+          </div>
+          
+          <div>
+            <Label htmlFor="razorpay_secret">Razorpay Secret Key</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                id="razorpay_secret"
+                type="password"
+                value={getSettingValue('razorpay_secret')}
+                onChange={(e) => handleSettingChange('razorpay_secret', e.target.value)}
+                placeholder="Keep this secure"
+              />
+              <Button 
+                onClick={() => updateSetting('razorpay_secret', getSettingValue('razorpay_secret'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Your Razorpay secret key (keep this secure)
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* General Settings */}
       <Card>
         <CardHeader>
           <CardTitle>General Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium">Site Name</label>
-            <input 
-              type="text" 
-              value={settings.siteName}
-              onChange={(e) => setSettings({...settings, siteName: e.target.value})}
-              className="w-full mt-1 px-3 py-2 border rounded-lg"
-            />
+            <Label htmlFor="site_name">Site Name</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                id="site_name"
+                type="text"
+                value={getSettingValue('site_name')}
+                onChange={(e) => handleSettingChange('site_name', e.target.value)}
+              />
+              <Button 
+                onClick={() => updateSetting('site_name', getSettingValue('site_name'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
           
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Maintenance Mode</p>
-              <p className="text-sm text-muted-foreground">Enable to show maintenance page</p>
+          <div>
+            <Label htmlFor="contact_email">Contact Email</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                id="contact_email"
+                type="email"
+                value={getSettingValue('contact_email')}
+                onChange={(e) => handleSettingChange('contact_email', e.target.value)}
+              />
+              <Button 
+                onClick={() => updateSetting('contact_email', getSettingValue('contact_email'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
             </div>
-            <button 
-              onClick={() => setSettings({...settings, maintenanceMode: !settings.maintenanceMode})}
-              className={`w-12 h-6 rounded-full ${settings.maintenanceMode ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
-            >
-              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.maintenanceMode ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Email Notifications</p>
-              <p className="text-sm text-muted-foreground">Send email alerts for new applications</p>
-            </div>
-            <button 
-              onClick={() => setSettings({...settings, emailNotifications: !settings.emailNotifications})}
-              className={`w-12 h-6 rounded-full ${settings.emailNotifications ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
-            >
-              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.emailNotifications ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Auto Approval</p>
-              <p className="text-sm text-muted-foreground">Automatically approve eligible applications</p>
-            </div>
-            <button 
-              onClick={() => setSettings({...settings, autoApproval: !settings.autoApproval})}
-              className={`w-12 h-6 rounded-full ${settings.autoApproval ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
-            >
-              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.autoApproval ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
-            </button>
           </div>
         </CardContent>
       </Card>
 
+      {/* System Information */}
       <Card>
         <CardHeader>
           <CardTitle>System Information</CardTitle>
@@ -89,6 +245,12 @@ const AdminSettings = () => {
             <div>
               <p className="text-sm text-muted-foreground">Status</p>
               <Badge variant="default">Online</Badge>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Last Updated</p>
+              <p className="font-medium text-xs">
+                {settings.length > 0 ? new Date(settings[0].updated_at).toLocaleString() : 'N/A'}
+              </p>
             </div>
           </div>
         </CardContent>

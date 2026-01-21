@@ -28,6 +28,7 @@ import AdminBlogs from "./admin/AdminBlogs";
 import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
 import AdminLeads from "./admin/AdminLeads";
+import AdminEnrollments from "./admin/AdminEnrollments";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -47,6 +48,7 @@ const AdminDashboard = () => {
     if (path.includes('/settings')) return 'settings';
     if (path.includes('/blogs')) return 'blogs';
     if (path.includes('/courses')) return 'courses';
+    if (path.includes('/enrollments')) return 'enrollments';
     if (path.includes('/branches')) return 'branches';
     return 'dashboard';
   };
@@ -96,6 +98,8 @@ const AdminDashboard = () => {
         return <AdminBlogs />;
       case 'courses':
         return <AdminCourses />;
+      case 'enrollments':
+        return <AdminEnrollments />;
       case 'branches':
         return <AdminBranches />;
       case 'settings':
@@ -207,6 +211,15 @@ const AdminDashboard = () => {
               Finobizz Learning
             </Link>
             <Link 
+              to="/admin/enrollments"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'enrollments' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              Course Enrollments
+            </Link>
+            <Link 
               to="/admin/branches"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'branches' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
@@ -255,6 +268,7 @@ const AdminDashboard = () => {
                   {activeTab === 'users' && 'Users Management'}
                   {activeTab === 'blogs' && 'Blog Management'}
                   {activeTab === 'courses' && 'Finobizz Learning Management'}
+                  {activeTab === 'enrollments' && 'Course Enrollments'}
                   {activeTab === 'branches' && 'Branch Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
@@ -266,6 +280,7 @@ const AdminDashboard = () => {
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
                   {activeTab === 'courses' && 'Manage Finobizz Learning courses and content'}
+                  {activeTab === 'enrollments' && 'View and manage course enrollments and payments'}
                   {activeTab === 'branches' && 'Manage branch locations and information'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>

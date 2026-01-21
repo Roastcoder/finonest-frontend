@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -31,60 +31,115 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
     goals: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [razorpayKey, setRazorpayKey] = useState('');
   const { token, user } = useAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchRazorpayKey();
+  }, []);
+
+  const fetchRazorpayKey = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/settings/razorpay-key');
+      if (response.ok) {
+        const data = await response.json();
+        setRazorpayKey(data.key || 'rzp_test_default');
+      }
+    } catch (error) {
+      console.error('Failed to fetch Razorpay key:', error);
+      setRazorpayKey('rzp_test_default');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const enrollmentData = {
-        course_id: course.id,
-        course_title: course.title,
-        amount_paid: course.price,
-        payment_method: formData.paymentMethod,
-        student_info: {
-          phone: formData.phone,
-          address: formData.address,
-          experience: formData.experience,
-          goals: formData.goals
-        }
-      };
-
-      const response = await fetch('https://api.finonest.com/api/forms', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          form_type: 'course_enrollment',
-          form_data: enrollmentData 
-        }),
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: `Successfully enrolled in ${course.title}`,
-        });
-        if (onClose) onClose();
+      if (course.price > 0) {
+        // For paid courses, initiate Razorpay payment
+        const options = {
+          key: razorpayKey,
+          amount: course.price * 100, // Amount in paise
+          currency: 'INR',
+          name: 'Finonest',
+          description: `Enrollment for ${course.title}`,
+          handler: async (response: any) => {
+            // Payment successful, now enroll the user
+            await enrollUser(response.razorpay_payment_id);
+          },
+          prefill: {
+            name: user?.name,
+            email: user?.email,
+            contact: formData.phone
+          },
+          theme: {
+            color: '#3B82F6'
+          },
+          modal: {
+            ondismiss: () => {
+              setIsLoading(false);
+            }
+          }
+        };
+        
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
       } else {
-        toast({
-          title: "Error",
-          description: "Failed to enroll in course",
-          variant: "destructive",
-        });
+        // Free course, enroll directly
+        await enrollUser();
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process enrollment",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const enrollUser = async (paymentId?: string) => {
+    const enrollmentData = {
+      course_id: course.id,
+      course_title: course.title,
+      amount_paid: course.price,
+      payment_method: formData.paymentMethod,
+      payment_id: paymentId,
+      student_info: {
+        phone: formData.phone,
+        address: formData.address,
+        experience: formData.experience,
+        goals: formData.goals
+      }
+    };
+
+    const response = await fetch('https://api.finonest.com/api/forms', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        form_type: 'course_enrollment',
+        form_data: enrollmentData 
+      }),
+    });
+
+    if (response.ok) {
+      toast({
+        title: "Success",
+        description: `Successfully enrolled in ${course.title}`,
+      });
+      if (onClose) onClose();
+    } else {
       toast({
         title: "Error",
         description: "Failed to enroll in course",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -132,7 +187,7 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
           {course.price > 0 && (
             <div>
               <Label htmlFor="paymentMethod">Payment Method</Label>
-              <Select value={formData.paymentMethod} onValueChange={(value) => handleChange('paymentMethod', value)}>
+              <Select value={formData.paymentMethod} onValueChange={(value) => handleChange('paymentMethod', value)} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select payment method" />
                 </SelectTrigger>
