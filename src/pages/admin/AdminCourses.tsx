@@ -42,6 +42,22 @@ const AdminCourses = () => {
   
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
+  };
 
   useEffect(() => {
     fetchCourses();
@@ -168,6 +184,7 @@ const AdminCourses = () => {
     });
     setImageFile(null);
     setVideoFile(null);
+    setImagePreview(null);
     setEditingCourse(null);
     setShowForm(false);
   };
@@ -302,12 +319,35 @@ const AdminCourses = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Course Image</label>
+                      <label className="block text-sm font-medium mb-2">Course Image (16:9 Ratio Recommended)</label>
                       <Input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                        onChange={handleImageChange}
                       />
+                      {imagePreview && (
+                        <div className="mt-2">
+                          <div className="aspect-video w-full max-w-xs overflow-hidden rounded-lg border">
+                            <img 
+                              src={imagePreview} 
+                              alt="Preview" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1">Preview (16:9 aspect ratio)</p>
+                        </div>
+                      )}
+                      {!imagePreview && (
+                        <div className="mt-2">
+                          <div className="aspect-video w-full max-w-xs bg-gray-100 rounded-lg border flex items-center justify-center">
+                            <div className="text-center text-gray-400">
+                              <BookOpen className="w-8 h-8 mx-auto mb-1" />
+                              <p className="text-xs">16:9 Ratio</p>
+                              <p className="text-xs">Recommended</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div>

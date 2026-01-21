@@ -79,18 +79,25 @@ const FinobizzLearning = () => {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
                   <div key={course.id} className="bg-card rounded-xl border border-border hover:shadow-lg transition-shadow overflow-hidden">
-                    {course.image_path && (
-                      <div className="aspect-video w-full overflow-hidden">
+                    <div className="aspect-video w-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                      {course.image_path ? (
                         <img 
                           src={`https://api.finonest.com/${course.image_path}`}
                           alt={course.title}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            e.currentTarget.style.display = 'none';
+                            const target = e.currentTarget;
+                            target.style.display = 'none';
+                            target.nextElementSibling?.classList.remove('hidden');
                           }}
                         />
+                      ) : null}
+                      <div className={`flex flex-col items-center justify-center text-gray-400 ${course.image_path ? 'hidden' : ''}`}>
+                        <BookOpen className="w-12 h-12 mb-2" />
+                        <span className="text-sm font-medium">Course Image</span>
+                        <span className="text-xs">16:9 Ratio Recommended</span>
                       </div>
-                    )}
+                    </div>
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${getLevelColor(course.level)}`}>
