@@ -105,7 +105,7 @@ const OurBranches = () => {
                         )}
                       </div>
                     );
-                  })}}
+                  })}
                 </div>
               </CardContent>
             </Card>
