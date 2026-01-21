@@ -130,13 +130,21 @@ const AdminCourses = () => {
         body: formDataToSend,
       });
 
+      const result = await response.json();
+
       if (response.ok) {
         toast({
           title: "Success",
-          description: `Course ${editingCourse ? 'updated' : 'created'} successfully`,
+          description: result.message || `Course ${editingCourse ? 'updated' : 'created'} successfully`,
         });
         fetchCourses();
         resetForm();
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || `Failed to ${editingCourse ? 'update' : 'create'} course`,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -161,11 +169,19 @@ const AdminCourses = () => {
         },
       });
 
+      const result = await response.json();
+
       if (response.ok) {
         setCourses(courses => courses.filter(course => course.id !== id));
         toast({
           title: "Success",
-          description: "Course deleted successfully",
+          description: result.message || "Course deleted successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to delete course",
+          variant: "destructive",
         });
       }
     } catch (error) {
