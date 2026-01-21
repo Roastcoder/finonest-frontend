@@ -52,10 +52,10 @@ const Navbar = () => {
     }, {
       name: "Credit Cards",
       href: "/credit-cards"
-    }, {
-      name: "Finobizz Learning",
-      href: "/services/finobizz-learning"
     }]
+  }, {
+    name: "Finobizz Learning",
+    href: "/services/finobizz-learning"
   }, {
     name: "Credit Score",
     href: "/credit-score"
