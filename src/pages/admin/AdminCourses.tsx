@@ -44,7 +44,7 @@ const AdminCourses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/admin/courses', {
+      const response = await fetch('https://api.finonest.com/api/courses', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -54,6 +54,12 @@ const AdminCourses = () => {
       if (response.ok) {
         const data = await response.json();
         setCourses(data.courses || []);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to fetch courses",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -71,8 +77,8 @@ const AdminCourses = () => {
     
     try {
       const url = editingCourse 
-        ? `https://api.finonest.com/api/admin/courses/${editingCourse.id}`
-        : 'https://api.finonest.com/api/admin/courses';
+        ? `https://api.finonest.com/api/courses/${editingCourse.id}`
+        : 'https://api.finonest.com/api/courses';
       
       const method = editingCourse ? 'PUT' : 'POST';
 
@@ -106,7 +112,7 @@ const AdminCourses = () => {
     if (!confirm('Are you sure you want to delete this course?')) return;
     
     try {
-      const response = await fetch(`https://api.finonest.com/api/admin/courses/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/courses/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -220,7 +226,7 @@ const AdminCourses = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Duration</label>
                       <Input
@@ -242,7 +248,7 @@ const AdminCourses = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Level</label>
                       <Select value={formData.level} onValueChange={(value: "Beginner" | "Intermediate" | "Advanced") => setFormData({...formData, level: value})}>
@@ -271,11 +277,11 @@ const AdminCourses = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <Button type="submit">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button type="submit" className="flex-1">
                       {editingCourse ? 'Update' : 'Create'} Course
                     </Button>
-                    <Button type="button" variant="outline" onClick={resetForm}>
+                    <Button type="button" variant="outline" onClick={resetForm} className="flex-1">
                       Cancel
                     </Button>
                   </div>
@@ -290,9 +296,9 @@ const AdminCourses = () => {
             <div className="space-y-4">
               {courses.map((course) => (
                 <div key={course.id} className="border p-4 rounded-lg">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                  <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="font-semibold text-lg">{course.title}</h3>
                         <Badge className={getLevelColor(course.level)}>
                           {course.level}
@@ -301,14 +307,14 @@ const AdminCourses = () => {
                           {course.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{course.description}</p>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mb-2 break-words">{course.description}</p>
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
+                          <Clock className="w-3 h-3 flex-shrink-0" />
                           {course.duration}
                         </span>
                         <span className="flex items-center gap-1">
-                          <BookOpen className="w-3 h-3" />
+                          <BookOpen className="w-3 h-3 flex-shrink-0" />
                           {course.lessons} lessons
                         </span>
                         <span>
@@ -316,12 +322,14 @@ const AdminCourses = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => editCourse(course)}>
-                        <Edit className="w-4 h-4" />
+                    <div className="flex flex-row lg:flex-col gap-2 w-full lg:w-auto">
+                      <Button variant="outline" size="sm" onClick={() => editCourse(course)} className="flex-1 lg:flex-none">
+                        <Edit className="w-4 h-4 mr-1 lg:mr-0" />
+                        <span className="lg:hidden">Edit</span>
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => deleteCourse(course.id)}>
-                        <Trash2 className="w-4 h-4" />
+                      <Button variant="destructive" size="sm" onClick={() => deleteCourse(course.id)} className="flex-1 lg:flex-none">
+                        <Trash2 className="w-4 h-4 mr-1 lg:mr-0" />
+                        <span className="lg:hidden">Delete</span>
                       </Button>
                     </div>
                   </div>
