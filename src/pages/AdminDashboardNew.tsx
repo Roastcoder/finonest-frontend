@@ -135,7 +135,7 @@ const AdminDashboard = () => {
           </div>
         </header>
         {/* Sidebar */}
-        <div className="hidden md:flex w-64 bg-card border-r border-border flex-col">
+        <div className="hidden md:flex w-64 bg-card border-r border-border flex-col fixed h-screen overflow-y-auto">
           <div className="p-6">
             <Link to="/">
               <img src={logo} alt="Finonest" className="h-8 object-contain" />
@@ -243,7 +243,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 pb-16 md:pb-0">
+        <div className="flex-1 pb-16 md:pb-0 md:ml-64">
           <header className="hidden md:block bg-card border-b border-border p-6">
             <div className="flex items-center justify-between">
               <div>
