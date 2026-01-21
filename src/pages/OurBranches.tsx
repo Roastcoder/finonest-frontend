@@ -134,7 +134,7 @@ const OurBranches = () => {
               <p className="text-gray-600 text-sm md:text-base">Complete details of our branch network</p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+            <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
               {branches.map((branch) => (
                 <div key={branch.id} className="group">
                   <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-6 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
