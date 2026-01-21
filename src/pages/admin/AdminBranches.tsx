@@ -209,7 +209,14 @@ const AdminBranches = () => {
   };
 
   const updateBranchPosition = async () => {
-    if (!selectedBranch || !selectedPosition) return;
+    if (!selectedBranch || !selectedPosition) {
+      toast({
+        title: "Error",
+        description: "Please select a branch and position first",
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
       const response = await fetch(`https://api.finonest.com/api/branches/${selectedBranch.id}/position`, {
@@ -224,6 +231,8 @@ const AdminBranches = () => {
         })
       });
       
+      const data = await response.json();
+      
       if (response.ok) {
         toast({
           title: "Success",
@@ -232,8 +241,15 @@ const AdminBranches = () => {
         fetchBranches();
         setSelectedPosition(null);
         setSelectedBranch(null);
+      } else {
+        toast({
+          title: "Error",
+          description: data.error || "Failed to update branch position",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      console.error('Error updating branch position:', error);
       toast({
         title: "Error",
         description: "Failed to update branch position",
