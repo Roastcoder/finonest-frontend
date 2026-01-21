@@ -37,7 +37,7 @@ import BankingPartnersPage from "./pages/BankingPartnersPage";
 import OurBranches from "./pages/OurBranches";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
 import BankerForm from "./pages/BankerForm";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
