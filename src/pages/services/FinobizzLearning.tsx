@@ -78,13 +78,17 @@ const FinobizzLearning = () => {
             {courses.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <div key={course.id} className="bg-card rounded-xl border border-border hover:shadow-lg transition-shadow overflow-hidden">
+                  <Link 
+                    key={course.id} 
+                    to={`/services/finobizz-learning/course/${course.id}`}
+                    className="bg-card rounded-xl border border-border hover:shadow-lg transition-shadow overflow-hidden block group"
+                  >
                     <div className="aspect-video w-full overflow-hidden bg-gray-100 flex items-center justify-center">
                       {course.image_path ? (
                         <img 
                           src={`https://api.finonest.com/${course.image_path}`}
                           alt={course.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e) => {
                             const target = e.currentTarget;
                             target.style.display = 'none';
@@ -109,7 +113,7 @@ const FinobizzLearning = () => {
                         </div>
                       </div>
                       
-                      <h3 className="text-xl font-semibold text-foreground mb-3">{course.title}</h3>
+                      <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">{course.title}</h3>
                       <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{course.description}</p>
                       
                       <div className="flex items-center justify-between">
@@ -117,14 +121,12 @@ const FinobizzLearning = () => {
                           <BookOpen className="w-4 h-4" />
                           {course.lessons} lessons
                         </div>
-                        <Button variant="outline" size="sm" asChild>
-                          <Link to={`/services/finobizz-learning/course/${course.id}`}>
-                            Start Course
-                          </Link>
-                        </Button>
+                        <div className="px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm font-medium group-hover:bg-primary/90 transition-colors">
+                          Start Course
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (
