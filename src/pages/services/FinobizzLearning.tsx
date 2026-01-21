@@ -62,48 +62,16 @@ const FinobizzLearning = () => {
       <Navbar />
 
       <main className="min-h-screen bg-background pb-16 lg:pb-0">
-        {/* Hero Section */}
-        <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
-          
-          <div className="container relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
-                <GraduationCap className="w-4 h-4" />
-                Finobizz Learning Platform
-              </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6">
-                Learn <span className="text-gradient">Finance</span> with Expert Courses
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Master financial concepts through our comprehensive course library. From basic personal finance 
-                to advanced investment strategies, learn at your own pace with industry experts.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="hero" size="lg" asChild>
-                  <Link to="#courses">
-                    Browse Courses
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </Button>
-                <Button variant="outline" size="lg">
-                  <Play className="w-5 h-5 mr-2" />
-                  Watch Demo
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Available Courses */}
-        <section id="courses" className="py-16">
+        <section className="pt-24 pb-16">
           <div className="container">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-                Our Course Library
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Explore our comprehensive collection of finance courses designed for all skill levels
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
+                Learn <span className="text-gradient">Finance</span> with Expert Courses
+              </h1>
+              <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+                Master financial concepts through our comprehensive course library. From basic personal finance 
+                to advanced investment strategies, learn at your own pace with industry experts.
               </p>
             </div>
 
