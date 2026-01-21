@@ -69,14 +69,13 @@ const AdminBranches = () => {
       
       // Initialize admin map
       adminMapRef.current = window.L.map('admin-map', {
-        maxBounds: indiaBounds,
-        maxBoundsViscosity: 1.0
+        // Remove bounds restriction for admin
       }).fitBounds(indiaBounds);
       
       // OpenStreetMap tiles
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 15,
+        maxZoom: 18,
         minZoom: 2
       }).addTo(adminMapRef.current);
       
