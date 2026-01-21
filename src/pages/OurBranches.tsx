@@ -173,7 +173,7 @@ const OurBranches = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
               {filteredBranches.map((branch) => (
                 <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
                   <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
