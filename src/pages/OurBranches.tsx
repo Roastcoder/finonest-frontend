@@ -193,20 +193,6 @@ const OurBranches = () => {
                         <MapPin className="w-3 h-3 md:w-5 md:h-5 mt-0.5 text-gray-400 flex-shrink-0" />
                         <span className="line-clamp-2">{branch.city}, {branch.state}</span>
                       </div>
-                      {branch.phone && (
-                        <div className="flex items-center gap-2 md:gap-3">
-                          <Phone className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.open(`tel:${branch.phone}`);
-                            }}
-                            className="text-blue-600 hover:text-blue-700 font-medium text-xs md:text-sm"
-                          >
-                            Call Branch
-                          </button>
-                        </div>
-                      )}
                       <div className="flex items-center gap-2 md:gap-3">
                         <Clock className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
                         <span className="truncate">{branch.working_hours}</span>
@@ -246,20 +232,18 @@ const OurBranches = () => {
                       {selectedBranch.address}, {selectedBranch.city}, {selectedBranch.state} - {selectedBranch.pincode}
                     </p>
                   </div>
-                  
+
                   {selectedBranch.phone && (
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Contact</h4>
                       <button 
                         onClick={() => window.open(`tel:${selectedBranch.phone}`)}
                         className="text-gray-600 flex items-center gap-2 hover:text-blue-600 transition-colors"
                       >
                         <Phone className="w-4 h-4 text-gray-400" />
-                        Call Branch
+                        Call
                       </button>
                     </div>
-                  )}
-                  
+                  )}                  
                   {selectedBranch.email && (
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Email</h4>
@@ -314,10 +298,10 @@ const OurBranches = () => {
                     className="flex-1"
                   >
                     <Phone className="w-4 h-4 mr-2" />
-                    Call Branch
+                    Call
                   </Button>
-                )}
-              </div>
+                )}            
+                </div>
             </div>
           )}
         </DialogContent>
