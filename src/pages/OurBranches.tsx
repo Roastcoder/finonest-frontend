@@ -101,7 +101,7 @@ const OurBranches = () => {
 
           {/* Interactive Map Section */}
           <div className="mb-12 flex justify-center">
-            <Card className="overflow-hidden shadow-xl max-w-2xl w-full">
+            <Card className="overflow-hidden shadow-xl max-w-4xl w-full">
               <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <MapPin className="w-6 h-6" />
@@ -110,7 +110,7 @@ const OurBranches = () => {
               </CardHeader>
               <CardContent className="p-0">
                 {/* Leaflet Map */}
-                <div ref={mapRef} className="w-full h-[500px]" style={{ zIndex: 1 }}></div>
+                <div ref={mapRef} className="w-full h-[600px]" style={{ zIndex: 1 }}></div>
               </CardContent>
             </Card>
           </div>
