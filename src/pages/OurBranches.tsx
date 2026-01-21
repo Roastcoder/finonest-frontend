@@ -41,31 +41,29 @@ const OurBranches = () => {
 
   useEffect(() => {
     if (branches.length > 0 && mapRef.current && window.L && !leafletMapRef.current) {
-      // Initialize Leaflet map
-      leafletMapRef.current = window.L.map(mapRef.current).setView([20.5937, 78.9629], 5);
+      // India geographic bounds
+      const indiaBounds = [[6.4627, 68.1097], [35.5137, 97.3953]];
       
-      // Add tile layer
-      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        minZoom: 4,
-        maxBounds: [[6.4627, 68.1097], [35.5137, 97.3953]],
-        attribution: '© OpenStreetMap contributors'
+      // Initialize map with India bounds
+      leafletMapRef.current = window.L.map(mapRef.current, {
+        maxBounds: indiaBounds,
+        maxBoundsViscosity: 1.0
+      }).fitBounds(indiaBounds);
+      
+      // CartoDB Light tiles (clean, professional)
+      window.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CartoDB',
+        subdomains: 'abcd',
+        maxZoom: 12,
+        minZoom: 5
       }).addTo(leafletMapRef.current);
       
       // Add markers for branches
       branches.forEach(branch => {
         if (branch.latitude && branch.longitude) {
-          const marker = window.L.marker([branch.latitude, branch.longitude])
+          window.L.marker([branch.latitude, branch.longitude])
             .addTo(leafletMapRef.current)
-            .bindPopup(`
-              <div class="p-2">
-                <h3 class="font-semibold">${branch.name}</h3>
-                <p class="text-sm text-gray-600">${branch.city}, ${branch.state}</p>
-                <p class="text-sm">${branch.address}</p>
-                <p class="text-sm">📞 ${branch.phone || 'N/A'}</p>
-                <p class="text-sm">🕒 ${branch.working_hours}</p>
-              </div>
-            `);
+            .bindPopup(`<b>${branch.name}</b><br>${branch.city}, ${branch.state}`);
         }
       });
     }
