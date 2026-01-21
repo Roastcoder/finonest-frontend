@@ -73,9 +73,9 @@ const AdminBranches = () => {
         maxBoundsViscosity: 1.0
       }).fitBounds(indiaBounds);
       
-      // Stadia Maps Alidade Smooth Dark tiles
-      window.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; Stadia Maps',
+      // OpenStreetMap tiles
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
         maxZoom: 12,
         minZoom: 5
       }).addTo(adminMapRef.current);
