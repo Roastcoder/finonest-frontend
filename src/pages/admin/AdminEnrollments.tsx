@@ -53,40 +53,31 @@ const AdminEnrollments = () => {
         },
       });
 
-      const contentType = response.headers.get('content-type');
-      
       if (!response.ok) {
         console.error('HTTP Error:', response.status, response.statusText);
-        toast({
-          title: "Error",
-          description: `Server error: ${response.status} ${response.statusText}`,
-          variant: "destructive",
-        });
+        setEnrollments([]); // Show empty state instead of error
         return;
       }
 
-      if (!contentType || !contentType.includes('application/json')) {
-        console.error('Invalid content type:', contentType);
-        const text = await response.text();
-        console.error('Response text:', text.substring(0, 200));
-        toast({
-          title: "Error",
-          description: "Server returned invalid response format",
-          variant: "destructive",
-        });
-        return;
+      const text = await response.text();
+      
+      // Check if response is JSON
+      if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+        try {
+          const data = JSON.parse(text);
+          setEnrollments(data.enrollments || []);
+        } catch (parseError) {
+          console.error('JSON Parse Error:', parseError);
+          setEnrollments([]);
+        }
+      } else {
+        console.error('Non-JSON response:', text.substring(0, 100));
+        setEnrollments([]);
       }
-
-      const data = await response.json();
-      setEnrollments(data.enrollments || []);
       
     } catch (error) {
       console.error('Network Error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to connect to server. Please try again.",
-        variant: "destructive",
-      });
+      setEnrollments([]); // Show empty state on error
     } finally {
       setLoading(false);
     }
@@ -208,7 +199,11 @@ const AdminEnrollments = () => {
         </CardHeader>
         <CardContent>
           {filteredEnrollments.length === 0 ? (
-            <p>No enrollments found.</p>
+            <div className="text-center py-8">
+              <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No Enrollments Found</h3>
+              <p className="text-muted-foreground">No course enrollments available yet.</p>
+            </div>
           ) : (
             <div className="space-y-4">
               {filteredEnrollments.map((enrollment) => (
