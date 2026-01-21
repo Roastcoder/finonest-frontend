@@ -80,7 +80,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/95 backdrop-blur-md py-2 shadow-lg border-b" : "py-4 bg-white"}`}>
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="w-full px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
           <img src={logo} alt="Finonest" className="h-10 object-contain" />
         </Link>
@@ -182,7 +182,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div className={`lg:hidden absolute top-full left-0 right-0 bg-white border-b shadow-lg transition-all duration-300 overflow-y-auto ${isMobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}>
-        <div className="container mx-auto px-6 py-4 flex flex-col gap-2">
+        <div className="w-full px-6 py-4 flex flex-col gap-2">
           {navLinks.map(link => (
             <div key={link.name}>
               {link.dropdown ? (
