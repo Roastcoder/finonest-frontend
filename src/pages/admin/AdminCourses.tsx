@@ -211,12 +211,12 @@ const AdminCourses = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <GraduationCap className="w-5 h-5" />
-              Finobizz Learning Management ({courses.length})
+              <span className="break-words">Finobizz Learning Management ({courses.length})</span>
             </CardTitle>
-            <Button onClick={() => setShowForm(true)}>
+            <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               New Course
             </Button>
