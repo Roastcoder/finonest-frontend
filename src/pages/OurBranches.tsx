@@ -71,13 +71,15 @@ const OurBranches = () => {
               </CardHeader>
               <CardContent className="p-0">
                 {/* Map Container - Same as Admin */}
-                <div className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
-                  {/* India SVG Map - Exact same as admin */}
-                  <img 
-                    src="/india.svg" 
-                    alt="India Map" 
-                    className="w-full h-full object-contain pointer-events-none"
-                  />
+                <div className="relative w-full h-96 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
+                  {/* India SVG Map */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img 
+                      src="/india.svg" 
+                      alt="India Map" 
+                      className="max-w-full max-h-full object-contain pointer-events-none"
+                    />
+                  </div>
                   
                   {/* Branch Pins - Exact same positioning as admin */}
                   {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
