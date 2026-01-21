@@ -81,12 +81,15 @@ const OurBranches = () => {
                   
                   {/* Branch Pins - Exact same positioning as admin */}
                   {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
-                    console.log('Public map pin:', branch.name, 'at', branch.x_position, branch.y_position);
+                    // Ensure position values are within valid range (0-100)
+                    const xPos = Math.max(0, Math.min(100, Number(branch.x_position)));
+                    const yPos = Math.max(0, Math.min(100, Number(branch.y_position)));
+                    console.log('Public map pin:', branch.name, 'at', xPos, yPos);
                     return (
                       <div
                         key={branch.id}
                         className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-125 transition-transform z-10"
-                        style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                        style={{ left: `${xPos}%`, top: `${yPos}%` }}
                         onMouseEnter={() => setHoveredBranch(branch)}
                         onMouseLeave={() => setHoveredBranch(null)}
                         onClick={() => openInMaps(branch)}
@@ -102,7 +105,7 @@ const OurBranches = () => {
                         )}
                       </div>
                     );
-                  })}
+                  })}}
                 </div>
               </CardContent>
             </Card>
