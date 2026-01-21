@@ -4,7 +4,9 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Clock, BookOpen, Users, Play, ArrowLeft, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { Clock, BookOpen, Users, Play, ArrowLeft, CheckCircle, X } from "lucide-react";
 
 interface Course {
   id: number;
@@ -22,6 +24,17 @@ const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const { toast } = useToast();
+
+  const handleStartLearning = () => setShowForm(true);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({ title: "Success", description: "Enrollment request submitted!" });
+    setShowForm(false);
+  };
 
   useEffect(() => {
     fetchCourse();
@@ -177,7 +190,7 @@ const CourseDetails = () => {
                   <p className="text-muted-foreground">Full access to course</p>
                 </div>
 
-                <Button className="w-full mb-4" size="lg">
+                <Button className="w-full mb-4" size="lg" onClick={handleStartLearning}>
                   <Play className="w-5 h-5 mr-2" />
                   Start Learning
                 </Button>
@@ -212,6 +225,44 @@ const CourseDetails = () => {
           </div>
         </div>
       </main>
+
+      {showForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Start Learning</h3>
+              <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                required
+              />
+              <Input
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                required
+              />
+              <Input
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                required
+              />
+              <div className="flex gap-2">
+                <Button type="submit" className="flex-1">Submit</Button>
+                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
