@@ -100,19 +100,12 @@ const OurBranches = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
         {/* Hero Section */}
-        <div className="relative pt-20 pb-16">
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/5 to-slate-800/5"></div>
+        <div className="relative pt-20 pb-8">
           <div className="relative container mx-auto px-4 text-center">
             <div className="inline-flex items-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <MapPin className="w-4 h-4" />
               Branch Network
             </div>
-            <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Visit Our <span className="text-gray-700">Branches</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Experience personalized financial services at our conveniently located branches across India.
-            </p>
           </div>
         </div>
 
