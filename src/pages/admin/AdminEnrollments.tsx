@@ -16,6 +16,11 @@ interface Enrollment {
   payment_method: string;
   payment_status: 'pending' | 'completed' | 'failed';
   payment_id?: string;
+  payment_details?: {
+    upi_id?: string;
+    card_number?: string;
+    expiry_date?: string;
+  };
   student_info: {
     phone: string;
     address: string;
@@ -218,6 +223,12 @@ const AdminEnrollments = () => {
                     </div>
                     <div className="space-y-1">
                       <p><strong>Payment Method:</strong> {enrollment.payment_method || 'N/A'}</p>
+                      {enrollment.payment_details?.upi_id && (
+                        <p><strong>UPI ID:</strong> {enrollment.payment_details.upi_id}</p>
+                      )}
+                      {enrollment.payment_details?.card_number && (
+                        <p><strong>Card:</strong> ****{enrollment.payment_details.card_number}</p>
+                      )}
                       <p><strong>Enrolled:</strong> {new Date(enrollment.enrollment_date).toLocaleDateString()}</p>
                       {enrollment.payment_id && (
                         <p><strong>Payment ID:</strong> <span className="break-all text-xs">{enrollment.payment_id}</span></p>
