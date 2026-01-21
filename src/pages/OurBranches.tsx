@@ -176,7 +176,7 @@ const OurBranches = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
               {filteredBranches.map((branch) => (
                 <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-6 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
                     <div className="flex items-start justify-between mb-3 md:mb-6">
                       <div className="bg-gray-100 p-2 md:p-4 rounded-lg md:rounded-xl">
                         <MapPin className="w-5 h-5 md:w-8 md:h-8 text-gray-700" />
