@@ -32,7 +32,7 @@ const OurBranches = () => {
 
   const fetchBranches = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/branches');
+      const response = await fetch(`https://api.finonest.com/api/branches?t=${Date.now()}`);
       const data = await response.json();
       if (response.ok) {
         console.log('Fetched branches:', data.branches);
