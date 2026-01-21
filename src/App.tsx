@@ -21,6 +21,7 @@ import CreditCardApply from "./pages/CreditCardApply";
 import LoanAgainstProperty from "./pages/services/LoanAgainstProperty";
 import FinobizzLearning from "./pages/services/FinobizzLearning";
 import CourseDetails from "./pages/services/CourseDetails";
+import CourseEnrollment from "./pages/services/CourseEnrollment";
 import CibilCheck from "./pages/CibilCheck";
 import ServiceApply from "./pages/ServiceApply";
 import FormSuccess from "./pages/FormSuccess";
@@ -89,6 +90,7 @@ const App = () => {
                 <Route path="/services/lap" element={<LoanAgainstProperty />} />
                 <Route path="/services/finobizz-learning" element={<FinobizzLearning />} />
                 <Route path="/services/finobizz-learning/course/:id" element={<CourseDetails />} />
+                <Route path="/services/finobizz-learning/course/:id/enroll" element={<CourseEnrollment />} />
                 <Route path="/services/:service/apply" element={<ServiceApply />} />
                 <Route path="/form-success" element={<FormSuccess />} />
                 <Route path="/credit-score" element={<CibilCheck />} />

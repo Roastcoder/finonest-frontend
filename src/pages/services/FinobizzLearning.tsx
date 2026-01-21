@@ -16,6 +16,8 @@ interface Course {
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   status: string;
+  price: number;
+  original_price?: number;
   image_path?: string;
   video_path?: string;
 }
@@ -71,7 +73,8 @@ const FinobizzLearning = () => {
               </h1>
               <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
                 Master financial concepts through our comprehensive course library. From basic personal finance 
-                to advanced investment strategies, learn at your own pace with industry experts.
+                to advanced investment strategies, learn at your own pace with industry experts. 
+                <span className="font-semibold text-primary">Affordable pricing for quality education.</span>
               </p>
             </div>
 
@@ -121,8 +124,24 @@ const FinobizzLearning = () => {
                           <BookOpen className="w-4 h-4" />
                           {course.lessons} lessons
                         </div>
-                        <div className="px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm font-medium group-hover:bg-primary/90 transition-colors">
-                          Start Course
+                        <div className="flex flex-col items-end">
+                          <div className="text-lg font-bold text-primary">
+                            ₹{course.price}
+                            {course.original_price && course.original_price > course.price && (
+                              <span className="ml-2 text-sm line-through text-muted-foreground">
+                                ₹{course.original_price}
+                              </span>
+                            )}
+                          </div>
+                          {course.price === 0 ? (
+                            <div className="px-3 py-1 bg-green-500 text-white rounded-md text-sm font-medium group-hover:bg-green-600 transition-colors">
+                              Free Course
+                            </div>
+                          ) : (
+                            <div className="px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm font-medium group-hover:bg-primary/90 transition-colors">
+                              Enroll Now
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -158,6 +177,7 @@ const FinobizzLearning = () => {
                     "Self-paced learning with lifetime access",
                     "Interactive content and real-world examples",
                     "Certificate of completion for each course",
+                    "Affordable pricing with occasional discounts",
                   ].map((point, index) => (
                     <div key={index} className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />

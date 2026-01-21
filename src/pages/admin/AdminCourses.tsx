@@ -17,6 +17,8 @@ interface Course {
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   status: 'active' | 'inactive';
+  price: number;
+  original_price?: number;
   image_path?: string;
   video_path?: string;
   created_at: string;
@@ -39,7 +41,9 @@ const AdminCourses = () => {
     duration: "",
     lessons: 0,
     level: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
-    status: "active" as "active" | "inactive"
+    status: "active" as "active" | "inactive",
+    price: 0,
+    original_price: ""
   });
   
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -125,6 +129,10 @@ const AdminCourses = () => {
       formDataToSend.append('lessons', formData.lessons.toString());
       formDataToSend.append('level', formData.level);
       formDataToSend.append('status', formData.status);
+      formDataToSend.append('price', formData.price.toString());
+      if (formData.original_price) {
+        formDataToSend.append('original_price', formData.original_price.toString());
+      }
       
       // Add method override for updates
       if (editingCourse) {
@@ -217,7 +225,9 @@ const AdminCourses = () => {
       duration: "",
       lessons: 0,
       level: "Beginner",
-      status: "active"
+      status: "active",
+      price: 0,
+      original_price: ""
     });
     setImageFile(null);
     setVideoFile(null);
@@ -233,7 +243,9 @@ const AdminCourses = () => {
       duration: course.duration,
       lessons: course.lessons,
       level: course.level,
-      status: course.status
+      status: course.status,
+      price: course.price,
+      original_price: course.original_price?.toString() || ""
     });
     setEditingCourse(course);
     setShowForm(true);
@@ -321,6 +333,32 @@ const AdminCourses = () => {
                         value={formData.lessons}
                         onChange={(e) => setFormData({...formData, lessons: parseInt(e.target.value)})}
                         required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Price (₹)</label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={formData.price}
+                        onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value) || 0})}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Original Price (₹) - Optional</label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={formData.original_price}
+                        onChange={(e) => setFormData({...formData, original_price: e.target.value})}
+                        placeholder="Leave empty if no discount"
                       />
                     </div>
                   </div>
@@ -452,6 +490,12 @@ const AdminCourses = () => {
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3 flex-shrink-0" />
                           {course.lessons} lessons
+                        </span>
+                        <span className="font-semibold text-primary">
+                          ₹{course.price}
+                          {course.original_price && course.original_price > course.price && (
+                            <span className="ml-1 line-through text-muted-foreground">₹{course.original_price}</span>
+                          )}
                         </span>
                         <span>
                           Created: {new Date(course.created_at).toLocaleDateString()}

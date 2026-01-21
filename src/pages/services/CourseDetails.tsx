@@ -14,6 +14,8 @@ interface Course {
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   status: string;
+  price: number;
+  original_price?: number;
   image_path?: string;
   video_path?: string;
 }
@@ -173,14 +175,23 @@ const CourseDetails = () => {
             <div className="lg:col-span-1">
               <div className="bg-card p-6 rounded-xl border sticky top-24">
                 <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-primary mb-2">FREE</div>
-                  <p className="text-muted-foreground">Full access to course</p>
+                  <div className="text-3xl font-bold text-primary mb-2">
+                    {course.price === 0 ? 'FREE' : `₹${course.price}`}
+                    {course.original_price && course.original_price > course.price && (
+                      <div className="text-lg line-through text-muted-foreground mt-1">
+                        ₹{course.original_price}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground">
+                    {course.price === 0 ? 'Full access to course' : 'One-time payment'}
+                  </p>
                 </div>
 
                 <Button className="w-full mb-4" size="lg" asChild>
-                  <Link to="/services/finobizz-learning/apply">
+                  <Link to={`/services/finobizz-learning/course/${course.id}/enroll`}>
                     <Play className="w-5 h-5 mr-2" />
-                    Start Learning
+                    {course.price === 0 ? 'Enroll for Free' : 'Enroll Now'}
                   </Link>
                 </Button>
 
