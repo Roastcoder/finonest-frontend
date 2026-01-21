@@ -110,16 +110,16 @@ const OurBranches = () => {
         </div>
 
         {/* Map Section */}
-        <div className="relative px-4 pb-16">
+        <div className="relative px-4 md:px-4 pb-16">
           <div className="container mx-auto">
-            <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200/50 p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Locate Our Branches</h2>
-                <p className="text-gray-600">Click on any marker to get directions</p>
+            <div className="bg-white/90 backdrop-blur-lg rounded-none md:rounded-3xl shadow-2xl border-0 md:border border-gray-200/50 p-0 md:p-8">
+              <div className="text-center mb-4 md:mb-8 px-4 md:px-0">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">Locate Our Branches</h2>
+                <p className="text-gray-600 text-sm md:text-base">Click on any marker to get directions</p>
               </div>
               
-              <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                <div ref={mapRef} className="w-full h-[500px]" style={{ zIndex: 1 }}></div>
+              <div className="relative overflow-hidden rounded-none md:rounded-2xl shadow-xl">
+                <div ref={mapRef} className="w-full h-[300px] md:h-[500px]" style={{ zIndex: 1 }}></div>
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-gray-900/5 to-transparent"></div>
               </div>
             </div>
