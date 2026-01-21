@@ -1,7 +1,7 @@
 import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn, Users, BarChart3, Settings, MessageSquare, BookOpen } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 const getNavItems = (isLoggedIn: boolean, userRole: string | undefined, isAdminPage: boolean) => {
   if (userRole === 'ADMIN' && isAdminPage) {
