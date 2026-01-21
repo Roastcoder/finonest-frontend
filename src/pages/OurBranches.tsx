@@ -72,22 +72,19 @@ const OurBranches = () => {
               <CardContent className="p-0">
                 {/* Map Container - Same as Admin */}
                 <div className="relative w-full h-96 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
-                  {/* India SVG Map */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {/* India SVG Map - Fixed dimensions */}
+                  <div className="absolute inset-0">
                     <img 
                       src="/india.svg" 
                       alt="India Map" 
-                      className="max-w-full max-h-full object-contain pointer-events-none"
+                      className="w-full h-full object-contain pointer-events-none"
                     />
                   </div>
                   
-                  {/* Branch Pins - Debug positioning */}
+                  {/* Branch Pins */}
                   {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
-                    // Ensure position values are within valid range (0-100)
                     const xPos = Math.max(0, Math.min(100, Number(branch.x_position)));
                     const yPos = Math.max(0, Math.min(100, Number(branch.y_position)));
-                    console.log('Branch:', branch.name, 'Raw positions:', branch.x_position, branch.y_position);
-                    console.log('Calculated positions:', xPos, yPos);
                     return (
                       <div
                         key={branch.id}
@@ -97,12 +94,7 @@ const OurBranches = () => {
                         onMouseLeave={() => setHoveredBranch(null)}
                         onClick={() => openInMaps(branch)}
                       >
-                        <MapPin className="w-8 h-8 text-red-600 drop-shadow-lg" fill="currentColor" />
-                        
-                        {/* Debug info */}
-                        <div className="absolute top-8 left-0 bg-black text-white text-xs p-1 rounded">
-                          {xPos.toFixed(1)}, {yPos.toFixed(1)}
-                        </div>
+                        <MapPin className="w-6 h-6 text-red-600 drop-shadow-lg" fill="currentColor" />
                         
                         {hoveredBranch?.id === branch.id && (
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
@@ -113,7 +105,7 @@ const OurBranches = () => {
                         )}
                       </div>
                     );
-                  })}
+                  })}}
                 </div>
               </CardContent>
             </Card>
