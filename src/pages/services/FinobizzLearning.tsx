@@ -150,7 +150,7 @@ const FinobizzLearning = () => {
                       </div>
                     </div>
                   </div>
-                ))}}
+                ))}
               </div>
             ) : (
               <div className="text-center py-12">
