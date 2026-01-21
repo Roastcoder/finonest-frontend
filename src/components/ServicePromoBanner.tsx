@@ -5,7 +5,7 @@ import serviceCarLoan from "@/assets/service-car-loan.jpg";
 
 const ServicePromoBanner = () => {
   const features = [
-    { icon: BadgePercent, text: "Rates from 7.5% p.a." },
+    { icon: BadgePercent, text: "Rates from 11.5% p.a." },
     { icon: Clock, text: "24-Hour Approval" },
     { icon: Shield, text: "35+ Bank Partners" },
     { icon: CheckCircle, text: "Minimal Documentation" },
@@ -83,7 +83,7 @@ const ServicePromoBanner = () => {
                 <div className="flex justify-between items-end gap-2">
                   <div className="glass rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-3">
                     <p className="text-[10px] sm:text-xs text-muted-foreground">Starting Rate</p>
-                    <p className="text-lg sm:text-2xl font-display font-bold text-gradient-primary">7.5%</p>
+                    <p className="text-lg sm:text-2xl font-display font-bold text-gradient-primary">11.5%</p>
                   </div>
                   <div className="glass rounded-lg sm:rounded-xl px-2 sm:px-4 py-1.5 sm:py-3 hidden sm:block">
                     <p className="text-[10px] sm:text-xs text-muted-foreground">Max Tenure</p>

@@ -49,7 +49,7 @@ const faqCategories = [
     faqs: [
       {
         question: "What are the current interest rates for different loans?",
-        answer: "Our current rates: Home Loan starting 8.5% p.a., Car Loan from 9.0% p.a., Personal Loan from 10.5% p.a., Business Loan from 11% p.a., and Loan Against Property from 9.5% p.a. Rates vary based on your profile and credit score."
+        answer: "Our current rates: Home Loan starting 7.3% p.a., Used Car Loan from 11.5% p.a., Personal Loan from 9.99% p.a., Business Loan from 14% p.a., and Loan Against Property from 9% p.a. Credit Cards offer No Cost EMI + Airport Lounge Access. Rates vary based on your profile and credit score."
       },
       {
         question: "Is the interest rate fixed or floating?",

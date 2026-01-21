@@ -183,13 +183,29 @@ const AdminBranches = () => {
   };
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!selectedBranch) return;
+    if (!selectedBranch) {
+      toast({
+        title: "Select a branch first",
+        description: "Please select a branch from the dropdown before clicking on the map.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
     setSelectedPosition({ x, y });
+    
+    // If we're editing this branch, also update the form
+    if (editingBranch && editingBranch.id === selectedBranch.id) {
+      setFormData(prev => ({
+        ...prev,
+        x_position: x.toFixed(2),
+        y_position: y.toFixed(2)
+      }));
+    }
   };
 
   const updateBranchPosition = async () => {
@@ -495,16 +511,36 @@ const AdminBranches = () => {
                   src="/india.svg" 
                   alt="India Map" 
                   className="w-full h-full object-contain pointer-events-none"
+                  onLoad={(e) => {
+                    console.log('India map loaded successfully');
+                  }}
                   onError={(e) => {
+                    console.error('Failed to load India map');
                     e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
                   }}
                 />
                 
                 {/* Fallback if SVG doesn't load */}
-                <div className="hidden w-full h-full items-center justify-center text-muted-foreground">
-                  India Map (SVG not available)
+                <div className="hidden w-full h-full items-center justify-center text-muted-foreground bg-gray-100 border-2 border-dashed border-gray-300">
+                  <div className="text-center">
+                    <MapPin className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                    <p className="text-lg font-medium">India Map</p>
+                    <p className="text-sm">(Click anywhere to set position)</p>
+                  </div>
                 </div>
+                
+                {/* Instructions overlay when no branch selected */}
+                {!selectedBranch && (
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <div className="bg-white p-4 rounded-lg shadow-lg text-center">
+                      <MapPin className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                      <p className="font-medium">Select a branch first</p>
+                      <p className="text-sm text-gray-600">Choose a branch from the dropdown above</p>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Branch pins overlay */}
                 {branches.filter(b => b.x_position && b.y_position).map((branch) => (

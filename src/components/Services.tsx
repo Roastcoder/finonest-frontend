@@ -9,8 +9,8 @@ import serviceLap from "@/assets/service-lap.jpg";
 const services = [{
   icon: Home,
   title: "Home Loan",
-  description: "Turn your dream home into reality with our competitive home loan rates starting at 6.5% p.a.",
-  rate: "6.5%",
+  description: "Turn your dream home into reality with our competitive home loan rates starting at 7.3% p.a.",
+  rate: "7.3%",
   highlight: false,
   image: serviceHomeLoan,
   link: "/services/home-loan"
@@ -18,7 +18,7 @@ const services = [{
   icon: Car,
   title: "Used Car Loan",
   description: "Get the best deals on used car loans with quick approval and minimal documentation. Our specialty!",
-  rate: "7.5%",
+  rate: "11.5%",
   highlight: true,
   image: serviceCarLoan,
   link: "/services/used-car-loan"
@@ -26,7 +26,7 @@ const services = [{
   icon: Briefcase,
   title: "Personal Loan",
   description: "Instant approval up to ₹40 lakhs with minimal documentation required for all your needs.",
-  rate: "10.5%",
+  rate: "9.99%",
   highlight: false,
   image: servicePersonalLoan,
   link: "/services/personal-loan"
@@ -34,15 +34,15 @@ const services = [{
   icon: Building,
   title: "Business Loan",
   description: "Fuel your business growth with flexible business loans up to ₹5 Crore.",
-  rate: "11.0%",
+  rate: "14%",
   highlight: false,
   image: serviceBusinessLoan,
   link: "/services/business-loan"
 }, {
   icon: CreditCard,
   title: "Credit Cards",
-  description: "Premium credit cards with exclusive rewards, cashback, and travel benefits.",
-  rate: "0% EMI",
+  description: "No Cost EMI on purchases above ₹2,500 + Airport Lounge Access with exclusive rewards.",
+  rate: "No Cost EMI",
   highlight: false,
   image: serviceCreditCards,
   link: "/credit-cards"
@@ -50,7 +50,7 @@ const services = [{
   icon: Landmark,
   title: "Loan Against Property",
   description: "Unlock the value of your property with our loan against property options.",
-  rate: "9.5%",
+  rate: "9%",
   highlight: false,
   image: serviceLap,
   link: "/services/loan-against-property"
