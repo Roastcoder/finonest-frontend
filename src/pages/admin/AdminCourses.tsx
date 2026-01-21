@@ -17,6 +17,8 @@ interface Course {
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   status: 'active' | 'inactive';
+  image_path?: string;
+  video_path?: string;
   created_at: string;
   updated_at: string;
 }
@@ -37,6 +39,9 @@ const AdminCourses = () => {
     level: "Beginner" as "Beginner" | "Intermediate" | "Advanced",
     status: "active" as "active" | "inactive"
   });
+  
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetchCourses();
@@ -81,14 +86,30 @@ const AdminCourses = () => {
         : 'https://api.finonest.com/api/courses';
       
       const method = editingCourse ? 'PUT' : 'POST';
+      
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('duration', formData.duration);
+      formDataToSend.append('lessons', formData.lessons.toString());
+      formDataToSend.append('level', formData.level);
+      formDataToSend.append('status', formData.status);
+      
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+      
+      if (videoFile) {
+        formDataToSend.append('video', videoFile);
+      }
 
       const response = await fetch(url, {
         method,
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       if (response.ok) {
@@ -145,6 +166,8 @@ const AdminCourses = () => {
       level: "Beginner",
       status: "active"
     });
+    setImageFile(null);
+    setVideoFile(null);
     setEditingCourse(null);
     setShowForm(false);
   };
@@ -274,6 +297,26 @@ const AdminCourses = () => {
                           <SelectItem value="inactive">Inactive</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Course Image</label>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Course Video</label>
+                      <Input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                      />
                     </div>
                   </div>
 

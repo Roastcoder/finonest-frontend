@@ -51,14 +51,10 @@ const FinobizzLearning = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/courses', {
-        headers: {
-          'X-API-Key': 'FINONEST_API_KEY_2024'
-        }
-      });
+      const response = await fetch('https://api.finonest.com/api/courses');
       if (response.ok) {
         const data = await response.json();
-        setCourses(data.courses || []);
+        setCourses(data.courses?.filter((course: Course) => course.status === 'active') || []);
       } else {
         // Use fallback courses if API fails
         setCourses([
@@ -197,6 +193,51 @@ const FinobizzLearning = () => {
             </div>
           </div>
         </section>
+
+        {/* Available Courses */}
+        {courses.length > 0 && (
+          <section className="py-16">
+            <div className="container">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
+                  Available Courses
+                </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Start your financial education journey with our expertly crafted courses
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courses.map((course) => (
+                  <div key={course.id} className="bg-card p-6 rounded-xl border border-border hover:shadow-lg transition-shadow">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getLevelColor(course.level)}`}>
+                        {course.level}
+                      </span>
+                      <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                        <Clock className="w-4 h-4" />
+                        {course.duration}
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{course.title}</h3>
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{course.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                        <BookOpen className="w-4 h-4" />
+                        {course.lessons} lessons
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Start Course
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Program Details */}
         <section className="py-16">
