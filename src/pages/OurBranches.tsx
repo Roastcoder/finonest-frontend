@@ -79,18 +79,18 @@ const OurBranches = () => {
                   />
                   
                   {/* Branch Pins */}
-                  {branches.filter(branch => branch.x_position && branch.y_position).map((branch) => {
+                  {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
                     console.log('Rendering pin for:', branch.name, 'at', branch.x_position, branch.y_position);
                     return (
                       <div
                         key={branch.id}
                         className="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition-transform group z-10"
-                        style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
+                        style={{ left: `${Number(branch.x_position)}%`, top: `${Number(branch.y_position)}%` }}
                         onMouseEnter={() => setHoveredBranch(branch)}
                         onMouseLeave={() => setHoveredBranch(null)}
                         onClick={() => openInMaps(branch)}
                       >
-                        <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" />
+                        <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" fill="currentColor" />
                         
                         {hoveredBranch?.id === branch.id && (
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
