@@ -81,22 +81,28 @@ const OurBranches = () => {
                     />
                   </div>
                   
-                  {/* Branch Pins - Exact same positioning as admin */}
+                  {/* Branch Pins - Debug positioning */}
                   {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
                     // Ensure position values are within valid range (0-100)
                     const xPos = Math.max(0, Math.min(100, Number(branch.x_position)));
                     const yPos = Math.max(0, Math.min(100, Number(branch.y_position)));
-                    console.log('Public map pin:', branch.name, 'at', xPos, yPos);
+                    console.log('Branch:', branch.name, 'Raw positions:', branch.x_position, branch.y_position);
+                    console.log('Calculated positions:', xPos, yPos);
                     return (
                       <div
                         key={branch.id}
-                        className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-125 transition-transform z-10"
+                        className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-125 transition-transform z-20"
                         style={{ left: `${xPos}%`, top: `${yPos}%` }}
                         onMouseEnter={() => setHoveredBranch(branch)}
                         onMouseLeave={() => setHoveredBranch(null)}
                         onClick={() => openInMaps(branch)}
                       >
-                        <MapPin className="w-6 h-6 text-red-600 drop-shadow-lg" fill="currentColor" />
+                        <MapPin className="w-8 h-8 text-red-600 drop-shadow-lg" fill="currentColor" />
+                        
+                        {/* Debug info */}
+                        <div className="absolute top-8 left-0 bg-black text-white text-xs p-1 rounded">
+                          {xPos.toFixed(1)}, {yPos.toFixed(1)}
+                        </div>
                         
                         {hoveredBranch?.id === branch.id && (
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
@@ -107,7 +113,7 @@ const OurBranches = () => {
                         )}
                       </div>
                     );
-                  })}
+                  })}}
                 </div>
               </CardContent>
             </Card>
