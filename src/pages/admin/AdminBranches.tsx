@@ -76,8 +76,8 @@ const AdminBranches = () => {
       // OpenStreetMap tiles
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 12,
-        minZoom: 5
+        maxZoom: 15,
+        minZoom: 2
       }).addTo(adminMapRef.current);
       
       // Add existing branch markers
