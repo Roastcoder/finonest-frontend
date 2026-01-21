@@ -650,10 +650,10 @@ const AdminBranches = () => {
                           <Clock className="w-3 h-3" />
                           {branch.working_hours}
                         </p>
-                        {branch.x_position && branch.y_position && (
+                        {branch.x_position != null && branch.y_position != null && (
                           <p className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
-                            Map Position: {branch.x_position.toFixed(1)}%, {branch.y_position.toFixed(1)}%
+                            Map Position: {Number(branch.x_position).toFixed(1)}%, {Number(branch.y_position).toFixed(1)}%
                           </p>
                         )}
                       </div>
