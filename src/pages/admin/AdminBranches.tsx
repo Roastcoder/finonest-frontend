@@ -26,6 +26,7 @@ interface Branch {
   manager_name?: string;
   working_hours: string;
   status: 'active' | 'inactive';
+  priority: number;
   created_at: string;
   updated_at: string;
 }
@@ -55,7 +56,8 @@ const AdminBranches = () => {
     y_position: "",
     manager_name: "",
     working_hours: "9:00 AM - 6:00 PM",
-    status: "active" as "active" | "inactive"
+    status: "active" as "active" | "inactive",
+    priority: "0"
   });
 
   useEffect(() => {
@@ -74,7 +76,7 @@ const AdminBranches = () => {
       
       // OpenStreetMap tiles
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: '',
         maxZoom: 18,
         minZoom: 2
       }).addTo(adminMapRef.current);
@@ -150,7 +152,8 @@ const AdminBranches = () => {
           latitude: parseFloat(formData.latitude),
           longitude: parseFloat(formData.longitude),
           x_position: formData.x_position ? parseFloat(formData.x_position) : null,
-          y_position: formData.y_position ? parseFloat(formData.y_position) : null
+          y_position: formData.y_position ? parseFloat(formData.y_position) : null,
+          priority: parseInt(formData.priority)
         }),
       });
 
@@ -290,7 +293,8 @@ const AdminBranches = () => {
       y_position: "",
       manager_name: "",
       working_hours: "9:00 AM - 6:00 PM",
-      status: "active"
+      status: "active",
+      priority: "0"
     });
     setEditingBranch(null);
     setShowForm(false);
@@ -311,7 +315,8 @@ const AdminBranches = () => {
       y_position: branch.y_position?.toString() || "",
       manager_name: branch.manager_name || "",
       working_hours: branch.working_hours,
-      status: branch.status
+      status: branch.status,
+      priority: (branch.priority || 0).toString()
     });
     setEditingBranch(branch);
     setShowForm(true);
@@ -362,6 +367,23 @@ const AdminBranches = () => {
                         required
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Priority</label>
+                      <Select value={formData.priority} onValueChange={(value) => setFormData({...formData, priority: value})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="0">Normal (0)</SelectItem>
+                          <SelectItem value="1">High (1)</SelectItem>
+                          <SelectItem value="2">Higher (2)</SelectItem>
+                          <SelectItem value="3">Highest (3)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Status</label>
                       <Select value={formData.status} onValueChange={(value: "active" | "inactive") => setFormData({...formData, status: value})}>
@@ -589,6 +611,11 @@ const AdminBranches = () => {
                         <Badge variant={branch.status === 'active' ? 'default' : 'secondary'}>
                           {branch.status}
                         </Badge>
+                        {branch.priority > 0 && (
+                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                            Priority {branch.priority}
+                          </Badge>
+                        )}
                       </div>
                       <div className="space-y-1 text-sm text-muted-foreground">
                         <p className="flex items-center gap-1">

@@ -27,6 +27,7 @@ interface Branch {
   manager_name?: string;
   working_hours: string;
   status: string;
+  priority?: number;
 }
 
 const OurBranches = () => {
@@ -52,7 +53,7 @@ const OurBranches = () => {
       
       // CartoDB Light tiles (clean, professional)
       window.L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CartoDB',
+        attribution: '',
         subdomains: 'abcd',
         maxZoom: 12,
         minZoom: 3
