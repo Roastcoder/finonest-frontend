@@ -29,6 +29,7 @@ const AdminCourses = () => {
   const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -58,6 +59,16 @@ const AdminCourses = () => {
     } else {
       setImagePreview(null);
     }
+  };
+
+  const toggleCard = (courseId: number) => {
+    const newExpanded = new Set(expandedCards);
+    if (newExpanded.has(courseId)) {
+      newExpanded.delete(courseId);
+    } else {
+      newExpanded.add(courseId);
+    }
+    setExpandedCards(newExpanded);
   };
 
   useEffect(() => {
@@ -410,11 +421,12 @@ const AdminCourses = () => {
             <p>No courses found.</p>
           ) : (
             <div className="space-y-4">
-              {courses.map((course) => (
-                <div key={course.id} className="border p-4 rounded-lg">
-                  <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
-                    <div className="flex-1 w-full">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
+              {courses.map((course) => {
+                const isExpanded = expandedCards.has(course.id);
+                return (
+                  <div key={course.id} className="border p-4 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold text-lg">{course.title}</h3>
                         <Badge className={getLevelColor(course.level)}>
                           {course.level}
@@ -423,8 +435,16 @@ const AdminCourses = () => {
                           {course.status}
                         </Badge>
                       </div>
+                      <button 
+                        onClick={() => toggleCard(course.id)}
+                        className="p-2 hover:bg-gray-100 rounded text-lg font-bold"
+                      >
+                        {isExpanded ? '−' : '+'}
+                      </button>
+                    </div>
+                    <div className={`${isExpanded ? 'block' : 'hidden'}`}>
                       <p className="text-sm text-muted-foreground mb-2 break-words">{course.description}</p>
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mb-4">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3 flex-shrink-0" />
                           {course.duration}
@@ -437,20 +457,20 @@ const AdminCourses = () => {
                           Created: {new Date(course.created_at).toLocaleDateString()}
                         </span>
                       </div>
-                    </div>
-                    <div className="flex flex-row lg:flex-col gap-2 w-full lg:w-auto">
-                      <Button variant="outline" size="sm" onClick={() => editCourse(course)} className="flex-1 lg:flex-none">
-                        <Edit className="w-4 h-4 mr-1 lg:mr-0" />
-                        <span className="lg:hidden">Edit</span>
-                      </Button>
-                      <Button variant="destructive" size="sm" onClick={() => deleteCourse(course.id)} className="flex-1 lg:flex-none">
-                        <Trash2 className="w-4 h-4 mr-1 lg:mr-0" />
-                        <span className="lg:hidden">Delete</span>
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => editCourse(course)}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => deleteCourse(course.id)}>
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>
