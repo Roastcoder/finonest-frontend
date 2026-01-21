@@ -98,17 +98,17 @@ const OurBranches = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
         {/* Hero Section */}
         <div className="relative pt-20 pb-16">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/5 to-slate-800/5"></div>
           <div className="relative container mx-auto px-4 text-center">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <MapPin className="w-4 h-4" />
               Branch Network
             </div>
             <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Visit Our <span className="text-blue-600">Branches</span>
+              Visit Our <span className="text-gray-700">Branches</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
               Experience personalized financial services at our conveniently located branches across India.
@@ -119,7 +119,7 @@ const OurBranches = () => {
         {/* Map Section */}
         <div className="relative px-4 pb-16">
           <div className="container mx-auto">
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8">
+            <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200/50 p-8">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Locate Our Branches</h2>
                 <p className="text-gray-600">Click on any marker to get directions</p>
@@ -127,7 +127,7 @@ const OurBranches = () => {
               
               <div className="relative overflow-hidden rounded-2xl shadow-xl">
                 <div ref={mapRef} className="w-full h-[500px]" style={{ zIndex: 1 }}></div>
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-blue-900/5 to-transparent"></div>
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-gray-900/5 to-transparent"></div>
               </div>
             </div>
           </div>
@@ -144,10 +144,10 @@ const OurBranches = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {branches.map((branch) => (
                 <div key={branch.id} className="group">
-                  <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 p-6 hover:shadow-xl hover:bg-white/80 transition-all duration-300">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/30 p-6 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="bg-blue-100 p-3 rounded-xl">
-                        <MapPin className="w-6 h-6 text-blue-600" />
+                      <div className="bg-gray-100 p-3 rounded-xl">
+                        <MapPin className="w-6 h-6 text-gray-700" />
                       </div>
                       <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
                         Active
@@ -181,7 +181,7 @@ const OurBranches = () => {
                     
                     <button
                       onClick={() => openInMaps(branch)}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 group-hover:shadow-lg"
+                      className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-900 hover:to-black transition-all duration-200 group-hover:shadow-lg"
                     >
                       Get Directions →
                     </button>
