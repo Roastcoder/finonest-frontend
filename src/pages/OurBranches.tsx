@@ -1,8 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
+// Declare Leaflet types
+declare global {
+  interface Window {
+    L: any;
+  }
+}
 
 interface Branch {
   id: number;
@@ -25,10 +32,41 @@ interface Branch {
 const OurBranches = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [hoveredBranch, setHoveredBranch] = useState<Branch | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const leafletMapRef = useRef<any>(null);
 
   useEffect(() => {
     fetchBranches();
   }, []);
+
+  useEffect(() => {
+    if (branches.length > 0 && mapRef.current && window.L && !leafletMapRef.current) {
+      // Initialize Leaflet map
+      leafletMapRef.current = window.L.map(mapRef.current).setView([20.5937, 78.9629], 5);
+      
+      // Add tile layer
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(leafletMapRef.current);
+      
+      // Add markers for branches
+      branches.forEach(branch => {
+        if (branch.latitude && branch.longitude) {
+          const marker = window.L.marker([branch.latitude, branch.longitude])
+            .addTo(leafletMapRef.current)
+            .bindPopup(`
+              <div class="p-2">
+                <h3 class="font-semibold">${branch.name}</h3>
+                <p class="text-sm text-gray-600">${branch.city}, ${branch.state}</p>
+                <p class="text-sm">${branch.address}</p>
+                <p class="text-sm">📞 ${branch.phone || 'N/A'}</p>
+                <p class="text-sm">🕒 ${branch.working_hours}</p>
+              </div>
+            `);
+        }
+      });
+    }
+  }, [branches]);
 
   const fetchBranches = async () => {
     try {
@@ -70,50 +108,15 @@ const OurBranches = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                {/* Map Container - Same as Admin */}
-                <div className="relative w-full h-96 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
-                  {/* India SVG Map - Fixed dimensions */}
-                  <div className="absolute inset-0">
-                    <img 
-                      src="/india.svg" 
-                      alt="India Map" 
-                      className="w-full h-full object-contain pointer-events-none"
-                    />
-                  </div>
-                  
-                  {/* Branch Pins */}
-                  {branches.filter(branch => branch.x_position != null && branch.y_position != null).map((branch) => {
-                    const xPos = Math.max(0, Math.min(100, Number(branch.x_position)));
-                    const yPos = Math.max(0, Math.min(100, Number(branch.y_position)));
-                    return (
-                      <div
-                        key={branch.id}
-                        className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-125 transition-transform z-20"
-                        style={{ left: `${xPos}%`, top: `${yPos}%` }}
-                        onMouseEnter={() => setHoveredBranch(branch)}
-                        onMouseLeave={() => setHoveredBranch(null)}
-                        onClick={() => openInMaps(branch)}
-                      >
-                        <MapPin className="w-6 h-6 text-red-600 drop-shadow-lg" fill="currentColor" />
-                        
-                        {hoveredBranch?.id === branch.id && (
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white p-3 rounded-lg shadow-xl border min-w-48 z-30">
-                            <p className="font-semibold text-sm text-gray-900">{branch.name}</p>
-                            <p className="text-xs text-gray-600 mb-1">{branch.city}, {branch.state}</p>
-                            <p className="text-xs text-blue-600 font-medium">Click for directions</p>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}}
-                </div>
+                {/* Leaflet Map */}
+                <div ref={mapRef} className="w-full h-96" style={{ zIndex: 1 }}></div>
               </CardContent>
             </Card>
           </div>
 
           {/* Branch List */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {branches.filter(branch => !branch.x_position || !branch.y_position).map((branch) => (
+            {branches.map((branch) => (
               <Card key={branch.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg">{branch.name}</CardTitle>
