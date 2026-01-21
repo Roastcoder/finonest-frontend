@@ -198,59 +198,201 @@ const FinobizzLearning = () => {
           </div>
         </section>
 
-        {/* Courses */}
+        {/* Program Details */}
         <section className="py-16">
           <div className="container">
             <div className="text-center mb-12">
-              <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-                Available Courses
-              </span>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-                Learn at Your Own Pace
+                About Finobizz Learning Program
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Choose from our curated collection of financial education courses
+                Powered by Finonest - Your gateway to financial expertise and career growth
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {loading ? (
-                <div className="col-span-full text-center py-8">
-                  <p className="text-muted-foreground">Loading courses...</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Program Objective */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Program Objective</h3>
+                <p className="text-muted-foreground text-sm">
+                  To provide comprehensive financial education and practical skills training to help individuals excel in the finance industry and make informed financial decisions.
+                </p>
+              </div>
+
+              {/* Program Fee & Enrollment */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Program Fee & Enrollment</h3>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Fee:</strong> ₹15,000 (One-time payment)
+                </p>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Enrollment:</strong> Rolling admissions throughout the year
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  <strong>Payment Options:</strong> Online payment, EMI available
+                </p>
+              </div>
+
+              {/* Finance Knowledge & Skills */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Finance Knowledge & Skills Covered</h3>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Personal Finance Management</li>
+                  <li>• Loan Processing & Documentation</li>
+                  <li>• Credit Analysis & Risk Assessment</li>
+                  <li>• Investment Planning & Portfolio Management</li>
+                  <li>• Banking Operations & Compliance</li>
+                  <li>• Financial Planning & Advisory</li>
+                </ul>
+              </div>
+
+              {/* Practical Training Approach */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Practical Training Approach</h3>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Live case studies and real-world scenarios</li>
+                  <li>• Hands-on training with industry tools</li>
+                  <li>• Interactive workshops and simulations</li>
+                  <li>• Project-based learning assignments</li>
+                  <li>• Mentorship from industry experts</li>
+                </ul>
+              </div>
+
+              {/* Career Guidance & Job Assistance */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Career Guidance & Job Assistance</h3>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Resume building and interview preparation</li>
+                  <li>• Job placement assistance with partner companies</li>
+                  <li>• Career counseling and guidance sessions</li>
+                  <li>• Industry networking opportunities</li>
+                  <li>• Internship opportunities with Finonest</li>
+                </ul>
+              </div>
+
+              {/* Eligibility & Who Can Join */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Eligibility & Who Can Join</h3>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Graduates from any discipline</li>
+                  <li>• Working professionals seeking career change</li>
+                  <li>• Fresh graduates looking to enter finance</li>
+                  <li>• Entrepreneurs and business owners</li>
+                  <li>• Anyone interested in financial literacy</li>
+                </ul>
+              </div>
+
+              {/* Work Model */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Work Model (WFH / Office Based)</h3>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Hybrid Model:</strong> Flexible learning options
+                </p>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Online live sessions and recorded lectures</li>
+                  <li>• Weekend classroom sessions (optional)</li>
+                  <li>• Work-from-home friendly schedule</li>
+                  <li>• Mobile app for learning on-the-go</li>
+                </ul>
+              </div>
+
+              {/* Why Choose Finobizz */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Why Choose Finobizz</h3>
+                <ul className="text-muted-foreground text-sm space-y-1">
+                  <li>• Industry-recognized certification</li>
+                  <li>• Expert faculty with 15+ years experience</li>
+                  <li>• 95% job placement rate</li>
+                  <li>• Lifetime access to course materials</li>
+                  <li>• Strong alumni network</li>
+                  <li>• Continuous skill development programs</li>
+                </ul>
+              </div>
+
+              {/* Program Duration & Structure */}
+              <div className="bg-card p-6 rounded-xl border border-border">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Program Duration & Structure</h3>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Duration:</strong> 6 months (Part-time)
+                </p>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Schedule:</strong> Weekends (Sat-Sun) 2-6 PM
+                </p>
+                <p className="text-muted-foreground text-sm mb-2">
+                  <strong>Format:</strong> 70% Online + 30% Practical
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  <strong>Modules:</strong> 12 comprehensive modules
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Certification & Important Info */}
+        <section className="py-16 bg-muted/30">
+          <div className="container">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Certification */}
+              <div className="bg-card p-8 rounded-xl border border-border">
+                <div className="flex items-center gap-3 mb-4">
+                  <Award className="w-8 h-8 text-primary" />
+                  <h3 className="text-2xl font-semibold text-foreground">Certification / Program Completion</h3>
                 </div>
-              ) : courses.length === 0 ? (
-                <div className="col-span-full text-center py-8">
-                  <p className="text-muted-foreground">No courses available at the moment.</p>
+                <ul className="text-muted-foreground space-y-2">
+                  <li>• Industry-recognized Finobizz Certificate</li>
+                  <li>• Digital badge for LinkedIn profile</li>
+                  <li>• Transcript of completed modules</li>
+                  <li>• Letter of recommendation (top performers)</li>
+                  <li>• Continuing education credits</li>
+                </ul>
+              </div>
+
+              {/* Important Disclaimer */}
+              <div className="bg-card p-8 rounded-xl border border-border">
+                <h3 className="text-2xl font-semibold text-foreground mb-4">Important Disclaimer</h3>
+                <div className="text-muted-foreground space-y-2 text-sm">
+                  <p>• Job placement assistance is provided but employment is not guaranteed</p>
+                  <p>• Course content may be updated based on industry requirements</p>
+                  <p>• Refund policy: 7-day money-back guarantee</p>
+                  <p>• Minimum 80% attendance required for certification</p>
+                  <p>• All course materials are proprietary to Finonest</p>
                 </div>
-              ) : (
-                courses.map((course) => (
-                  <div key={course.id} className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-lg transition-shadow group">
-                    <div className="h-40 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                      <BookOpen className="w-16 h-16 text-primary/50" />
-                    </div>
-                    <div className="p-6">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${getLevelColor(course.level)}`}>
-                        {course.level}
-                      </span>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">{course.title}</h3>
-                      <p className="text-muted-foreground text-sm mb-4">{course.description}</p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {course.duration}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <BookOpen className="w-4 h-4" />
-                          {course.lessons} lessons
-                        </span>
-                      </div>
-                      <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                        Start Course
-                      </Button>
-                    </div>
-                  </div>
-                ))
-              )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact & Enquiry */}
+        <section className="py-16">
+          <div className="container">
+            <div className="bg-primary text-primary-foreground rounded-2xl p-8 md:p-12 text-center">
+              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
+                Contact & Enquiry Details
+              </h2>
+              <div className="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Phone</h4>
+                  <p className="text-primary-foreground/80">+91-98765-43210</p>
+                  <p className="text-primary-foreground/80">+91-87654-32109</p>
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Email</h4>
+                  <p className="text-primary-foreground/80">learning@finonest.com</p>
+                  <p className="text-primary-foreground/80">support@finobizz.com</p>
+                </div>
+                <div>
+                  <h4 className="text-xl font-semibold mb-2">Office Hours</h4>
+                  <p className="text-primary-foreground/80">Mon-Fri: 9 AM - 6 PM</p>
+                  <p className="text-primary-foreground/80">Sat: 10 AM - 4 PM</p>
+                </div>
+              </div>
+              <Button variant="secondary" size="lg" asChild>
+                <Link to="/contact">
+                  Get in Touch
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
