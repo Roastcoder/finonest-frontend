@@ -129,52 +129,52 @@ const OurBranches = () => {
         {/* Branch Cards Section */}
         <div className="px-4 pb-20">
           <div className="container mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">All Branch Locations</h2>
-              <p className="text-gray-600">Complete details of our branch network</p>
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">All Branch Locations</h2>
+              <p className="text-gray-600 text-sm md:text-base">Complete details of our branch network</p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
               {branches.map((branch) => (
                 <div key={branch.id} className="group">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/30 p-6 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="bg-gray-100 p-3 rounded-xl">
-                        <MapPin className="w-6 h-6 text-gray-700" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-6 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-3 md:mb-4">
+                      <div className="bg-gray-100 p-2 md:p-3 rounded-lg md:rounded-xl">
+                        <MapPin className="w-4 h-4 md:w-6 md:h-6 text-gray-700" />
                       </div>
-                      <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                      <div className="bg-green-100 text-green-800 px-2 md:px-3 py-1 rounded-full text-xs font-medium">
                         Active
                       </div>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{branch.name}</h3>
+                    <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2 md:mb-3 line-clamp-2">{branch.name}</h3>
                     
-                    <div className="space-y-3 text-sm text-gray-600 mb-6">
+                    <div className="space-y-2 md:space-y-3 text-xs md:text-sm text-gray-600 mb-4 md:mb-6">
                       <div className="flex items-start gap-2">
-                        <MapPin className="w-4 h-4 mt-0.5 text-gray-400" />
-                        <span>{branch.address}, {branch.city}, {branch.state} - {branch.pincode}</span>
+                        <MapPin className="w-3 h-3 md:w-4 md:h-4 mt-0.5 text-gray-400 flex-shrink-0" />
+                        <span className="line-clamp-2">{branch.address}, {branch.city}, {branch.state} - {branch.pincode}</span>
                       </div>
                       {branch.phone && (
                         <div className="flex items-center gap-2">
                           <span className="text-gray-400">📞</span>
-                          <span>{branch.phone}</span>
+                          <span className="truncate">{branch.phone}</span>
                         </div>
                       )}
                       {branch.manager_name && (
                         <div className="flex items-center gap-2">
                           <span className="text-gray-400">👤</span>
-                          <span>Manager: {branch.manager_name}</span>
+                          <span className="truncate">Manager: {branch.manager_name}</span>
                         </div>
                       )}
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400">🕒</span>
-                        <span>{branch.working_hours}</span>
+                        <span className="truncate">{branch.working_hours}</span>
                       </div>
                     </div>
                     
                     <button
                       onClick={() => openInMaps(branch)}
-                      className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-900 hover:to-black transition-all duration-200 group-hover:shadow-lg"
+                      className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-2 md:py-3 px-3 md:px-4 rounded-lg md:rounded-xl text-sm md:text-base font-medium hover:from-gray-900 hover:to-black transition-all duration-200 group-hover:shadow-lg"
                     >
                       Get Directions →
                     </button>
