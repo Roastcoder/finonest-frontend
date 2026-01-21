@@ -18,29 +18,6 @@ interface Course {
   status: string;
 }
 
-const features = [
-  {
-    icon: Video,
-    title: "Video Lessons",
-    description: "High-quality video content by industry experts",
-  },
-  {
-    icon: BookOpen,
-    title: "Study Materials",
-    description: "Downloadable PDFs and reference guides",
-  },
-  {
-    icon: Award,
-    title: "Certificates",
-    description: "Get certified upon course completion",
-  },
-  {
-    icon: Users,
-    title: "Community",
-    description: "Connect with fellow learners and mentors",
-  },
-];
-
 const FinobizzLearning = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,23 +89,6 @@ const FinobizzLearning = () => {
                   Watch Demo
                 </Button>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border text-center">
-                  <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.description}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
