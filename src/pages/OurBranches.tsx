@@ -61,9 +61,18 @@ const OurBranches = () => {
       // Add markers for branches
       branches.forEach(branch => {
         if (branch.latitude && branch.longitude) {
-          window.L.marker([branch.latitude, branch.longitude])
+          const marker = window.L.marker([branch.latitude, branch.longitude])
             .addTo(leafletMapRef.current)
-            .bindPopup(`<b>${branch.name}</b><br>${branch.city}, ${branch.state}`);
+            .bindPopup(`
+              <div>
+                <b>${branch.name}</b><br>
+                ${branch.city}, ${branch.state}<br>
+                <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}', '_blank')" 
+                        style="background: #2563eb; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;">
+                  Get Directions →
+                </button>
+              </div>
+            `);
         }
       });
     }
@@ -100,19 +109,12 @@ const OurBranches = () => {
           </div>
 
           {/* Interactive Map Section */}
-          <div className="mb-12 flex justify-center">
-            <Card className="overflow-hidden shadow-xl max-w-4xl w-full">
-              <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                  <MapPin className="w-6 h-6" />
-                  Branch Locations
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                {/* Leaflet Map */}
-                <div ref={mapRef} className="w-full h-[600px]" style={{ zIndex: 1 }}></div>
-              </CardContent>
-            </Card>
+          <div className="mb-12">
+            <div className="relative">
+              <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">Find Our Branches</h2>
+              {/* Leaflet Map */}
+              <div ref={mapRef} className="w-full h-[600px] rounded-2xl shadow-2xl border-4 border-white/20 backdrop-blur-sm" style={{ zIndex: 1 }}></div>
+            </div>
           </div>
 
           {/* Branch List */}
