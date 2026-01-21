@@ -28,7 +28,11 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
     phone: '',
     address: '',
     experience: '',
-    goals: ''
+    goals: '',
+    upiId: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [razorpayKey, setRazorpayKey] = useState('');
@@ -57,6 +61,16 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
     setIsLoading(true);
 
     try {
+      if (course.price > 0 && !formData.paymentMethod) {
+        toast({
+          title: "Error",
+          description: "Please select a payment method",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+      
       if (course.price > 0) {
         // For paid courses, initiate Razorpay payment
         const options = {
@@ -108,6 +122,11 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
       amount_paid: course.price,
       payment_method: formData.paymentMethod,
       payment_id: paymentId,
+      payment_details: {
+        upi_id: formData.upiId,
+        card_number: formData.cardNumber ? formData.cardNumber.slice(-4) : null, // Only last 4 digits
+        expiry_date: formData.expiryDate
+      },
       student_info: {
         phone: formData.phone,
         address: formData.address,
@@ -186,8 +205,12 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
         <form onSubmit={handleSubmit} className="space-y-4">
           {course.price > 0 && (
             <div>
-              <Label htmlFor="paymentMethod">Payment Method</Label>
-              <Select value={formData.paymentMethod} onValueChange={(value) => handleChange('paymentMethod', value)} required>
+              <Label htmlFor="paymentMethod">Payment Method *</Label>
+              <Select 
+                value={formData.paymentMethod} 
+                onValueChange={(value) => handleChange('paymentMethod', value)}
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select payment method" />
                 </SelectTrigger>
@@ -207,6 +230,60 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
                   <SelectItem value="netbanking">Net Banking</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          )}
+
+          {course.price > 0 && formData.paymentMethod === 'upi' && (
+            <div>
+              <Label htmlFor="upiId">UPI ID</Label>
+              <Input
+                id="upiId"
+                type="text"
+                value={formData.upiId || ''}
+                onChange={(e) => handleChange('upiId', e.target.value)}
+                placeholder="yourname@paytm"
+                required
+              />
+            </div>
+          )}
+
+          {course.price > 0 && formData.paymentMethod === 'card' && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="cardNumber">Card Number</Label>
+                <Input
+                  id="cardNumber"
+                  type="text"
+                  value={formData.cardNumber || ''}
+                  onChange={(e) => handleChange('cardNumber', e.target.value)}
+                  placeholder="1234 5678 9012 3456"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="expiryDate">Expiry Date</Label>
+                  <Input
+                    id="expiryDate"
+                    type="text"
+                    value={formData.expiryDate || ''}
+                    onChange={(e) => handleChange('expiryDate', e.target.value)}
+                    placeholder="MM/YY"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="cvv">CVV</Label>
+                  <Input
+                    id="cvv"
+                    type="text"
+                    value={formData.cvv || ''}
+                    onChange={(e) => handleChange('cvv', e.target.value)}
+                    placeholder="123"
+                    required
+                  />
+                </div>
+              </div>
             </div>
           )}
 
