@@ -55,70 +55,9 @@ const FinobizzLearning = () => {
       if (response.ok) {
         const data = await response.json();
         setCourses(data.courses?.filter((course: Course) => course.status === 'active') || []);
-      } else {
-        // Use fallback courses if API fails
-        setCourses([
-          {
-            id: 1,
-            title: "Personal Finance Basics",
-            description: "Learn the fundamentals of personal finance, budgeting, and money management.",
-            duration: "2 hours",
-            lessons: 8,
-            level: "Beginner" as const,
-            status: "active"
-          },
-          {
-            id: 2,
-            title: "Understanding Credit Scores",
-            description: "Master credit scores, reports, and how to improve your creditworthiness.",
-            duration: "1.5 hours",
-            lessons: 6,
-            level: "Beginner" as const,
-            status: "active"
-          },
-          {
-            id: 3,
-            title: "Loan Application Process",
-            description: "Step-by-step guide to applying for loans and getting the best rates.",
-            duration: "3 hours",
-            lessons: 12,
-            level: "Intermediate" as const,
-            status: "active"
-          }
-        ]);
       }
     } catch (error) {
       console.error('Failed to fetch courses:', error);
-      // Use fallback courses on error
-      setCourses([
-        {
-          id: 1,
-          title: "Personal Finance Basics",
-          description: "Learn the fundamentals of personal finance, budgeting, and money management.",
-          duration: "2 hours",
-          lessons: 8,
-          level: "Beginner" as const,
-          status: "active"
-        },
-        {
-          id: 2,
-          title: "Understanding Credit Scores",
-          description: "Master credit scores, reports, and how to improve your creditworthiness.",
-          duration: "1.5 hours",
-          lessons: 6,
-          level: "Beginner" as const,
-          status: "active"
-        },
-        {
-          id: 3,
-          title: "Loan Application Process",
-          description: "Step-by-step guide to applying for loans and getting the best rates.",
-          duration: "3 hours",
-          lessons: 12,
-          level: "Intermediate" as const,
-          status: "active"
-        }
-      ]);
     } finally {
       setLoading(false);
     }
@@ -228,8 +167,10 @@ const FinobizzLearning = () => {
                         <BookOpen className="w-4 h-4" />
                         {course.lessons} lessons
                       </div>
-                      <Button variant="outline" size="sm">
-                        Start Course
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/services/finobizz-learning/course/${course.id}`}>
+                          View Details
+                        </Link>
                       </Button>
                     </div>
                   </div>
