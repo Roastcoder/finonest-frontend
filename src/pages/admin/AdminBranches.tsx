@@ -517,25 +517,6 @@ const AdminBranches = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 relative z-50">
-                <Select value={selectedBranch?.id.toString() || ""} onValueChange={(value) => {
-                  const branch = branches.find(b => b.id === parseInt(value));
-                  setSelectedBranch(branch || null);
-                  setSelectedPosition(null);
-                }}>
-                  <SelectTrigger className="relative z-50">
-                    <SelectValue placeholder="Select branch to position" />
-                  </SelectTrigger>
-                  <SelectContent className="relative z-50">
-                    {branches.map(branch => (
-                      <SelectItem key={branch.id} value={branch.id.toString()}>
-                        {branch.name} - {branch.city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
               <div 
                 className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 cursor-crosshair border rounded-lg overflow-hidden"
                 onClick={handleMapClick}
@@ -549,7 +530,7 @@ const AdminBranches = () => {
                     <div className="bg-white p-4 rounded-lg shadow-lg text-center">
                       <MapPin className="w-8 h-8 mx-auto mb-2 text-blue-600" />
                       <p className="font-medium">Select a branch first</p>
-                      <p className="text-sm text-gray-600">Choose a branch from the dropdown above</p>
+                      <p className="text-sm text-gray-600">Choose a branch from the dropdown below</p>
                     </div>
                   </div>
                 )}
@@ -573,6 +554,25 @@ const AdminBranches = () => {
                     </div>
                   </div>
                 )}
+              </div>
+              
+              <div className="mt-4 relative z-50">
+                <Select value={selectedBranch?.id.toString() || ""} onValueChange={(value) => {
+                  const branch = branches.find(b => b.id === parseInt(value));
+                  setSelectedBranch(branch || null);
+                  setSelectedPosition(null);
+                }}>
+                  <SelectTrigger className="relative z-50">
+                    <SelectValue placeholder="Select branch to position" />
+                  </SelectTrigger>
+                  <SelectContent className="relative z-50">
+                    {branches.map(branch => (
+                      <SelectItem key={branch.id} value={branch.id.toString()}>
+                        {branch.name} - {branch.city}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
