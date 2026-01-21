@@ -26,6 +26,7 @@ interface Course {
 const AdminCourses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const { token } = useAuth();
@@ -95,6 +96,7 @@ const AdminCourses = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
     
     try {
       const url = editingCourse 
@@ -142,6 +144,8 @@ const AdminCourses = () => {
         description: `Failed to ${editingCourse ? 'update' : 'create'} course`,
         variant: "destructive",
       });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -361,10 +365,17 @@ const AdminCourses = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Button type="submit" className="flex-1">
-                      {editingCourse ? 'Update' : 'Create'} Course
+                    <Button type="submit" className="flex-1" disabled={uploading}>
+                      {uploading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          {editingCourse ? 'Updating...' : 'Creating...'}
+                        </>
+                      ) : (
+                        <>{editingCourse ? 'Update' : 'Create'} Course</>
+                      )}
                     </Button>
-                    <Button type="button" variant="outline" onClick={resetForm} className="flex-1">
+                    <Button type="button" variant="outline" onClick={resetForm} className="flex-1" disabled={uploading}>
                       Cancel
                     </Button>
                   </div>
