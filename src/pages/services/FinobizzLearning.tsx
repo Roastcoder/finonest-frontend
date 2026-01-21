@@ -16,6 +16,8 @@ interface Course {
   lessons: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   status: string;
+  image_path?: string;
+  video_path?: string;
 }
 
 const FinobizzLearning = () => {
@@ -108,33 +110,47 @@ const FinobizzLearning = () => {
             {courses.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <div key={course.id} className="bg-card p-6 rounded-xl border border-border hover:shadow-lg transition-shadow">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getLevelColor(course.level)}`}>
-                        {course.level}
-                      </span>
-                      <div className="flex items-center gap-1 text-muted-foreground text-sm">
-                        <Clock className="w-4 h-4" />
-                        {course.duration}
+                  <div key={course.id} className="bg-card rounded-xl border border-border hover:shadow-lg transition-shadow overflow-hidden">
+                    {course.image_path && (
+                      <div className="aspect-video w-full overflow-hidden">
+                        <img 
+                          src={`https://api.finonest.com/${course.image_path}`}
+                          alt={course.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
                       </div>
-                    </div>
-                    
-                    <h3 className="text-xl font-semibold text-foreground mb-3">{course.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{course.description}</p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-muted-foreground text-sm">
-                        <BookOpen className="w-4 h-4" />
-                        {course.lessons} lessons
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getLevelColor(course.level)}`}>
+                          {course.level}
+                        </span>
+                        <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                          <Clock className="w-4 h-4" />
+                          {course.duration}
+                        </div>
                       </div>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/services/finobizz-learning/course/${course.id}`}>
-                          Start Course
-                        </Link>
-                      </Button>
+                      
+                      <h3 className="text-xl font-semibold text-foreground mb-3">{course.title}</h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{course.description}</p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                          <BookOpen className="w-4 h-4" />
+                          {course.lessons} lessons
+                        </div>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/services/finobizz-learning/course/${course.id}`}>
+                            Start Course
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                ))}
+                ))}}
               </div>
             ) : (
               <div className="text-center py-12">

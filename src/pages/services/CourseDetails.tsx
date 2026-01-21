@@ -100,11 +100,16 @@ const CourseDetails = () => {
             {/* Course Content */}
             <div className="lg:col-span-2">
               {course.image_path && (
-                <img 
-                  src={`https://api.finonest.com/${course.image_path}`}
-                  alt={course.title}
-                  className="w-full h-64 object-cover rounded-xl mb-6"
-                />
+                <div className="aspect-video w-full overflow-hidden rounded-xl mb-6">
+                  <img 
+                    src={`https://api.finonest.com/${course.image_path}`}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
               )}
 
               <div className="flex items-center gap-3 mb-4">
