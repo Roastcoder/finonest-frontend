@@ -55,7 +55,7 @@ const OurBranches = () => {
         attribution: '&copy; OpenStreetMap &copy; CartoDB',
         subdomains: 'abcd',
         maxZoom: 12,
-        minZoom: 5
+        minZoom: 3
       }).addTo(leafletMapRef.current);
       
       // Add markers for branches
