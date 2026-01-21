@@ -46,6 +46,9 @@ const OurBranches = () => {
       
       // Add tile layer
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        minZoom: 4,
+        maxBounds: [[6.4627, 68.1097], [35.5137, 97.3953]],
         attribution: '© OpenStreetMap contributors'
       }).addTo(leafletMapRef.current);
       
