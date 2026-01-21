@@ -296,9 +296,9 @@ const AdminAnalytics = () => {
   }
 
   return (
-    <div className="space-y-3 p-3">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -307,15 +307,15 @@ const AdminAnalytics = () => {
               className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-0 shadow-sm"
               onClick={() => navigate(stat.href)}
             >
-              <CardContent className="p-3">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <p className="text-xs font-medium text-muted-foreground truncate">{stat.title}</p>
-                    <p className="text-lg font-bold">{stat.value}</p>
+                  <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">{stat.title}</p>
+                    <p className="text-xl sm:text-3xl font-bold">{stat.value}</p>
                     <Badge variant="secondary" className="text-xs">{stat.change}</Badge>
                   </div>
-                  <div className={`p-2 rounded-full ${stat.bgColor} ml-2`}>
-                    <Icon className={`w-4 h-4 ${stat.color}`} />
+                  <div className={`p-2 sm:p-3 rounded-full ${stat.bgColor} ml-2`}>
+                    <Icon className={`w-4 h-4 sm:w-6 sm:h-6 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
@@ -326,19 +326,19 @@ const AdminAnalytics = () => {
 
       {/* Performance Overview */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Zap className="w-4 h-4" />
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
             Performance Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {performanceData.map((item, index) => (
               <div key={index} className="space-y-2">
-                <div className="flex justify-between text-xs">
+                <div className="flex justify-between text-sm">
                   <span className="font-medium truncate">{item.category}</span>
-                  <span className="text-muted-foreground">{item.current}/{item.target}</span>
+                  <span className="text-muted-foreground text-xs sm:text-sm">{item.current}/{item.target}</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-2">
                   <div 
@@ -354,21 +354,21 @@ const AdminAnalytics = () => {
       </Card>
 
       {/* Charts Row */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Monthly Trends */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Activity className="w-4 h-4" />
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
               Monthly Growth Trends
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <AreaChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" fontSize={10} />
-                <YAxis fontSize={10} />
+                <XAxis dataKey="month" fontSize={12} />
+                <YAxis fontSize={12} />
                 <Tooltip />
                 <Area type="monotone" dataKey="applications" stackId="1" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
                 <Area type="monotone" dataKey="users" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
@@ -381,21 +381,21 @@ const AdminAnalytics = () => {
 
         {/* Application Status Distribution */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <CheckCircle className="w-4 h-4" />
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               Application Status
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
                   data={applicationStatusData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={30}
-                  outerRadius={60}
+                  innerRadius={40}
+                  outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
                 >
@@ -406,11 +406,11 @@ const AdminAnalytics = () => {
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
-            <div className="flex flex-wrap justify-center gap-2 mt-3">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-4">
               {applicationStatusData.map((item, index) => (
-                <div key={index} className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className="text-xs">{item.name}: {item.value}</span>
+                <div key={index} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+                  <span className="text-xs sm:text-sm">{item.name}: {item.value}</span>
                 </div>
               ))}
             </div>
@@ -420,14 +420,14 @@ const AdminAnalytics = () => {
 
       {/* System Overview */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <DollarSign className="w-4 h-4" />
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
             System Overview
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={250}>
             <BarChart data={[
               { name: 'Apps', value: totalApplications },
               { name: 'Users', value: activeUsers },
@@ -438,8 +438,8 @@ const AdminAnalytics = () => {
               { name: 'Contacts', value: contactForms.length }
             ]}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" fontSize={10} />
-              <YAxis fontSize={10} />
+              <XAxis dataKey="name" fontSize={12} />
+              <YAxis fontSize={12} />
               <Tooltip />
               <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             </BarChart>
@@ -448,86 +448,102 @@ const AdminAnalytics = () => {
       </Card>
 
       {/* Quick Actions & Recent Activity */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Quick Actions */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Quick Actions</CardTitle>
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-2 sm:space-y-3">
             <Button 
               variant="outline" 
-              className="w-full justify-start text-xs h-8" 
+              className="w-full justify-start text-sm" 
               onClick={() => navigate('/admin/applications')}
             >
-              <FileText className="w-3 h-3 mr-2" />
-              <span className="truncate">Applications ({pendingApplications})</span>
+              <FileText className="w-4 h-4 mr-2" />
+              <span className="truncate">Applications ({pendingApplications} pending)</span>
             </Button>
             <Button 
               variant="outline" 
-              className="w-full justify-start text-xs h-8" 
+              className="w-full justify-start text-sm" 
               onClick={() => navigate('/admin/users')}
             >
-              <Users className="w-3 h-3 mr-2" />
-              <span className="truncate">Users ({activeUsers})</span>
+              <Users className="w-4 h-4 mr-2" />
+              <span className="truncate">Users ({activeUsers} active)</span>
             </Button>
             <Button 
               variant="outline" 
-              className="w-full justify-start text-xs h-8" 
+              className="w-full justify-start text-sm" 
               onClick={() => navigate('/admin/contact-forms')}
             >
-              <MessageSquare className="w-3 h-3 mr-2" />
+              <MessageSquare className="w-4 h-4 mr-2" />
               <span className="truncate">Contact Forms ({contactForms.length})</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start text-sm" 
+              onClick={() => navigate('/admin/blogs')}
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              <span className="truncate">Blogs ({publishedBlogs} published)</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start text-sm" 
+              onClick={() => navigate('/admin/courses')}
+            >
+              <GraduationCap className="w-4 h-4 mr-2" />
+              <span className="truncate">Courses ({activeCourses} active)</span>
             </Button>
           </CardContent>
         </Card>
 
         {/* Recent Activity */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Clock className="w-4 h-4" />
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
               Recent Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-2">
-              <Card className="p-2 bg-green-50 border-green-200">
+            <div className="grid grid-cols-2 gap-3">
+              <Card className="p-3 bg-green-50 border-green-200">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-medium">Application Approved</p>
-                    <p className="text-xs text-muted-foreground truncate">Personal loan</p>
+                    <p className="text-xs text-muted-foreground truncate">Personal loan for ₹5,00,000</p>
                   </div>
                 </div>
               </Card>
               
-              <Card className="p-2 bg-blue-50 border-blue-200">
+              <Card className="p-3 bg-blue-50 border-blue-200">
                 <div className="flex items-center gap-2">
-                  <Users className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                  <Users className="w-4 h-4 text-blue-600 flex-shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium">New User</p>
-                    <p className="text-xs text-muted-foreground truncate">user@example.com</p>
+                    <p className="text-xs font-medium">New User Registration</p>
+                    <p className="text-xs text-muted-foreground truncate">user@example.com joined</p>
                   </div>
                 </div>
               </Card>
               
-              <Card className="p-2 bg-purple-50 border-purple-200">
+              <Card className="p-3 bg-purple-50 border-purple-200">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-3 h-3 text-purple-600 flex-shrink-0" />
+                  <BookOpen className="w-4 h-4 text-purple-600 flex-shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium">Blog Published</p>
-                    <p className="text-xs text-muted-foreground truncate">Financial Tips</p>
+                    <p className="text-xs font-medium">New Blog Published</p>
+                    <p className="text-xs text-muted-foreground truncate">"Financial Planning Tips" is now live</p>
                   </div>
                 </div>
               </Card>
               
-              <Card className="p-2 bg-orange-50 border-orange-200">
+              <Card className="p-3 bg-orange-50 border-orange-200">
                 <div className="flex items-center gap-2">
-                  <GraduationCap className="w-3 h-3 text-orange-600 flex-shrink-0" />
+                  <GraduationCap className="w-4 h-4 text-orange-600 flex-shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-medium">Course Enrollment</p>
-                    <p className="text-xs text-muted-foreground truncate">5 new students</p>
+                    <p className="text-xs text-muted-foreground truncate">5 new students enrolled today</p>
                   </div>
                 </div>
               </Card>
