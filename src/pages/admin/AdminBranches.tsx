@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +37,7 @@ const AdminBranches = () => {
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<{x: number, y: number} | null>(null);
+  const adminMapRef = useRef<any>(null);
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -60,6 +61,43 @@ const AdminBranches = () => {
   useEffect(() => {
     fetchBranches();
   }, []);
+
+  useEffect(() => {
+    if (branches.length > 0 && !adminMapRef.current && window.L) {
+      // India geographic bounds
+      const indiaBounds = [[6.4627, 68.1097], [35.5137, 97.3953]];
+      
+      // Initialize admin map
+      adminMapRef.current = window.L.map('admin-map', {
+        maxBounds: indiaBounds,
+        maxBoundsViscosity: 1.0
+      }).fitBounds(indiaBounds);
+      
+      // Stadia Maps Alidade Smooth Dark tiles
+      window.L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; Stadia Maps',
+        maxZoom: 12,
+        minZoom: 5
+      }).addTo(adminMapRef.current);
+      
+      // Add existing branch markers
+      branches.forEach(branch => {
+        if (branch.latitude && branch.longitude) {
+          window.L.marker([branch.latitude, branch.longitude])
+            .addTo(adminMapRef.current)
+            .bindPopup(`<b>${branch.name}</b><br>${branch.city}, ${branch.state}`);
+        }
+      });
+      
+      // Handle map clicks for positioning
+      adminMapRef.current.on('click', (e: any) => {
+        if (selectedBranch) {
+          const { lat, lng } = e.latlng;
+          setSelectedPosition({ x: lng, y: lat });
+        }
+      });
+    }
+  }, [branches, selectedBranch]);
 
   const fetchBranches = async () => {
     try {
@@ -184,29 +222,8 @@ const AdminBranches = () => {
   };
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!selectedBranch) {
-      toast({
-        title: "Select a branch first",
-        description: "Please select a branch from the dropdown before clicking on the map.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    setSelectedPosition({ x, y });
-    
-    // If we're editing this branch, also update the form
-    if (editingBranch && editingBranch.id === selectedBranch.id) {
-      setFormData(prev => ({
-        ...prev,
-        x_position: x.toFixed(2),
-        y_position: y.toFixed(2)
-      }));
-    }
+    // Map clicks are now handled by Leaflet event listener
+    return;
   };
 
   const updateBranchPosition = async () => {
@@ -227,8 +244,8 @@ const AdminBranches = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          x_position: selectedPosition.x,
-          y_position: selectedPosition.y
+          latitude: selectedPosition.y,
+          longitude: selectedPosition.x
         })
       });
       
@@ -523,34 +540,12 @@ const AdminBranches = () => {
                 className="relative h-96 bg-gradient-to-br from-blue-100 to-indigo-200 cursor-crosshair border rounded-lg overflow-hidden"
                 onClick={handleMapClick}
               >
-                {/* India SVG Map */}
-                <img 
-                  src="/india.svg" 
-                  alt="India Map" 
-                  className="w-full h-full object-contain pointer-events-none"
-                  onLoad={(e) => {
-                    console.log('India map loaded successfully');
-                  }}
-                  onError={(e) => {
-                    console.error('Failed to load India map');
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = 'flex';
-                  }}
-                />
-                
-                {/* Fallback if SVG doesn't load */}
-                <div className="hidden w-full h-full items-center justify-center text-muted-foreground bg-gray-100 border-2 border-dashed border-gray-300">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                    <p className="text-lg font-medium">India Map</p>
-                    <p className="text-sm">(Click anywhere to set position)</p>
-                  </div>
-                </div>
+                {/* Leaflet Map Container */}
+                <div id="admin-map" className="w-full h-full"></div>
                 
                 {/* Instructions overlay when no branch selected */}
                 {!selectedBranch && (
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-lg shadow-lg text-center">
                       <MapPin className="w-8 h-8 mx-auto mb-2 text-blue-600" />
                       <p className="font-medium">Select a branch first</p>
@@ -559,38 +554,11 @@ const AdminBranches = () => {
                   </div>
                 )}
                 
-                {/* Branch pins overlay */}
-                {branches.filter(b => b.x_position && b.y_position).map((branch) => (
-                  <div
-                    key={branch.id}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10"
-                    style={{ left: `${branch.x_position}%`, top: `${branch.y_position}%` }}
-                    title={`${branch.name} - ${branch.city}`}
-                  >
-                    <div className="relative">
-                      <MapPin className={`w-6 h-6 ${selectedBranch?.id === branch.id ? 'text-blue-600' : 'text-red-600'} drop-shadow-lg`} fill="currentColor" />
-                      <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {branch.name}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {/* New position preview */}
-                {selectedPosition && selectedBranch && (
-                  <div
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-bounce z-20"
-                    style={{ left: `${selectedPosition.x}%`, top: `${selectedPosition.y}%` }}
-                  >
-                    <MapPin className="w-6 h-6 text-green-600 drop-shadow-lg" fill="currentColor" />
-                  </div>
-                )}
-                
                 {/* Position controls */}
                 {selectedPosition && selectedBranch && (
-                  <div className="absolute top-4 right-4 bg-white p-3 rounded-lg shadow-lg">
+                  <div className="absolute top-4 right-4 bg-white p-3 rounded-lg shadow-lg z-50">
                     <p className="text-sm mb-2">
-                      {selectedBranch.name}: {selectedPosition.x.toFixed(1)}%, {selectedPosition.y.toFixed(1)}%
+                      {selectedBranch.name}: {selectedPosition.y.toFixed(4)}, {selectedPosition.x.toFixed(4)}
                     </p>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={updateBranchPosition}>
