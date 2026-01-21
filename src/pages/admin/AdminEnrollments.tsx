@@ -53,23 +53,38 @@ const AdminEnrollments = () => {
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setEnrollments(data.enrollments || []);
-      } else {
-        const errorData = await response.json();
-        console.error('API Error:', errorData);
+      const contentType = response.headers.get('content-type');
+      
+      if (!response.ok) {
+        console.error('HTTP Error:', response.status, response.statusText);
         toast({
           title: "Error",
-          description: errorData.error || "Failed to fetch enrollments",
+          description: `Server error: ${response.status} ${response.statusText}`,
           variant: "destructive",
         });
+        return;
       }
+
+      if (!contentType || !contentType.includes('application/json')) {
+        console.error('Invalid content type:', contentType);
+        const text = await response.text();
+        console.error('Response text:', text.substring(0, 200));
+        toast({
+          title: "Error",
+          description: "Server returned invalid response format",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const data = await response.json();
+      setEnrollments(data.enrollments || []);
+      
     } catch (error) {
       console.error('Network Error:', error);
       toast({
         title: "Error",
-        description: "Network error - please check your connection",
+        description: "Failed to connect to server. Please try again.",
         variant: "destructive",
       });
     } finally {
