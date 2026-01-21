@@ -268,47 +268,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;    >
-                  {link.name}
-                </Link>
-              )}
-            </div>
-          ))}
-          <div className="flex flex-col gap-3 pt-4 mt-2 border-t border-border">
-            {user ? (
-              <>
-                <Button variant="ghost" className="w-full justify-center" asChild>
-                  <Link to={user.role === 'ADMIN' ? '/admin' : '/dashboard'}>
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-center text-destructive border-destructive/30 hover:bg-destructive/10"
-                  onClick={() => {
-                    logout();
-                    setIsMobileMenuOpen(false);
-                    navigate('/');
-                  }}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <Button variant="ghost" className="w-full justify-center" asChild>
-                <Link to="/auth">Login</Link>
-              </Button>
-            )}
-            <Button variant="hero" className="w-full justify-center" asChild>
-              <Link to="/apply">Apply Now</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-};
-
 export default Navbar;
