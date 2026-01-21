@@ -358,7 +358,7 @@ const AdminBranches = () => {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Branch Name</label>
                       <Input
@@ -408,7 +408,7 @@ const AdminBranches = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">City</label>
                       <Input
@@ -435,7 +435,7 @@ const AdminBranches = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Phone</label>
                       <Input
@@ -453,7 +453,7 @@ const AdminBranches = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Latitude</label>
                       <Input
@@ -476,7 +476,7 @@ const AdminBranches = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Map X Position (%)</label>
                       <Input
@@ -499,7 +499,7 @@ const AdminBranches = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Manager Name</label>
                       <Input
@@ -516,11 +516,11 @@ const AdminBranches = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <Button type="submit">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button type="submit" className="flex-1">
                       {editingBranch ? 'Update' : 'Create'} Branch
                     </Button>
-                    <Button type="button" variant="outline" onClick={resetForm}>
+                    <Button type="button" variant="outline" onClick={resetForm} className="flex-1">
                       Cancel
                     </Button>
                   </div>
@@ -604,9 +604,9 @@ const AdminBranches = () => {
             <div className="space-y-4">
               {branches.map((branch) => (
                 <div key={branch.id} className="border p-4 rounded-lg">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                  <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="font-semibold text-lg">{branch.name}</h3>
                         <Badge variant={branch.status === 'active' ? 'default' : 'secondary'}>
                           {branch.status}
@@ -618,48 +618,50 @@ const AdminBranches = () => {
                         )}
                       </div>
                       <div className="space-y-1 text-sm text-muted-foreground">
-                        <p className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {branch.address}, {branch.city}, {branch.state} - {branch.pincode}
+                        <p className="flex items-start gap-1">
+                          <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                          <span className="break-words">{branch.address}, {branch.city}, {branch.state} - {branch.pincode}</span>
                         </p>
                         {branch.phone && (
                           <p className="flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {branch.phone}
+                            <Phone className="w-3 h-3 flex-shrink-0" />
+                            <span className="break-all">{branch.phone}</span>
                           </p>
                         )}
                         {branch.email && (
                           <p className="flex items-center gap-1">
-                            <Mail className="w-3 h-3" />
-                            {branch.email}
+                            <Mail className="w-3 h-3 flex-shrink-0" />
+                            <span className="break-all">{branch.email}</span>
                           </p>
                         )}
                         {branch.manager_name && (
                           <p className="flex items-center gap-1">
-                            <User className="w-3 h-3" />
-                            Manager: {branch.manager_name}
+                            <User className="w-3 h-3 flex-shrink-0" />
+                            <span>Manager: {branch.manager_name}</span>
                           </p>
                         )}
                         <p className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {branch.working_hours}
+                          <Clock className="w-3 h-3 flex-shrink-0" />
+                          <span>{branch.working_hours}</span>
                         </p>
                         {branch.x_position != null && branch.y_position != null && (
                           <p className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            Map Position: {Number(branch.x_position).toFixed(1)}%, {Number(branch.y_position).toFixed(1)}%
+                            <MapPin className="w-3 h-3 flex-shrink-0" />
+                            <span>Map Position: {Number(branch.x_position).toFixed(1)}%, {Number(branch.y_position).toFixed(1)}%</span>
                           </p>
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => editBranch(branch)}>
-                        <Edit className="w-4 h-4" />
+                    <div className="flex flex-row lg:flex-col gap-2 w-full lg:w-auto">
+                      <Button variant="outline" size="sm" onClick={() => editBranch(branch)} className="flex-1 lg:flex-none">
+                        <Edit className="w-4 h-4 mr-1 lg:mr-0 lg:mb-1" />
+                        <span className="lg:hidden">Edit</span>
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="destructive" size="sm">
-                            <Trash2 className="w-4 h-4" />
+                          <Button variant="destructive" size="sm" className="flex-1 lg:flex-none">
+                            <Trash2 className="w-4 h-4 mr-1 lg:mr-0 lg:mb-1" />
+                            <span className="lg:hidden">Delete</span>
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>

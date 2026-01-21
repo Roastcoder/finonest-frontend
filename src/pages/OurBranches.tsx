@@ -173,34 +173,34 @@ const OurBranches = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8">
               {filteredBranches.map((branch) => (
                 <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-6 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
-                    <div className="flex items-start justify-between mb-4 md:mb-6">
-                      <div className="bg-gray-100 p-3 md:p-4 rounded-lg md:rounded-xl">
-                        <MapPin className="w-6 h-6 md:w-8 md:h-8 text-gray-700" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-4 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-3 md:mb-6">
+                      <div className="bg-gray-100 p-2 md:p-4 rounded-lg md:rounded-xl">
+                        <MapPin className="w-5 h-5 md:w-8 md:h-8 text-gray-700" />
                       </div>
-                      <div className="bg-green-100 text-green-800 px-3 md:px-4 py-1 md:py-2 rounded-full text-sm font-medium">
+                      <div className="bg-green-100 text-green-800 px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
                         Active
                       </div>
                     </div>
                     
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4 line-clamp-2">{branch.name}</h3>
+                    <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-4 line-clamp-2">{branch.name}</h3>
                     
-                    <div className="space-y-3 md:space-y-4 text-sm md:text-base text-gray-600 mb-6 md:mb-8">
-                      <div className="flex items-start gap-3">
-                        <MapPin className="w-4 h-4 md:w-5 md:h-5 mt-0.5 text-gray-400 flex-shrink-0" />
+                    <div className="space-y-2 md:space-y-4 text-xs md:text-base text-gray-600 mb-4 md:mb-8">
+                      <div className="flex items-start gap-2 md:gap-3">
+                        <MapPin className="w-3 h-3 md:w-5 md:h-5 mt-0.5 text-gray-400 flex-shrink-0" />
                         <span className="line-clamp-2">{branch.city}, {branch.state}</span>
                       </div>
                       {branch.phone && (
-                        <div className="flex items-center gap-3">
-                          <Phone className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <Phone className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
                           <span className="truncate">{branch.phone}</span>
                         </div>
                       )}
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Clock className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
                         <span className="truncate">{branch.working_hours}</span>
                       </div>
                     </div>
