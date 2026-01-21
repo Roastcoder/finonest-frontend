@@ -52,16 +52,19 @@ const AdminEnrollments = () => {
         const data = await response.json();
         setEnrollments(data.enrollments || []);
       } else {
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
         toast({
           title: "Error",
-          description: "Failed to fetch enrollments",
+          description: errorData.error || "Failed to fetch enrollments",
           variant: "destructive",
         });
       }
     } catch (error) {
+      console.error('Network Error:', error);
       toast({
         title: "Error",
-        description: "Failed to fetch enrollments",
+        description: "Network error - please check your connection",
         variant: "destructive",
       });
     } finally {
@@ -158,14 +161,14 @@ const AdminEnrollments = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
               Course Enrollments ({filteredEnrollments.length})
             </CardTitle>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Select value={filter} onValueChange={setFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-full sm:w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -176,7 +179,7 @@ const AdminEnrollments = () => {
                   <SelectItem value="pending">Pending</SelectItem>
                 </SelectContent>
               </Select>
-              <Button onClick={exportToCSV} variant="outline">
+              <Button onClick={exportToCSV} variant="outline" className="w-full sm:w-auto">
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
               </Button>
@@ -190,14 +193,14 @@ const AdminEnrollments = () => {
             <div className="space-y-4">
               {filteredEnrollments.map((enrollment) => (
                 <div key={enrollment.id} className="border p-4 rounded-lg">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-semibold text-lg">{enrollment.course_title}</h3>
-                      <p className="text-sm text-muted-foreground">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg break-words">{enrollment.course_title}</h3>
+                      <p className="text-sm text-muted-foreground break-words">
                         Student: {enrollment.user_name || 'N/A'} ({enrollment.user_email || 'N/A'})
                       </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <Badge className={getStatusColor(enrollment.payment_status)}>
                         {enrollment.payment_status}
                       </Badge>
@@ -207,31 +210,31 @@ const AdminEnrollments = () => {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p><strong>Phone:</strong> {enrollment.student_info.phone}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4">
+                    <div className="space-y-1">
+                      <p><strong>Phone:</strong> <span className="break-all">{enrollment.student_info.phone}</span></p>
                       <p><strong>Experience:</strong> {enrollment.student_info.experience}</p>
                       <p><strong>Amount:</strong> ₹{enrollment.amount_paid}</p>
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <p><strong>Payment Method:</strong> {enrollment.payment_method || 'N/A'}</p>
                       <p><strong>Enrolled:</strong> {new Date(enrollment.enrollment_date).toLocaleDateString()}</p>
                       {enrollment.payment_id && (
-                        <p><strong>Payment ID:</strong> {enrollment.payment_id}</p>
+                        <p><strong>Payment ID:</strong> <span className="break-all text-xs">{enrollment.payment_id}</span></p>
                       )}
                     </div>
                   </div>
                   
-                  <div className="mt-3 pt-3 border-t">
-                    <p className="text-sm"><strong>Goals:</strong> {enrollment.student_info.goals}</p>
+                  <div className="mb-3 pt-3 border-t">
+                    <p className="text-sm break-words"><strong>Goals:</strong> {enrollment.student_info.goals}</p>
                   </div>
                   
-                  <div className="flex gap-2 mt-3">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Select 
                       value={enrollment.status} 
                       onValueChange={(value) => updateEnrollmentStatus(enrollment.id, value)}
                     >
-                      <SelectTrigger className="w-32">
+                      <SelectTrigger className="w-full sm:w-32">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
