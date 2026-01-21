@@ -247,6 +247,18 @@ const AdminCourses = () => {
       price: course.price,
       original_price: course.original_price?.toString() || ""
     });
+    
+    // Set existing image preview if course has an image
+    if (course.image_path) {
+      setImagePreview(`https://api.finonest.com/${course.image_path}`);
+    } else {
+      setImagePreview(null);
+    }
+    
+    // Reset file inputs since we're editing existing content
+    setImageFile(null);
+    setVideoFile(null);
+    
     setEditingCourse(course);
     setShowForm(true);
   };
@@ -400,19 +412,21 @@ const AdminCourses = () => {
                         accept="image/*"
                         onChange={handleImageChange}
                       />
-                      {imagePreview && (
+                      {(imagePreview || editingCourse?.image_path) && (
                         <div className="mt-2">
                           <div className="aspect-video w-full max-w-xs overflow-hidden rounded-lg border">
                             <img 
-                              src={imagePreview} 
+                              src={imagePreview || `https://api.finonest.com/${editingCourse?.image_path}`} 
                               alt="Preview" 
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1">Preview (16:9 aspect ratio)</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {imagePreview ? 'New image preview' : 'Current image'} (16:9 aspect ratio)
+                          </p>
                         </div>
                       )}
-                      {!imagePreview && (
+                      {!imagePreview && !editingCourse?.image_path && (
                         <div className="mt-2">
                           <div className="aspect-video w-full max-w-xs bg-gray-100 rounded-lg border flex items-center justify-center">
                             <div className="text-center text-gray-400">
