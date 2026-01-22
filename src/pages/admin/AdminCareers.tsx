@@ -449,13 +449,16 @@ const AdminCareers = () => {
                       <option value="######">H6</option>
                     </select>
                     <Button type="button" variant="outline" size="sm" onClick={() => {
-                      const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
-                      const start = textarea.selectionStart;
-                      const end = textarea.selectionEnd;
-                      const text = textarea.value;
-                      const selectedText = text.substring(start, end);
-                      const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
-                      setJobForm(prev => ({ ...prev, description: newText }));
+                      const textarea = document.getElementById('job-description') as HTMLTextAreaElement;
+                      if (textarea) {
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const text = textarea.value;
+                        const selectedText = text.substring(start, end);
+                        const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
+                        setJobForm(prev => ({ ...prev, description: newText }));
+                        textarea.focus();
+                      }
                     }}>B</Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => {
                       const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
@@ -471,6 +474,7 @@ const AdminCareers = () => {
                     }}>•</Button>
                   </div>
                   <Textarea
+                    id="job-description"
                     value={jobForm.description}
                     onChange={(e) => setJobForm(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Describe the role and responsibilities..."

@@ -262,15 +262,18 @@ const AdminBlogs = () => {
                         <option value="#####">H5</option>
                         <option value="######">H6</option>
                       </select>
-                      <Button type="button" variant="outline" size="sm" onClick={() => {
-                        const textarea = document.querySelector('textarea[rows="8"]') as HTMLTextAreaElement;
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      const textarea = document.getElementById('blog-content') as HTMLTextAreaElement;
+                      if (textarea) {
                         const start = textarea.selectionStart;
                         const end = textarea.selectionEnd;
                         const text = textarea.value;
                         const selectedText = text.substring(start, end);
                         const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
                         setFormData({...formData, content: newText});
-                      }}>B</Button>
+                        textarea.focus();
+                      }
+                    }}>B</Button>
                       <Button type="button" variant="outline" size="sm" onClick={() => {
                         const textarea = document.querySelector('textarea[rows="8"]') as HTMLTextAreaElement;
                         const start = textarea.selectionStart;
@@ -285,6 +288,7 @@ const AdminBlogs = () => {
                       }}>•</Button>
                     </div>
                     <Textarea
+                      id="blog-content"
                       value={formData.content}
                       onChange={(e) => setFormData({...formData, content: e.target.value})}
                       rows={8}
