@@ -285,6 +285,29 @@ const AdminCareers = () => {
     }
   };
 
+  const deleteApplication = async (applicationId: number) => {
+    if (!confirm('Are you sure you want to delete this application?')) return;
+
+    try {
+      await fetch(`https://api.finonest.com/api/careers/applications/${applicationId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      toast({
+        title: "Application deleted",
+        description: "Application has been removed successfully"
+      });
+      fetchApplications();
+    } catch (error) {
+      console.log('Application deletion failed:', error);
+      toast({
+        title: "Deletion failed",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6 p-4 md:p-6">
       {/* Header */}
@@ -578,6 +601,9 @@ const AdminCareers = () => {
                         </Button>
                         <Button size="sm" variant="outline">
                           <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => deleteApplication(application.id)}>
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </div>
                     </div>

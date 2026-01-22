@@ -49,6 +49,8 @@ const JobDetail = () => {
     cv_file: null as File | null
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (slug) {
       fetchJobBySlug(slug);
@@ -105,6 +107,7 @@ const JobDetail = () => {
       return;
     }
 
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append('job_id', job?.id.toString() || '');
     formData.append('name', applicationData.name);
@@ -121,6 +124,7 @@ const JobDetail = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
         toast({
           title: "Application submitted",
           description: "Thank you for your application. We'll be in touch soon!"
@@ -134,14 +138,23 @@ const JobDetail = () => {
           cover_letter: '',
           cv_file: null
         });
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Submission failed",
+          description: error.error || "Please try again later",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.log('Application submission failed:', error);
       toast({
         title: "Submission failed",
-        description: "Please try again later or contact support",
+        description: "Please check your connection and try again",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -307,29 +320,69 @@ const JobDetail = () => {
                 </div>
                 
                 <div>
-                  <label className="text-sm font-medium">Upload CV/Resume *</label>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {applicationData.cv_file ? applicationData.cv_file.name : "Click to upload or drag and drop"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">PDF, DOC, DOCX (Max 5MB)</p>
+                  <label className="text-sm font-medium mb-2 block">Upload CV/Resume *</label>
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors">
+                    {applicationData.cv_file ? (
+                      <div className="space-y-3">
+                        <div className="w-16 h-16 mx-auto rounded-lg bg-green-100 flex items-center justify-center">
+                          <Upload className="w-8 h-8 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-green-600">
+                            {applicationData.cv_file.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {(applicationData.cv_file.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setApplicationData(prev => ({ ...prev, cv_file: null }))}
+                        >
+                          Remove File
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="w-16 h-16 mx-auto rounded-lg bg-muted flex items-center justify-center">
+                          <Upload className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Upload your CV/Resume</p>
+                          <p className="text-xs text-muted-foreground">PDF, DOC, DOCX (Max 5MB)</p>
+                        </div>
+                      </div>
+                    )}
                     <Input
                       type="file"
                       accept=".pdf,.doc,.docx"
                       onChange={handleFileChange}
-                      className="mt-2"
+                      className="mt-4"
                     />
                   </div>
                 </div>
                 
                 <div className="flex gap-4">
-                  <Button onClick={submitApplication} className="flex-1">
-                    Submit Application
+                  <Button 
+                    onClick={submitApplication} 
+                    className="flex-1"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Application'
+                    )}
                   </Button>
                   <Button 
                     variant="outline" 
                     onClick={() => setShowApplication(false)}
+                    disabled={isSubmitting}
                   >
                     Cancel
                   </Button>
