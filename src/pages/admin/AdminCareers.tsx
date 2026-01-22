@@ -64,11 +64,16 @@ const AdminCareers = () => {
     salary: '',
     description: '',
     requirements: '',
+    features: [''],
     image: null as File | null
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  const addFeature = () => setJobForm(prev => ({ ...prev, features: [...prev.features, ''] }));
+  const removeFeature = (index: number) => setJobForm(prev => ({ ...prev, features: prev.features.filter((_, i) => i !== index) }));
+  const updateFeature = (index: number, value: string) => setJobForm(prev => ({ ...prev, features: prev.features.map((f, i) => i === index ? value : f) }));
 
   useEffect(() => {
     fetchJobs();
@@ -235,6 +240,7 @@ const AdminCareers = () => {
       salary: '',
       description: '',
       requirements: '',
+      features: [''],
       image: null
     });
     setImagePreview(null);
@@ -410,6 +416,7 @@ const AdminCareers = () => {
                       <option value="Part-time">Part-time</option>
                       <option value="Contract">Contract</option>
                       <option value="Internship">Internship</option>
+                      <option value="WFH">Work From Home</option>
                     </select>
                   </div>
                   <div>
@@ -440,6 +447,19 @@ const AdminCareers = () => {
                     placeholder="List the requirements (use • for bullet points)..."
                     rows={4}
                   />
+                </div>
+
+                <div>
+                  <label className="text-lg font-bold italic">Job Features</label>
+                  <div className="space-y-2 mt-2">
+                    {jobForm.features.map((feature, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input value={feature} onChange={(e) => updateFeature(index, e.target.value)} placeholder="Enter job feature..." className="flex-1" />
+                        <Button type="button" variant="outline" size="sm" onClick={() => removeFeature(index)} disabled={jobForm.features.length === 1}>✕</Button>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" size="sm" onClick={addFeature} className="w-full">+ Add Feature</Button>
+                  </div>
                 </div>
 
                 <div>
