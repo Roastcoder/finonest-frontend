@@ -61,7 +61,28 @@ const AdminBlogs = () => {
     status: "draft" as "draft" | "published",
     image_url: "",
     video_url: "",
-    meta_tags: ""
+    meta_tags: "",
+    table_of_contents: "",
+    introduction: "",
+    quick_info_box: "",
+    emi_example: "",
+    what_is_loan: "",
+    benefits: "",
+    who_should_apply: "",
+    eligibility_criteria: "",
+    documents_required: "",
+    interest_rates: "",
+    finonest_process: "",
+    why_choose_finonest: "",
+    customer_testimonials: "",
+    common_mistakes: "",
+    mid_blog_cta: "",
+    faqs: "",
+    service_areas: "",
+    related_blogs: "",
+    final_cta: "",
+    disclaimer: "",
+    trust_footer: ""
   });
 
   const categories = ["Credit Score", "Car Loan", "Home Loan", "Personal Loan", "Business Loan", "Financial Planning"];
@@ -190,7 +211,28 @@ const AdminBlogs = () => {
       status: "draft",
       image_url: "",
       video_url: "",
-      meta_tags: ""
+      meta_tags: "",
+      table_of_contents: "",
+      introduction: "",
+      quick_info_box: "",
+      emi_example: "",
+      what_is_loan: "",
+      benefits: "",
+      who_should_apply: "",
+      eligibility_criteria: "",
+      documents_required: "",
+      interest_rates: "",
+      finonest_process: "",
+      why_choose_finonest: "",
+      customer_testimonials: "",
+      common_mistakes: "",
+      mid_blog_cta: "",
+      faqs: "",
+      service_areas: "",
+      related_blogs: "",
+      final_cta: "",
+      disclaimer: "",
+      trust_footer: ""
     });
     setEditingBlog(null);
     setShowForm(false);
@@ -205,7 +247,28 @@ const AdminBlogs = () => {
       status: blog.status,
       image_url: blog.image_url || "",
       video_url: blog.video_url || "",
-      meta_tags: ""
+      meta_tags: "",
+      table_of_contents: blog.table_of_contents || "",
+      introduction: blog.introduction || "",
+      quick_info_box: blog.quick_info_box || "",
+      emi_example: blog.emi_example || "",
+      what_is_loan: blog.what_is_loan || "",
+      benefits: blog.benefits || "",
+      who_should_apply: blog.who_should_apply || "",
+      eligibility_criteria: blog.eligibility_criteria || "",
+      documents_required: blog.documents_required || "",
+      interest_rates: blog.interest_rates || "",
+      finonest_process: blog.finonest_process || "",
+      why_choose_finonest: blog.why_choose_finonest || "",
+      customer_testimonials: blog.customer_testimonials || "",
+      common_mistakes: blog.common_mistakes || "",
+      mid_blog_cta: blog.mid_blog_cta || "",
+      faqs: blog.faqs || "",
+      service_areas: blog.service_areas || "",
+      related_blogs: blog.related_blogs || "",
+      final_cta: blog.final_cta || "",
+      disclaimer: blog.disclaimer || "",
+      trust_footer: blog.trust_footer || ""
     });
     setEditingBlog(blog);
     setShowForm(true);
@@ -387,43 +450,87 @@ const AdminBlogs = () => {
                     <div className="grid grid-cols-1 gap-4">
                       <div>
                         <label className="block text-sm font-medium mb-2">Table of Contents</label>
-                        <Textarea value={formData.table_of_contents || ''} onChange={(e) => setFormData({...formData, table_of_contents: e.target.value})} rows={2} />
+                        <Textarea value={formData.table_of_contents} onChange={(e) => setFormData({...formData, table_of_contents: e.target.value})} rows={2} />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">Introduction</label>
-                        <Textarea value={formData.introduction || ''} onChange={(e) => setFormData({...formData, introduction: e.target.value})} rows={3} />
+                        <Textarea value={formData.introduction} onChange={(e) => setFormData({...formData, introduction: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Quick Info Box</label>
-                        <Textarea value={formData.quick_info_box || ''} onChange={(e) => setFormData({...formData, quick_info_box: e.target.value})} rows={3} />
+                        <label className="block text-sm font-medium mb-2">Quick Info Box (Loan at a Glance)</label>
+                        <Textarea value={formData.quick_info_box} onChange={(e) => setFormData({...formData, quick_info_box: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">EMI Example</label>
-                        <Textarea value={formData.emi_example || ''} onChange={(e) => setFormData({...formData, emi_example: e.target.value})} rows={3} />
+                        <label className="block text-sm font-medium mb-2">EMI Example / Calculator Teaser</label>
+                        <Textarea value={formData.emi_example} onChange={(e) => setFormData({...formData, emi_example: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Benefits</label>
-                        <Textarea value={formData.benefits || ''} onChange={(e) => setFormData({...formData, benefits: e.target.value})} rows={3} />
+                        <label className="block text-sm font-medium mb-2">What Is [Loan Name]?</label>
+                        <Textarea value={formData.what_is_loan} onChange={(e) => setFormData({...formData, what_is_loan: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Benefits of [Loan Name]</label>
+                        <Textarea value={formData.benefits} onChange={(e) => setFormData({...formData, benefits: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Who Should Apply for This Loan?</label>
+                        <Textarea value={formData.who_should_apply} onChange={(e) => setFormData({...formData, who_should_apply: e.target.value})} rows={3} />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">Eligibility Criteria</label>
-                        <Textarea value={formData.eligibility_criteria || ''} onChange={(e) => setFormData({...formData, eligibility_criteria: e.target.value})} rows={3} />
+                        <Textarea value={formData.eligibility_criteria} onChange={(e) => setFormData({...formData, eligibility_criteria: e.target.value})} rows={3} />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">Documents Required</label>
-                        <Textarea value={formData.documents_required || ''} onChange={(e) => setFormData({...formData, documents_required: e.target.value})} rows={3} />
+                        <Textarea value={formData.documents_required} onChange={(e) => setFormData({...formData, documents_required: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">FAQs</label>
-                        <Textarea value={formData.faqs || ''} onChange={(e) => setFormData({...formData, faqs: e.target.value})} rows={4} />
+                        <label className="block text-sm font-medium mb-2">Interest Rate & Charges Disclosure</label>
+                        <Textarea value={formData.interest_rates} onChange={(e) => setFormData({...formData, interest_rates: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Final CTA</label>
-                        <Textarea value={formData.final_cta || ''} onChange={(e) => setFormData({...formData, final_cta: e.target.value})} rows={2} />
+                        <label className="block text-sm font-medium mb-2">How Finonest Loan Process Works</label>
+                        <Textarea value={formData.finonest_process} onChange={(e) => setFormData({...formData, finonest_process: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Disclaimer</label>
-                        <Textarea value={formData.disclaimer || ''} onChange={(e) => setFormData({...formData, disclaimer: e.target.value})} rows={2} />
+                        <label className="block text-sm font-medium mb-2">Why Choose Finonest?</label>
+                        <Textarea value={formData.why_choose_finonest} onChange={(e) => setFormData({...formData, why_choose_finonest: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Customer Testimonials</label>
+                        <Textarea value={formData.customer_testimonials} onChange={(e) => setFormData({...formData, customer_testimonials: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Common Mistakes to Avoid</label>
+                        <Textarea value={formData.common_mistakes} onChange={(e) => setFormData({...formData, common_mistakes: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Mid-Blog Call to Action</label>
+                        <Textarea value={formData.mid_blog_cta} onChange={(e) => setFormData({...formData, mid_blog_cta: e.target.value})} rows={2} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Frequently Asked Questions (FAQs)</label>
+                        <Textarea value={formData.faqs} onChange={(e) => setFormData({...formData, faqs: e.target.value})} rows={4} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Service Areas / Local Presence</label>
+                        <Textarea value={formData.service_areas} onChange={(e) => setFormData({...formData, service_areas: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Related Blogs & Internal Links</label>
+                        <Textarea value={formData.related_blogs} onChange={(e) => setFormData({...formData, related_blogs: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Final Call to Action</label>
+                        <Textarea value={formData.final_cta} onChange={(e) => setFormData({...formData, final_cta: e.target.value})} rows={2} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Disclaimer & Compliance Notice</label>
+                        <Textarea value={formData.disclaimer} onChange={(e) => setFormData({...formData, disclaimer: e.target.value})} rows={2} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Trust & Compliance Footer</label>
+                        <Textarea value={formData.trust_footer} onChange={(e) => setFormData({...formData, trust_footer: e.target.value})} rows={2} />
                       </div>
                     </div>
                   </div>
