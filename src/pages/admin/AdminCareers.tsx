@@ -433,6 +433,21 @@ const AdminCareers = () => {
                 <div>
                   <label className="text-lg font-bold italic">Job Description *</label>
                   <div className="flex gap-2 mb-2">
+                    <select className="text-xs border rounded px-2 py-1" onChange={(e) => {
+                      const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const text = textarea.value;
+                      const newText = text.substring(0, start) + e.target.value + ' ' + text.substring(start);
+                      setJobForm(prev => ({ ...prev, description: newText }));
+                    }}>
+                      <option value="">Heading</option>
+                      <option value="#">H1</option>
+                      <option value="##">H2</option>
+                      <option value="###">H3</option>
+                      <option value="####">H4</option>
+                      <option value="#####">H5</option>
+                      <option value="######">H6</option>
+                    </select>
                     <Button type="button" variant="outline" size="sm" onClick={() => {
                       const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
                       const start = textarea.selectionStart;
@@ -466,6 +481,21 @@ const AdminCareers = () => {
                 <div>
                   <label className="text-lg font-bold italic">Requirements</label>
                   <div className="flex gap-2 mb-2">
+                    <select className="text-xs border rounded px-2 py-1" onChange={(e) => {
+                      const textarea = document.querySelector('textarea[placeholder*="List the requirements"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const text = textarea.value;
+                      const newText = text.substring(0, start) + e.target.value + ' ' + text.substring(start);
+                      setJobForm(prev => ({ ...prev, requirements: newText }));
+                    }}>
+                      <option value="">Heading</option>
+                      <option value="#">H1</option>
+                      <option value="##">H2</option>
+                      <option value="###">H3</option>
+                      <option value="####">H4</option>
+                      <option value="#####">H5</option>
+                      <option value="######">H6</option>
+                    </select>
                     <Button type="button" variant="outline" size="sm" onClick={() => {
                       const textarea = document.querySelector('textarea[placeholder*="List the requirements"]') as HTMLTextAreaElement;
                       const start = textarea.selectionStart;

@@ -43,9 +43,17 @@ const JobDetails = () => {
 
   const renderFormattedText = (text: string) => {
     return text
+      .replace(/#{6}\s*(.*?)$/gm, '<h6>$1</h6>')
+      .replace(/#{5}\s*(.*?)$/gm, '<h5>$1</h5>')
+      .replace(/#{4}\s*(.*?)$/gm, '<h4>$1</h4>')
+      .replace(/#{3}\s*(.*?)$/gm, '<h3>$1</h3>')
+      .replace(/#{2}\s*(.*?)$/gm, '<h2>$1</h2>')
+      .replace(/#{1}\s*(.*?)$/gm, '<h1>$1</h1>')
+      .replace(/\*{4,}(.*?)\*{4,}/g, '<strong>$1</strong>')
       .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+      .replace(/•/g, '&bull;')
       .replace(/\n/g, '<br />');
   };
 
@@ -262,26 +270,6 @@ const JobDetails = () => {
                     />
                   </CardContent>
                 </Card>
-
-                {job.features && job.features.length > 0 && job.features[0] && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Job Features</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {job.features.map((feature, index) => (
-                          feature && (
-                            <li key={index} className="flex items-start gap-2 text-muted-foreground">
-                              <span className="text-primary mt-1">•</span>
-                              {feature}
-                            </li>
-                          )
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
             </div>
           ) : (

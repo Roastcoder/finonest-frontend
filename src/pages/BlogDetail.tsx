@@ -29,6 +29,22 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const renderFormattedText = (text: string) => {
+    return text
+      .replace(/#{6}\s*(.*?)$/gm, '<h6>$1</h6>')
+      .replace(/#{5}\s*(.*?)$/gm, '<h5>$1</h5>')
+      .replace(/#{4}\s*(.*?)$/gm, '<h4>$1</h4>')
+      .replace(/#{3}\s*(.*?)$/gm, '<h3>$1</h3>')
+      .replace(/#{2}\s*(.*?)$/gm, '<h2>$1</h2>')
+      .replace(/#{1}\s*(.*?)$/gm, '<h1>$1</h1>')
+      .replace(/\*{4,}(.*?)\*{4,}/g, '<strong>$1</strong>')
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+      .replace(/•/g, '&bull;')
+      .replace(/\n/g, '<br />');
+  };
+
   useEffect(() => {
     if (!id) return;
 
@@ -209,42 +225,10 @@ const BlogDetail = () => {
               </div>
             )}
 
-            <div className="space-y-4 text-base leading-relaxed">
-              {blog.content.split('\n').map((line, index) => {
-                line = line.trim();
-                if (!line) return null;
-                
-                // Numbered list items with bold headings
-                const numberedMatch = line.match(/^(\d+)\.\s+\*\*(.*?)\*\*:?\s*(.*)/);
-                if (numberedMatch) {
-                  return (
-                    <div key={index} className="mb-4">
-                      <h3 className="text-lg font-bold text-foreground mb-2">
-                        {numberedMatch[1]}. {numberedMatch[2]}
-                      </h3>
-                      {numberedMatch[3] && (
-                        <p className="text-muted-foreground ml-6">{numberedMatch[3]}</p>
-                      )}
-                    </div>
-                  );
-                }
-                
-                // Bold text
-                if (line.includes('**')) {
-                  const parts = line.split(/\*\*(.*?)\*\*/);
-                  return (
-                    <p key={index} className="text-muted-foreground">
-                      {parts.map((part, i) => 
-                        i % 2 === 1 ? <strong key={i} className="text-foreground font-semibold">{part}</strong> : part
-                      )}
-                    </p>
-                  );
-                }
-                
-                // Regular paragraph
-                return <p key={index} className="text-muted-foreground">{line}</p>;
-              })}
-            </div>
+            <div 
+              className="space-y-4 text-base leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }}
+            />
 
             {blog.video_url && (
               <div className="mt-8">

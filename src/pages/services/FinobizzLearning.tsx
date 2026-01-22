@@ -26,6 +26,22 @@ const FinobizzLearning = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const renderFormattedText = (text: string) => {
+    return text
+      .replace(/#{6}\s*(.*?)$/gm, '<h6>$1</h6>')
+      .replace(/#{5}\s*(.*?)$/gm, '<h5>$1</h5>')
+      .replace(/#{4}\s*(.*?)$/gm, '<h4>$1</h4>')
+      .replace(/#{3}\s*(.*?)$/gm, '<h3>$1</h3>')
+      .replace(/#{2}\s*(.*?)$/gm, '<h2>$1</h2>')
+      .replace(/#{1}\s*(.*?)$/gm, '<h1>$1</h1>')
+      .replace(/\*{4,}(.*?)\*{4,}/g, '<strong>$1</strong>')
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+      .replace(/•/g, '&bull;')
+      .replace(/\n/g, '<br />');
+  };
+
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -117,7 +133,10 @@ const FinobizzLearning = () => {
                       </div>
                       
                       <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">{course.title}</h3>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{course.description}</p>
+                      <div 
+                        className="text-muted-foreground text-sm mb-4 line-clamp-3"
+                        dangerouslySetInnerHTML={{ __html: renderFormattedText(course.description) }}
+                      />
                       
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-muted-foreground text-sm">

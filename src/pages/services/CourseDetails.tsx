@@ -25,6 +25,22 @@ const CourseDetails = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const renderFormattedText = (text: string) => {
+    return text
+      .replace(/#{6}\s*(.*?)$/gm, '<h6>$1</h6>')
+      .replace(/#{5}\s*(.*?)$/gm, '<h5>$1</h5>')
+      .replace(/#{4}\s*(.*?)$/gm, '<h4>$1</h4>')
+      .replace(/#{3}\s*(.*?)$/gm, '<h3>$1</h3>')
+      .replace(/#{2}\s*(.*?)$/gm, '<h2>$1</h2>')
+      .replace(/#{1}\s*(.*?)$/gm, '<h1>$1</h1>')
+      .replace(/\*{4,}(.*?)\*{4,}/g, '<strong>$1</strong>')
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+      .replace(/•/g, '&bull;')
+      .replace(/\n/g, '<br />');
+  };
+
   useEffect(() => {
     fetchCourse();
   }, [id]);
@@ -132,9 +148,10 @@ const CourseDetails = () => {
                 {course.title}
               </h1>
 
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                {course.description}
-              </p>
+              <div 
+                className="text-muted-foreground text-lg mb-8 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: renderFormattedText(course.description) }}
+              />
 
               {course.video_path && (
                 <div className="mb-8">
