@@ -20,6 +20,27 @@ interface BlogPost {
   image_url?: string;
   video_url?: string;
   slug?: string;
+  table_of_contents?: string;
+  introduction?: string;
+  quick_info_box?: string;
+  emi_example?: string;
+  what_is_loan?: string;
+  benefits?: string;
+  who_should_apply?: string;
+  eligibility_criteria?: string;
+  documents_required?: string;
+  interest_rates?: string;
+  finonest_process?: string;
+  why_choose_finonest?: string;
+  customer_testimonials?: string;
+  common_mistakes?: string;
+  mid_blog_cta?: string;
+  faqs?: string;
+  service_areas?: string;
+  related_blogs?: string;
+  final_cta?: string;
+  disclaimer?: string;
+  trust_footer?: string;
 }
 
 const BlogDetail = () => {
@@ -225,68 +246,150 @@ const BlogDetail = () => {
               </div>
             )}
 
-            <div className="space-y-4 text-base leading-relaxed">
+            <div className="space-y-8 text-base leading-relaxed">
               {blog.table_of_contents && (
-                <div>
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Table of Contents</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.table_of_contents) }} />
-                </div>
+                </section>
               )}
               
               {blog.introduction && (
-                <div>
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.introduction) }} />
-                </div>
+                </section>
               )}
               
               {blog.quick_info_box && (
-                <div className="bg-blue-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3">Quick Info</h3>
+                <section className="bg-blue-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Loan at a Glance</h3>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.quick_info_box) }} />
-                </div>
+                </section>
               )}
               
-              <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }} />
+              {blog.emi_example && (
+                <section className="bg-green-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">EMI Calculator Example</h3>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.emi_example) }} />
+                </section>
+              )}
+              
+              {blog.what_is_loan && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">What is Personal Loan?</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.what_is_loan) }} />
+                </section>
+              )}
               
               {blog.benefits && (
-                <div>
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Benefits</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.benefits) }} />
-                </div>
+                </section>
+              )}
+              
+              {blog.who_should_apply && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">Who Should Apply for This Loan?</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.who_should_apply) }} />
+                </section>
               )}
               
               {blog.eligibility_criteria && (
-                <div>
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Eligibility Criteria</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.eligibility_criteria) }} />
-                </div>
+                </section>
               )}
               
               {blog.documents_required && (
-                <div>
+                <section>
                   <h2 className="text-2xl font-semibold mb-4">Documents Required</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.documents_required) }} />
-                </div>
+                </section>
+              )}
+              
+              {blog.interest_rates && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">Interest Rate & Charges Disclosure</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.interest_rates) }} />
+                </section>
+              )}
+              
+              {blog.finonest_process && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">How Finonest Loan Process Works</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.finonest_process) }} />
+                </section>
+              )}
+              
+              {blog.why_choose_finonest && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">Why Choose Finonest?</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.why_choose_finonest) }} />
+                </section>
+              )}
+              
+              {blog.customer_testimonials && (
+                <section className="bg-yellow-50 p-6 rounded-lg">
+                  <h2 className="text-2xl font-semibold mb-4">Customer Testimonials</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.customer_testimonials) }} />
+                </section>
+              )}
+              
+              {blog.common_mistakes && (
+                <section className="bg-red-50 p-6 rounded-lg">
+                  <h2 className="text-2xl font-semibold mb-4">Common Mistakes to Avoid</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.common_mistakes) }} />
+                </section>
+              )}
+              
+              {blog.mid_blog_cta && (
+                <section className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.mid_blog_cta) }} />
+                </section>
               )}
               
               {blog.faqs && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h2>
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions (FAQs)</h2>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.faqs) }} />
-                </div>
+                </section>
+              )}
+              
+              {blog.service_areas && (
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4">Service Areas / Local Presence</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.service_areas) }} />
+                </section>
+              )}
+              
+              {blog.related_blogs && (
+                <section className="bg-gray-50 p-6 rounded-lg">
+                  <h2 className="text-2xl font-semibold mb-4">Related Blogs & Internal Links</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.related_blogs) }} />
+                </section>
               )}
               
               {blog.final_cta && (
-                <div className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
+                <section className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.final_cta) }} />
-                </div>
+                </section>
               )}
               
               {blog.disclaimer && (
-                <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                <section className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                  <h3 className="font-semibold mb-2">Disclaimer & Compliance Notice</h3>
                   <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.disclaimer) }} />
-                </div>
+                </section>
+              )}
+              
+              {blog.trust_footer && (
+                <section className="bg-green-50 p-6 rounded-lg text-center">
+                  <h3 className="text-lg font-semibold mb-3">Trust & Compliance</h3>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.trust_footer) }} />
+                </section>
               )}
             </div>
 
