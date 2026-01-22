@@ -49,7 +49,32 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('introduction');
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+
+  const sections = [
+    { key: 'introduction', title: 'Introduction', icon: '📖' },
+    { key: 'table_of_contents', title: 'Table of Contents', icon: '📋' },
+    { key: 'quick_info_box', title: 'Loan at a Glance', icon: '📊' },
+    { key: 'emi_example', title: 'EMI Calculator', icon: '💰' },
+    { key: 'what_is_loan', title: 'What is Personal Loan?', icon: '🤔' },
+    { key: 'benefits', title: 'Benefits', icon: '✅' },
+    { key: 'who_should_apply', title: 'Who Should Apply?', icon: '👥' },
+    { key: 'eligibility_criteria', title: 'Eligibility Criteria', icon: '📋' },
+    { key: 'documents_required', title: 'Documents Required', icon: '📄' },
+    { key: 'interest_rates', title: 'Interest Rates & Charges', icon: '💳' },
+    { key: 'finonest_process', title: 'Finonest Process', icon: '🔄' },
+    { key: 'why_choose_finonest', title: 'Why Choose Finonest?', icon: '⭐' },
+    { key: 'customer_testimonials', title: 'Customer Testimonials', icon: '💬' },
+    { key: 'common_mistakes', title: 'Common Mistakes', icon: '⚠️' },
+    { key: 'mid_blog_cta', title: 'Apply Now', icon: '🚀' },
+    { key: 'faqs', title: 'FAQs', icon: '❓' },
+    { key: 'service_areas', title: 'Service Areas', icon: '📍' },
+    { key: 'related_blogs', title: 'Related Blogs', icon: '🔗' },
+    { key: 'final_cta', title: 'Final Call to Action', icon: '🎯' },
+    { key: 'disclaimer', title: 'Disclaimer', icon: '⚖️' },
+    { key: 'trust_footer', title: 'Trust & Compliance', icon: '🛡️' }
+  ];
 
   const parseFAQs = (faqText: string) => {
     const faqs = [];
@@ -141,6 +166,60 @@ const BlogDetail = () => {
     }
   };
 
+  const renderSectionContent = () => {
+    if (!blog) return null;
+
+    const sectionData = blog[activeSection as keyof BlogPost];
+    if (!sectionData) return <div className="text-gray-500 text-center py-12">No content available for this section.</div>;
+
+    const section = sections.find(s => s.key === activeSection);
+    
+    if (activeSection === 'faqs' && blog.faqs) {
+      return (
+        <div>
+          <h2 className="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-3">
+            <span className="text-2xl">{section?.icon}</span>
+            {section?.title}
+          </h2>
+          <div className="space-y-4">
+            {parseFAQs(blog.faqs).map((faq, index) => (
+              <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
+                <button
+                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-all duration-200 group"
+                  onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                >
+                  <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{faq.question}</span>
+                  <div className="ml-4 flex-shrink-0">
+                    {openFAQ === index ? (
+                      <ChevronUp className="w-5 h-5 text-blue-600" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                    )}
+                  </div>
+                </button>
+                {openFAQ === index && (
+                  <div className="px-6 pb-4 text-gray-700 bg-gray-50 border-t border-gray-100">
+                    <p className="pt-4 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-3">
+          <span className="text-2xl">{section?.icon}</span>
+          {section?.title}
+        </h2>
+        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(sectionData as string) }} />
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <>
@@ -216,185 +295,89 @@ const BlogDetail = () => {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
-          <div className="container max-w-6xl pt-24 pb-16">
+        {/* Header */}
+        <div className="bg-white border-b">
+          <div className="container max-w-7xl pt-24 pb-8">
             <Button 
               variant="ghost" 
               onClick={() => navigate('/blog')}
-              className="mb-6 text-white hover:bg-white/10"
+              className="mb-6"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Blog
             </Button>
 
-            <div className="grid lg:grid-cols-3 gap-8 items-center">
-              <div className="lg:col-span-2">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
-                    <Tag className="w-3 h-3" />
-                    {blog.category}
-                  </span>
-                </div>
-                
-                <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-                  {blog.title}
-                </h1>
-                
-                <p className="text-xl text-blue-100 mb-6 leading-relaxed">
-                  {blog.excerpt}
-                </p>
-                
-                <div className="flex items-center gap-6 text-blue-200">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    {blog.author}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    {formatDate(blog.created_at)}
-                  </div>
-                  {navigator.share && (
-                    <Button variant="outline" size="sm" onClick={handleShare} className="border-white/30 text-white hover:bg-white/10">
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Share
-                    </Button>
-                  )}
-                </div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                <Tag className="w-3 h-3" />
+                {blog.category}
+              </span>
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              {blog.title}
+            </h1>
+            
+            <p className="text-lg text-gray-600 mb-6">
+              {blog.excerpt}
+            </p>
+            
+            <div className="flex items-center gap-6 text-gray-500">
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {blog.author}
               </div>
-              
-              {blog.image_url && (
-                <div className="lg:col-span-1">
-                  <img
-                    src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
-                    alt={blog.title}
-                    className="w-full h-64 lg:h-80 object-cover rounded-2xl shadow-2xl"
-                    onError={(e) => {
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
-                    }}
-                  />
-                </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {formatDate(blog.created_at)}
+              </div>
+              {navigator.share && (
+                <Button variant="outline" size="sm" onClick={handleShare}>
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share
+                </Button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="container max-w-6xl py-12">
+        {/* Content Layout */}
+        <div className="container max-w-7xl py-8">
           <div className="grid lg:grid-cols-4 gap-8">
-            {/* Table of Contents Sidebar */}
-            {blog.table_of_contents && (
-              <div className="lg:col-span-1">
-                <div className="sticky top-24">
-                  <div className="bg-white rounded-2xl p-6 shadow-lg border">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-900">📋 Table of Contents</h3>
-                    <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.table_of_contents) }} />
-                  </div>
+            {/* Left Sidebar - Section Navigation */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-24">
+                <h3 className="text-lg font-semibold mb-4 text-gray-900">Sections</h3>
+                <div className="space-y-2">
+                  {sections.map((section) => {
+                    const hasContent = blog[section.key as keyof BlogPost];
+                    if (!hasContent) return null;
+                    
+                    return (
+                      <button
+                        key={section.key}
+                        onClick={() => setActiveSection(section.key)}
+                        className={`w-full text-left p-3 rounded-lg border transition-all duration-200 ${
+                          activeSection === section.key
+                            ? 'bg-blue-50 border-blue-200 text-blue-900'
+                            : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">{section.icon}</span>
+                          <span className="font-medium text-sm">{section.title}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            )}
+            </div>
             
-            {/* Main Content */}
-            <div className={`${blog.table_of_contents ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
-              <div className="space-y-8">
-                {blog.introduction && (
-                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
-                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
-                      <span className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl">📖</span>
-                      Introduction
-                    </h2>
-                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.introduction) }} />
-                  </section>
-                )}
-                
-                {blog.quick_info_box && (
-                  <section className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 border border-blue-200">
-                    <h3 className="text-2xl font-bold mb-6 text-blue-900 flex items-center gap-3">
-                      <span className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg">📊</span>
-                      Loan at a Glance
-                    </h3>
-                    <div className="prose prose-blue max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.quick_info_box) }} />
-                  </section>
-                )}
-                
-                {blog.emi_example && (
-                  <section className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-8 border border-green-200">
-                    <h3 className="text-2xl font-bold mb-6 text-green-900 flex items-center gap-3">
-                      <span className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-lg">💰</span>
-                      EMI Calculator Example
-                    </h3>
-                    <div className="prose prose-green max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.emi_example) }} />
-                  </section>
-                )}
-                
-                {blog.what_is_loan && (
-                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
-                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
-                      <span className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-xl">🤔</span>
-                      What is Personal Loan?
-                    </h2>
-                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.what_is_loan) }} />
-                  </section>
-                )}
-                
-                {blog.benefits && (
-                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
-                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
-                      <span className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xl">✅</span>
-                      Benefits
-                    </h2>
-                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.benefits) }} />
-                  </section>
-                )}
-
-                {blog.faqs && (
-                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
-                    <h2 className="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-3">
-                      <span className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xl">❓</span>
-                      Frequently Asked Questions
-                    </h2>
-                    <div className="space-y-4">
-                      {parseFAQs(blog.faqs).map((faq, index) => (
-                        <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
-                          <button
-                            className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-all duration-200 group"
-                            onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                          >
-                            <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{faq.question}</span>
-                            <div className="ml-4 flex-shrink-0">
-                              {openFAQ === index ? (
-                                <ChevronUp className="w-5 h-5 text-blue-600" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                              )}
-                            </div>
-                          </button>
-                          {openFAQ === index && (
-                            <div className="px-6 pb-4 text-gray-700 bg-gray-50 border-t border-gray-100">
-                              <p className="pt-4 leading-relaxed">{faq.answer}</p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-                
-                {blog.final_cta && (
-                  <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 text-center shadow-xl">
-                    <div className="prose prose-invert prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.final_cta) }} />
-                  </section>
-                )}
-                
-                {blog.disclaimer && (
-                  <section className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                    <h3 className="font-bold mb-4 text-gray-800 flex items-center gap-2">
-                      <span className="text-lg">⚖️</span>
-                      Disclaimer & Compliance Notice
-                    </h3>
-                    <div className="text-sm text-gray-600 prose prose-sm" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.disclaimer) }} />
-                  </section>
-                )}
+            {/* Right Content Area */}
+            <div className="lg:col-span-3">
+              <div className="bg-white rounded-2xl p-8 shadow-lg border min-h-[600px]">
+                {renderSectionContent()}
               </div>
             </div>
           </div>
