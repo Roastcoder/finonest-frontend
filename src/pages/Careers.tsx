@@ -53,7 +53,7 @@ const Careers = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('/api/careers/jobs');
+      const response = await fetch('https://api.finonest.com/api/careers/jobs');
       if (response.ok) {
         const data = await response.json();
         setJobs(data.jobs || []);
@@ -105,7 +105,7 @@ const Careers = () => {
     formData.append('cv_file', applicationData.cv_file);
 
     try {
-      const response = await fetch('/api/careers/apply', {
+      const response = await fetch('https://api.finonest.com/api/careers/apply', {
         method: 'POST',
         body: formData
       });
