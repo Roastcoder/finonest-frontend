@@ -178,7 +178,7 @@ const AdminCareers = () => {
         : 'https://api.finonest.com/api/careers/jobs';
       
       const response = await fetch(url, {
-        method: editingJob ? 'POST' : 'POST',
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },
