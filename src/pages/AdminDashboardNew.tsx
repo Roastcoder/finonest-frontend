@@ -29,6 +29,7 @@ import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
 
 import AdminEnrollments from "./admin/AdminEnrollments";
+import AdminCareers from "./admin/AdminCareers";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,7 @@ const AdminDashboard = () => {
     if (path.includes('/courses')) return 'courses';
     if (path.includes('/enrollments')) return 'enrollments';
     if (path.includes('/branches')) return 'branches';
+    if (path.includes('/careers')) return 'careers';
     return 'dashboard';
   };
 
@@ -99,6 +101,8 @@ const AdminDashboard = () => {
         return <AdminCourses />;
       case 'enrollments':
         return <AdminEnrollments />;
+      case 'careers':
+        return <AdminCareers />;
       case 'branches':
         return <AdminBranches />;
       case 'settings':
@@ -211,6 +215,15 @@ const AdminDashboard = () => {
               Course Enrollments
             </Link>
             <Link 
+              to="/admin/careers"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'careers' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              Career Management
+            </Link>
+            <Link 
               to="/admin/branches"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'branches' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
@@ -260,6 +273,7 @@ const AdminDashboard = () => {
                   {activeTab === 'blogs' && 'Blog Management'}
                   {activeTab === 'courses' && 'Finobizz Learning Management'}
                   {activeTab === 'enrollments' && 'Course Enrollments'}
+                  {activeTab === 'careers' && 'Career Management'}
                   {activeTab === 'branches' && 'Branch Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
@@ -272,6 +286,7 @@ const AdminDashboard = () => {
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
                   {activeTab === 'courses' && 'Manage Finobizz Learning courses and content'}
                   {activeTab === 'enrollments' && 'View and manage course enrollments and payments'}
+                  {activeTab === 'careers' && 'Manage job postings and applications'}
                   {activeTab === 'branches' && 'Manage branch locations and information'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
