@@ -33,7 +33,7 @@ interface Job {
 }
 
 const JobDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
   const [showApplication, setShowApplication] = useState(false);
@@ -50,17 +50,25 @@ const JobDetail = () => {
   });
 
   useEffect(() => {
-    if (id) {
-      fetchJob(id);
+    if (slug) {
+      fetchJobBySlug(slug);
     }
-  }, [id]);
+  }, [slug]);
 
-  const fetchJob = async (jobId: string) => {
+  const fetchJobBySlug = async (jobSlug: string) => {
     try {
-      const response = await fetch(`https://api.finonest.com/api/careers/jobs/${jobId}`);
+      const response = await fetch(`https://api.finonest.com/api/careers/jobs`);
       if (response.ok) {
         const data = await response.json();
-        setJob(data.job);
+        const jobs = data.jobs || [];
+        const foundJob = jobs.find((job: Job) => 
+          job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === jobSlug
+        );
+        if (foundJob) {
+          setJob(foundJob);
+        } else {
+          navigate('/careers');
+        }
       } else {
         navigate('/careers');
       }

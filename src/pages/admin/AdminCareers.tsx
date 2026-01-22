@@ -67,6 +67,9 @@ const AdminCareers = () => {
     image: null as File | null
   });
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   useEffect(() => {
     fetchJobs();
     fetchApplications();
@@ -147,6 +150,7 @@ const AdminCareers = () => {
       return;
     }
 
+    setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append('title', jobForm.title);
@@ -174,12 +178,21 @@ const AdminCareers = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
         toast({
           title: editingJob ? "Job updated" : "Job posted",
           description: "Job has been saved successfully"
         });
         fetchJobs();
         resetJobForm();
+      } else {
+        const error = await response.json();
+        console.error('API Error:', error);
+        toast({
+          title: "Operation failed",
+          description: error.error || "Please try again later",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.log('Job creation/update failed:', error);
@@ -188,6 +201,8 @@ const AdminCareers = () => {
         description: "Please try again later",
         variant: "destructive"
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -202,6 +217,7 @@ const AdminCareers = () => {
       requirements: '',
       image: null
     });
+    setImagePreview(null);
     setShowJobForm(false);
     setEditingJob(null);
   };
@@ -386,19 +402,43 @@ const AdminCareers = () => {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Job Image (Optional)</label>
                   <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center hover:border-muted-foreground/50 transition-colors">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
-                        <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {jobForm.image ? jobForm.image.name : "Upload job image"}
+                    {imagePreview ? (
+                      <div className="space-y-3">
+                        <div className="w-32 h-32 mx-auto rounded-lg overflow-hidden">
+                          <img 
+                            src={imagePreview} 
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <p className="text-sm font-medium text-green-600">
+                          {jobForm.image?.name}
                         </p>
-                        <p className="text-xs text-muted-foreground">PNG, JPG, JPEG up to 5MB</p>
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            setJobForm(prev => ({ ...prev, image: null }));
+                            setImagePreview(null);
+                          }}
+                        >
+                          Remove Image
+                        </Button>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                          <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Upload job image</p>
+                          <p className="text-xs text-muted-foreground">PNG, JPG, JPEG up to 5MB</p>
+                        </div>
+                      </div>
+                    )}
                     <Input
                       type="file"
                       accept="image/*"
@@ -412,7 +452,14 @@ const AdminCareers = () => {
                           });
                           return;
                         }
-                        setJobForm(prev => ({ ...prev, image: file || null }));
+                        if (file) {
+                          setJobForm(prev => ({ ...prev, image: file }));
+                          const reader = new FileReader();
+                          reader.onload = (e) => {
+                            setImagePreview(e.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
                       }}
                       className="mt-2"
                     />
@@ -420,10 +467,21 @@ const AdminCareers = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button onClick={handleJobSubmit} className="w-full sm:w-auto">
-                    {editingJob ? 'Update Job' : 'Post Job'}
+                  <Button 
+                    onClick={handleJobSubmit} 
+                    className="w-full sm:w-auto"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        {editingJob ? 'Updating...' : 'Posting...'}
+                      </>
+                    ) : (
+                      editingJob ? 'Update Job' : 'Post Job'
+                    )}
                   </Button>
-                  <Button variant="outline" onClick={resetJobForm} className="w-full sm:w-auto">
+                  <Button variant="outline" onClick={resetJobForm} className="w-full sm:w-auto" disabled={isUploading}>
                     Cancel
                   </Button>
                 </div>

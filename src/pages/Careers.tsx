@@ -88,8 +88,13 @@ const Careers = () => {
     }
   };
 
-  const handleJobClick = (jobId: number) => {
-    navigate(`/careers/job/${jobId}`);
+  const createJobSlug = (title: string) => {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
+
+  const handleJobClick = (job: Job) => {
+    const slug = createJobSlug(job.title);
+    navigate(`/careers/${slug}`);
   };
 
   if (loading) {
@@ -123,7 +128,7 @@ const Careers = () => {
               <Card 
                 key={job.id} 
                 className="hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => handleJobClick(job.id)}
+                onClick={() => handleJobClick(job)}
               >
                 <CardContent className="p-6">
                   <div className="flex gap-4">
