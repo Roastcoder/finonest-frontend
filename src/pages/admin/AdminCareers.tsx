@@ -62,7 +62,8 @@ const AdminCareers = () => {
     type: 'Full-time',
     salary: '',
     description: '',
-    requirements: ''
+    requirements: '',
+    image: null as File | null
   });
 
   useEffect(() => {
@@ -80,21 +81,7 @@ const AdminCareers = () => {
         setJobs(data.jobs || []);
       }
     } catch (error) {
-      // Mock data
-      setJobs([
-        {
-          id: 1,
-          title: "Senior Financial Analyst",
-          department: "Finance",
-          location: "Mumbai, India",
-          type: "Full-time",
-          salary: "₹8-12 LPA",
-          description: "We are looking for a Senior Financial Analyst to join our growing finance team.",
-          requirements: "• Bachelor's degree in Finance\n• 3-5 years experience\n• Strong Excel skills",
-          posted_date: "2024-01-15",
-          status: "active"
-        }
-      ]);
+      console.log('Jobs API not available');
     }
   };
 
@@ -108,22 +95,7 @@ const AdminCareers = () => {
         setApplications(data.applications || []);
       }
     } catch (error) {
-      // Mock data
-      setApplications([
-        {
-          id: 1,
-          job_id: 1,
-          job_title: "Senior Financial Analyst",
-          name: "John Doe",
-          email: "john@example.com",
-          phone: "+91 9876543210",
-          experience: "4 years",
-          cover_letter: "I am interested in this position because...",
-          cv_filename: "john_doe_cv.pdf",
-          applied_date: "2024-01-20",
-          status: "pending"
-        }
-      ]);
+      console.log('Applications API not available');
     }
   };
 
@@ -160,12 +132,12 @@ const AdminCareers = () => {
         resetJobForm();
       }
     } catch (error) {
+      console.log('Job creation/update failed:', error);
       toast({
-        title: editingJob ? "Job updated" : "Job posted",
-        description: "Job has been saved successfully"
+        title: "Operation failed",
+        description: "Please try again later",
+        variant: "destructive"
       });
-      fetchJobs();
-      resetJobForm();
     }
   };
 
@@ -177,7 +149,8 @@ const AdminCareers = () => {
       type: 'Full-time',
       salary: '',
       description: '',
-      requirements: ''
+      requirements: '',
+      image: null
     });
     setShowJobForm(false);
     setEditingJob(null);
@@ -191,7 +164,8 @@ const AdminCareers = () => {
       type: job.type,
       salary: job.salary,
       description: job.description,
-      requirements: job.requirements
+      requirements: job.requirements,
+      image: null
     });
     setEditingJob(job);
     setShowJobForm(true);
@@ -211,11 +185,12 @@ const AdminCareers = () => {
       });
       fetchJobs();
     } catch (error) {
+      console.log('Job deletion failed:', error);
       toast({
-        title: "Job deleted",
-        description: "Job has been removed successfully"
+        title: "Deletion failed",
+        description: "Please try again later",
+        variant: "destructive"
       });
-      fetchJobs();
     }
   };
 
@@ -235,11 +210,12 @@ const AdminCareers = () => {
       });
       fetchApplications();
     } catch (error) {
+      console.log('Status update failed:', error);
       toast({
-        title: "Status updated",
-        description: `Application marked as ${status}`
+        title: "Update failed",
+        description: "Please try again later",
+        variant: "destructive"
       });
-      fetchApplications();
     }
   };
 
@@ -353,6 +329,19 @@ const AdminCareers = () => {
                     placeholder="List the requirements (use • for bullet points)..."
                     rows={4}
                   />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Job Image</label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      setJobForm(prev => ({ ...prev, image: file || null }));
+                    }}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Upload an image for the job posting (optional)</p>
                 </div>
 
                 <div className="flex gap-4">
