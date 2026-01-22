@@ -16,7 +16,8 @@ import {
   CheckCircle,
   Clock,
   X,
-  Eye
+  Eye,
+  Briefcase
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -38,8 +39,23 @@ interface Application {
   updated_at?: string;
 }
 
+interface JobApplication {
+  id: number;
+  job_id: number;
+  job_title: string;
+  name: string;
+  email: string;
+  phone: string;
+  experience: string;
+  cover_letter: string;
+  cv_filename: string;
+  applied_date: string;
+  status: string;
+}
+
 const Dashboard = () => {
   const [applications, setApplications] = useState<Application[]>([]);
+  const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const navigate = useNavigate();
@@ -59,8 +75,26 @@ const Dashboard = () => {
       }
       
       fetchApplications();
+      fetchJobApplications();
     }
   }, [authLoading, token, user, navigate]);
+
+  const fetchJobApplications = async () => {
+    if (!token || !user?.email) return;
+    
+    try {
+      const response = await fetch('https://api.finonest.com/api/careers/applications');
+      if (response.ok) {
+        const data = await response.json();
+        const userJobApps = (data.applications || []).filter(
+          (app: JobApplication) => app.email === user.email
+        );
+        setJobApplications(userJobApps);
+      }
+    } catch (error) {
+      console.error('Failed to fetch job applications:', error);
+    }
+  };
 
   const fetchApplications = async () => {
     if (!token) return;
@@ -283,7 +317,7 @@ const Dashboard = () => {
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Link to="/apply" className="group p-6 rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
@@ -291,6 +325,16 @@ const Dashboard = () => {
                     </div>
                     <h3 className="font-semibold text-gray-900 mb-2">Apply for Loan</h3>
                     <p className="text-sm text-gray-600">Start your loan application</p>
+                  </div>
+                </Link>
+                
+                <Link to="/careers" className="group p-6 rounded-xl border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 transition-colors">
+                      <Briefcase className="w-6 h-6 text-orange-600" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Careers</h3>
+                    <p className="text-sm text-gray-600">Join our team</p>
                   </div>
                 </Link>
                 
@@ -320,7 +364,7 @@ const Dashboard = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-gray-900">My Applications</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">My Loan Applications</h2>
                   <Badge variant="secondary" className="bg-blue-100 text-blue-700">
                     {applications.length} Total
                   </Badge>
@@ -397,6 +441,67 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
+
+            {/* Job Applications */}
+            {jobApplications.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div className="p-6 border-b border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-gray-900">My Job Applications</h2>
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                      {jobApplications.length} Total
+                    </Badge>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {jobApplications.map((app) => (
+                      <div key={app.id} className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <Briefcase className="w-5 h-5 text-orange-600" />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-900">{app.job_title}</h3>
+                                <p className="text-sm text-gray-600">
+                                  Applied on {new Date(app.applied_date).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                  })}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <p className="text-gray-600">Experience</p>
+                                <p className="font-medium text-gray-900">{app.experience || 'Not specified'}</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-600">CV Submitted</p>
+                                <p className="font-medium text-gray-900">{app.cv_filename ? 'Yes' : 'No'}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="ml-6">
+                            <Badge className={`${
+                              app.status === 'shortlisted' ? 'bg-green-500' :
+                              app.status === 'rejected' ? 'bg-red-500' :
+                              app.status === 'reviewed' ? 'bg-blue-500' :
+                              'bg-yellow-500'
+                            } text-white px-3 py-1`}>
+                              {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </main>
 

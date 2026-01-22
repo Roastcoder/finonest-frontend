@@ -652,7 +652,20 @@ const AdminCareers = () => {
                   
                   <div>
                     <label className="text-sm font-medium">CV/Resume</label>
-                    <p className="text-sm truncate">{selectedApplication.cv_filename}</p>
+                    <div className="flex items-center gap-2">
+                      {selectedApplication.cv_filename ? (
+                        <a 
+                          href={`https://api.finonest.com/${selectedApplication.cv_path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {selectedApplication.cv_filename}
+                        </a>
+                      ) : (
+                        <p className="text-sm text-gray-500">No CV uploaded</p>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-2">

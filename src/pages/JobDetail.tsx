@@ -15,7 +15,8 @@ import {
   Upload,
   Briefcase,
   Calendar,
-  ArrowLeft
+  ArrowLeft,
+  FileText
 } from "lucide-react";
 
 interface Job {
@@ -321,28 +322,39 @@ const JobDetail = () => {
                 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Upload CV/Resume *</label>
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors">
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors relative">
                     {applicationData.cv_file ? (
-                      <div className="space-y-3">
-                        <div className="w-16 h-16 mx-auto rounded-lg bg-green-100 flex items-center justify-center">
-                          <Upload className="w-8 h-8 text-green-600" />
+                      <div className="space-y-4">
+                        <div className="w-32 h-40 mx-auto rounded-lg bg-gray-100 border-2 border-gray-200 flex flex-col items-center justify-center p-4">
+                          <FileText className="w-12 h-12 text-blue-600 mb-2" />
+                          <div className="text-center">
+                            <p className="text-xs font-medium text-gray-700 truncate w-full">
+                              {applicationData.cv_file.name.length > 15 
+                                ? applicationData.cv_file.name.substring(0, 15) + '...' 
+                                : applicationData.cv_file.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {applicationData.cv_file.type.includes('pdf') ? 'PDF' : 
+                               applicationData.cv_file.type.includes('word') ? 'DOC' : 'Document'}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {(applicationData.cv_file.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-green-600">
-                            {applicationData.cv_file.name}
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-green-600 mb-2">
+                            File uploaded successfully!
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {(applicationData.cv_file.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setApplicationData(prev => ({ ...prev, cv_file: null }))}
+                          >
+                            Remove File
+                          </Button>
                         </div>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => setApplicationData(prev => ({ ...prev, cv_file: null }))}
-                        >
-                          Remove File
-                        </Button>
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -350,16 +362,19 @@ const JobDetail = () => {
                           <Upload className="w-8 h-8 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">Upload your CV/Resume</p>
+                          <p className="text-sm font-medium">Click to upload your CV/Resume</p>
                           <p className="text-xs text-muted-foreground">PDF, DOC, DOCX (Max 5MB)</p>
                         </div>
+                        <Button type="button" variant="outline" size="sm" className="mt-2">
+                          Choose File
+                        </Button>
                       </div>
                     )}
                     <Input
                       type="file"
                       accept=".pdf,.doc,.docx"
                       onChange={handleFileChange}
-                      className="mt-4"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
                   </div>
                 </div>
