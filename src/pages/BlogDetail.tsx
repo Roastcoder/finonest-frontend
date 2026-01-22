@@ -225,10 +225,70 @@ const BlogDetail = () => {
               </div>
             )}
 
-            <div 
-              className="space-y-4 text-base leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }}
-            />
+            <div className="space-y-4 text-base leading-relaxed">
+              {blog.table_of_contents && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Table of Contents</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.table_of_contents) }} />
+                </div>
+              )}
+              
+              {blog.introduction && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.introduction) }} />
+                </div>
+              )}
+              
+              {blog.quick_info_box && (
+                <div className="bg-blue-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Quick Info</h3>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.quick_info_box) }} />
+                </div>
+              )}
+              
+              <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }} />
+              
+              {blog.benefits && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Benefits</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.benefits) }} />
+                </div>
+              )}
+              
+              {blog.eligibility_criteria && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Eligibility Criteria</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.eligibility_criteria) }} />
+                </div>
+              )}
+              
+              {blog.documents_required && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Documents Required</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.documents_required) }} />
+                </div>
+              )}
+              
+              {blog.faqs && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions</h2>
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.faqs) }} />
+                </div>
+              )}
+              
+              {blog.final_cta && (
+                <div className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.final_cta) }} />
+                </div>
+              )}
+              
+              {blog.disclaimer && (
+                <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
+                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.disclaimer) }} />
+                </div>
+              )}
+            </div>
 
             {blog.video_url && (
               <div className="mt-8">

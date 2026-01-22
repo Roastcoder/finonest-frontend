@@ -22,6 +22,27 @@ interface BlogPost {
   updated_at: string;
   image_url?: string;
   video_url?: string;
+  table_of_contents?: string;
+  introduction?: string;
+  quick_info_box?: string;
+  emi_example?: string;
+  what_is_loan?: string;
+  benefits?: string;
+  who_should_apply?: string;
+  eligibility_criteria?: string;
+  documents_required?: string;
+  interest_rates?: string;
+  finonest_process?: string;
+  why_choose_finonest?: string;
+  customer_testimonials?: string;
+  common_mistakes?: string;
+  mid_blog_cta?: string;
+  faqs?: string;
+  service_areas?: string;
+  related_blogs?: string;
+  final_cta?: string;
+  disclaimer?: string;
+  trust_footer?: string;
 }
 
 const AdminBlogs = () => {
@@ -359,6 +380,52 @@ const AdminBlogs = () => {
                       onChange={(e) => setFormData({...formData, meta_tags: e.target.value})}
                       placeholder="credit score, loans, finance (comma separated)"
                     />
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Blog Sections</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Table of Contents</label>
+                        <Textarea value={formData.table_of_contents || ''} onChange={(e) => setFormData({...formData, table_of_contents: e.target.value})} rows={2} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Introduction</label>
+                        <Textarea value={formData.introduction || ''} onChange={(e) => setFormData({...formData, introduction: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Quick Info Box</label>
+                        <Textarea value={formData.quick_info_box || ''} onChange={(e) => setFormData({...formData, quick_info_box: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">EMI Example</label>
+                        <Textarea value={formData.emi_example || ''} onChange={(e) => setFormData({...formData, emi_example: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Benefits</label>
+                        <Textarea value={formData.benefits || ''} onChange={(e) => setFormData({...formData, benefits: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Eligibility Criteria</label>
+                        <Textarea value={formData.eligibility_criteria || ''} onChange={(e) => setFormData({...formData, eligibility_criteria: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Documents Required</label>
+                        <Textarea value={formData.documents_required || ''} onChange={(e) => setFormData({...formData, documents_required: e.target.value})} rows={3} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">FAQs</label>
+                        <Textarea value={formData.faqs || ''} onChange={(e) => setFormData({...formData, faqs: e.target.value})} rows={4} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Final CTA</label>
+                        <Textarea value={formData.final_cta || ''} onChange={(e) => setFormData({...formData, final_cta: e.target.value})} rows={2} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Disclaimer</label>
+                        <Textarea value={formData.disclaimer || ''} onChange={(e) => setFormData({...formData, disclaimer: e.target.value})} rows={2} />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
