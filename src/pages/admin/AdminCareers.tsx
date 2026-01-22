@@ -194,11 +194,23 @@ const AdminCareers = () => {
         fetchJobs();
         resetJobForm();
       } else {
-        const error = await response.json();
-        console.error('API Error:', error);
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        
+        let errorMessage = "Please try again later";
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorMessage = errorJson.error || errorMessage;
+        } catch {
+          // If it's not JSON, it's likely a PHP error
+          if (errorText.includes('<br />')) {
+            errorMessage = "Server error occurred. Please check the server logs.";
+          }
+        }
+        
         toast({
           title: "Operation failed",
-          description: error.error || "Please try again later",
+          description: errorMessage,
           variant: "destructive"
         });
       }
