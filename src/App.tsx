@@ -40,7 +40,7 @@ import OurBranches from "./pages/OurBranches";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
 import BankerForm from "./pages/BankerForm";
 import Careers from "./pages/Careers";
-import JobDetails from "./pages/JobDetails";
+import JobDetail from "./pages/JobDetail";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -117,7 +117,7 @@ const App = () => {
                 <Route path="/admin/enrollments" element={<AdminDashboard />} />
                 <Route path="/admin/branches" element={<AdminDashboard />} />
                 <Route path="/careers" element={<Careers />} />
-                <Route path="/careers/job/:id" element={<JobDetails />} />
+                <Route path="/careers/job/:id" element={<JobDetail />} />
                 <Route path="/admin/careers" element={<AdminDashboard />} />
                 <Route path="/admin/bankers" element={<AdminDashboard />} />
                 <Route path="/admin/settings" element={<AdminDashboard />} />
