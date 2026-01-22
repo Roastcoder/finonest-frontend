@@ -257,6 +257,7 @@ const AdminCareers = () => {
       salary: job.salary,
       description: job.description,
       requirements: job.requirements,
+      features: [''],
       image: null
     });
     setEditingJob(job);
@@ -452,10 +453,10 @@ const AdminCareers = () => {
                 <div>
                   <label className="text-lg font-bold italic">Job Features</label>
                   <div className="space-y-2 mt-2">
-                    {jobForm.features.map((feature, index) => (
+                    {(jobForm.features || ['']).map((feature, index) => (
                       <div key={index} className="flex gap-2">
                         <Input value={feature} onChange={(e) => updateFeature(index, e.target.value)} placeholder="Enter job feature..." className="flex-1" />
-                        <Button type="button" variant="outline" size="sm" onClick={() => removeFeature(index)} disabled={jobForm.features.length === 1}>✕</Button>
+                        <Button type="button" variant="outline" size="sm" onClick={() => removeFeature(index)} disabled={(jobForm.features || ['']).length === 1}>✕</Button>
                       </div>
                     ))}
                     <Button type="button" variant="outline" size="sm" onClick={addFeature} className="w-full">+ Add Feature</Button>
