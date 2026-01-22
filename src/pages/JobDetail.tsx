@@ -190,7 +190,7 @@ const JobDetail = () => {
               <CardHeader>
                 <div className="flex flex-col md:flex-row gap-6">
                   {job.image && (
-                    <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="w-full md:w-48 aspect-square rounded-lg overflow-hidden flex-shrink-0">
                       <img 
                         src={job.image} 
                         alt={job.title}

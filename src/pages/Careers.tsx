@@ -123,16 +123,16 @@ const Careers = () => {
         {/* Job Listings */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6">Open Positions</h2>
-          <div className="grid gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobs.map((job) => (
               <Card 
                 key={job.id} 
-                className="hover:shadow-lg transition-shadow cursor-pointer"
+                className="hover:shadow-lg transition-all duration-300 cursor-pointer hover:-translate-y-1"
                 onClick={() => handleJobClick(job)}
               >
                 <CardContent className="p-6">
-                  <div className="flex gap-4">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center">
+                  <div className="flex flex-col">
+                    <div className="w-full aspect-square rounded-lg overflow-hidden mb-4 bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center">
                       {job.image ? (
                         <img 
                           src={job.image} 
@@ -140,39 +140,38 @@ const Careers = () => {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <Briefcase className="w-8 h-8 text-primary/60" />
+                        <Briefcase className="w-12 h-12 text-primary/60" />
                       )}
                     </div>
+                    
                     <div className="flex-1">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-xl font-semibold mb-2">{job.title}</h3>
-                          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-3">
-                            <div className="flex items-center gap-1">
-                              <Briefcase className="w-4 h-4" />
-                              {job.department}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {job.location}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {job.type}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <IndianRupee className="w-4 h-4" />
-                              {job.salary}
-                            </div>
+                      <div className="mb-4">
+                        <h3 className="text-xl font-semibold mb-3">{job.title}</h3>
+                        <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1">
+                            <Briefcase className="w-4 h-4" />
+                            {job.department}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {job.location}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {job.type}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <IndianRupee className="w-4 h-4" />
+                            {job.salary}
                           </div>
                         </div>
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="mb-3">
                           <Calendar className="w-3 h-3 mr-1" />
                           {new Date(job.posted_date).toLocaleDateString()}
                         </Badge>
                       </div>
                       
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
+                      <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
                         {job.description}
                       </p>
                     </div>
