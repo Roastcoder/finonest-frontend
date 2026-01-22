@@ -217,7 +217,7 @@ const Careers = () => {
                       </div>
                     </CardContent>
                   </Card>
-                ))}}}
+                ))}
               </div>
             </div>
 
