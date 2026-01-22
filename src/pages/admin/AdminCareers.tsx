@@ -431,7 +431,30 @@ const AdminCareers = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Job Description *</label>
+                  <label className="text-lg font-bold italic">Job Description *</label>
+                  <div className="flex gap-2 mb-2">
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const end = textarea.selectionEnd;
+                      const text = textarea.value;
+                      const selectedText = text.substring(start, end);
+                      const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
+                      setJobForm(prev => ({ ...prev, description: newText }));
+                    }}>B</Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      const textarea = document.querySelector('textarea[placeholder*="Describe the role"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const end = textarea.selectionEnd;
+                      const text = textarea.value;
+                      const selectedText = text.substring(start, end);
+                      const newText = text.substring(0, start) + `*${selectedText}*` + text.substring(end);
+                      setJobForm(prev => ({ ...prev, description: newText }));
+                    }}>I</Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      setJobForm(prev => ({ ...prev, description: prev.description + '\n• ' }));
+                    }}>•</Button>
+                  </div>
                   <Textarea
                     value={jobForm.description}
                     onChange={(e) => setJobForm(prev => ({ ...prev, description: e.target.value }))}
@@ -441,7 +464,30 @@ const AdminCareers = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Requirements</label>
+                  <label className="text-lg font-bold italic">Requirements</label>
+                  <div className="flex gap-2 mb-2">
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      const textarea = document.querySelector('textarea[placeholder*="List the requirements"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const end = textarea.selectionEnd;
+                      const text = textarea.value;
+                      const selectedText = text.substring(start, end);
+                      const newText = text.substring(0, start) + `**${selectedText}**` + text.substring(end);
+                      setJobForm(prev => ({ ...prev, requirements: newText }));
+                    }}>B</Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      const textarea = document.querySelector('textarea[placeholder*="List the requirements"]') as HTMLTextAreaElement;
+                      const start = textarea.selectionStart;
+                      const end = textarea.selectionEnd;
+                      const text = textarea.value;
+                      const selectedText = text.substring(start, end);
+                      const newText = text.substring(0, start) + `*${selectedText}*` + text.substring(end);
+                      setJobForm(prev => ({ ...prev, requirements: newText }));
+                    }}>I</Button>
+                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                      setJobForm(prev => ({ ...prev, requirements: prev.requirements + '\n• ' }));
+                    }}>•</Button>
+                  </div>
                   <Textarea
                     value={jobForm.requirements}
                     onChange={(e) => setJobForm(prev => ({ ...prev, requirements: e.target.value }))}

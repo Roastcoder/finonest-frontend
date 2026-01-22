@@ -27,6 +27,7 @@ interface Job {
   salary: string;
   description: string;
   requirements: string;
+  features?: string[];
   posted_date: string;
   status: string;
   image?: string;
@@ -39,6 +40,14 @@ const JobDetails = () => {
   const [showApplication, setShowApplication] = useState(false);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  const renderFormattedText = (text: string) => {
+    return text
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br />');
+  };
 
   const [applicationData, setApplicationData] = useState({
     name: '',
@@ -235,9 +244,10 @@ const JobDetails = () => {
                     <CardTitle>Job Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {job.description}
-                    </p>
+                    <div 
+                      className="text-muted-foreground leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: renderFormattedText(job.description) }}
+                    />
                   </CardContent>
                 </Card>
 
@@ -246,11 +256,32 @@ const JobDetails = () => {
                     <CardTitle>Requirements</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <pre className="text-muted-foreground whitespace-pre-wrap font-sans leading-relaxed">
-                      {job.requirements}
-                    </pre>
+                    <div 
+                      className="text-muted-foreground leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: renderFormattedText(job.requirements) }}
+                    />
                   </CardContent>
                 </Card>
+
+                {job.features && job.features.length > 0 && job.features[0] && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Job Features</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {job.features.map((feature, index) => (
+                          feature && (
+                            <li key={index} className="flex items-start gap-2 text-muted-foreground">
+                              <span className="text-primary mt-1">•</span>
+                              {feature}
+                            </li>
+                          )
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
           ) : (
