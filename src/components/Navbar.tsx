@@ -69,6 +69,9 @@ const Navbar = () => {
     name: "Our Branches",
     href: "/branches"
   }, {
+    name: "Careers",
+    href: "/careers"
+  }, {
     name: "About",
     href: "/about"
   }, {
