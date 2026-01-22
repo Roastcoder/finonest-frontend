@@ -304,7 +304,9 @@ const About = () => {
                     <img 
                       src={promoter.image} 
                       alt={promoter.name}
-                      className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                      className={`w-16 h-16 rounded-full object-cover flex-shrink-0 ${
+                        promoter.name === 'Prateek Rathore' ? 'scale-115' : ''
+                      }`}
                     />
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-foreground">{promoter.name}</h3>
