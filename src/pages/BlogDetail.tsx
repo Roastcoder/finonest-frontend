@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
-import { Calendar, User, ArrowLeft, Tag, Share2 } from "lucide-react";
+import { Calendar, User, ArrowLeft, Tag, Share2, ChevronDown, ChevronUp } from "lucide-react";
 
 interface BlogPost {
   id: number;
@@ -49,6 +49,34 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+
+  const parseFAQs = (faqText: string) => {
+    const faqs = [];
+    const lines = faqText.split('\n');
+    let currentQ = '';
+    let currentA = '';
+    
+    for (const line of lines) {
+      if (line.trim().startsWith('**Q:') || line.trim().startsWith('Q:')) {
+        if (currentQ && currentA) {
+          faqs.push({ question: currentQ, answer: currentA });
+        }
+        currentQ = line.replace(/\*\*Q:\s*|Q:\s*/g, '').replace(/\*\*/g, '');
+        currentA = '';
+      } else if (line.trim().startsWith('**A:') || line.trim().startsWith('A:')) {
+        currentA = line.replace(/\*\*A:\s*|A:\s*/g, '').replace(/\*\*/g, '');
+      } else if (currentA && line.trim()) {
+        currentA += ' ' + line.trim();
+      }
+    }
+    
+    if (currentQ && currentA) {
+      faqs.push({ question: currentQ, answer: currentA });
+    }
+    
+    return faqs;
+  };
 
   const renderFormattedText = (text: string) => {
     return text
@@ -71,7 +99,6 @@ const BlogDetail = () => {
 
     const fetchBlog = async () => {
       try {
-        // Check if id is numeric - use ID endpoint, otherwise use slug endpoint
         const isNumeric = /^\d+$/.test(id);
         const url = isNumeric 
           ? `https://api.finonest.com/api/blogs/${id}`
@@ -188,32 +215,37 @@ const BlogDetail = () => {
 
       <Navbar />
 
-      <main className="min-h-screen bg-background">
-        <article className="pt-24 pb-12">
-          <div className="container max-w-4xl">
+      <main className="min-h-screen bg-gray-50">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
+          <div className="container max-w-6xl pt-24 pb-16">
             <Button 
               variant="ghost" 
               onClick={() => navigate('/blog')}
-              className="mb-6"
+              className="mb-6 text-white hover:bg-white/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Blog
             </Button>
 
-            <header className="mb-8">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
-                  <Tag className="w-3 h-3" />
-                  {blog.category}
-                </span>
-              </div>
-              
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                {blog.title}
-              </h1>
-              
-              <div className="flex items-center justify-between text-sm text-muted-foreground mb-6 flex-wrap gap-4">
-                <div className="flex items-center gap-4">
+            <div className="grid lg:grid-cols-3 gap-8 items-center">
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
+                    <Tag className="w-3 h-3" />
+                    {blog.category}
+                  </span>
+                </div>
+                
+                <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                  {blog.title}
+                </h1>
+                
+                <p className="text-xl text-blue-100 mb-6 leading-relaxed">
+                  {blog.excerpt}
+                </p>
+                
+                <div className="flex items-center gap-6 text-blue-200">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
                     {blog.author}
@@ -222,191 +254,167 @@ const BlogDetail = () => {
                     <Calendar className="w-4 h-4" />
                     {formatDate(blog.created_at)}
                   </div>
+                  {navigator.share && (
+                    <Button variant="outline" size="sm" onClick={handleShare} className="border-white/30 text-white hover:bg-white/10">
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Share
+                    </Button>
+                  )}
                 </div>
-                {navigator.share && (
-                  <Button variant="outline" size="sm" onClick={handleShare}>
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                )}
               </div>
-            </header>
-
-            {blog.image_url && (
-              <div className="mb-8">
-                <img
-                  src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
-                  alt={blog.title}
-                  loading="eager"
-                  className="w-full h-64 md:h-96 object-cover rounded-xl"
-                  onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-              </div>
-            )}
-
-            <div className="space-y-8 text-base leading-relaxed">
-              {blog.table_of_contents && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Table of Contents</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.table_of_contents) }} />
-                </section>
-              )}
               
-              {blog.introduction && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.introduction) }} />
-                </section>
-              )}
-              
-              {blog.quick_info_box && (
-                <section className="bg-blue-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3">Loan at a Glance</h3>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.quick_info_box) }} />
-                </section>
-              )}
-              
-              {blog.emi_example && (
-                <section className="bg-green-50 p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-3">EMI Calculator Example</h3>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.emi_example) }} />
-                </section>
-              )}
-              
-              {blog.what_is_loan && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">What is Personal Loan?</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.what_is_loan) }} />
-                </section>
-              )}
-              
-              {blog.benefits && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Benefits</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.benefits) }} />
-                </section>
-              )}
-              
-              {blog.who_should_apply && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Who Should Apply for This Loan?</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.who_should_apply) }} />
-                </section>
-              )}
-              
-              {blog.eligibility_criteria && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Eligibility Criteria</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.eligibility_criteria) }} />
-                </section>
-              )}
-              
-              {blog.documents_required && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Documents Required</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.documents_required) }} />
-                </section>
-              )}
-              
-              {blog.interest_rates && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Interest Rate & Charges Disclosure</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.interest_rates) }} />
-                </section>
-              )}
-              
-              {blog.finonest_process && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">How Finonest Loan Process Works</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.finonest_process) }} />
-                </section>
-              )}
-              
-              {blog.why_choose_finonest && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Why Choose Finonest?</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.why_choose_finonest) }} />
-                </section>
-              )}
-              
-              {blog.customer_testimonials && (
-                <section className="bg-yellow-50 p-6 rounded-lg">
-                  <h2 className="text-2xl font-semibold mb-4">Customer Testimonials</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.customer_testimonials) }} />
-                </section>
-              )}
-              
-              {blog.common_mistakes && (
-                <section className="bg-red-50 p-6 rounded-lg">
-                  <h2 className="text-2xl font-semibold mb-4">Common Mistakes to Avoid</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.common_mistakes) }} />
-                </section>
-              )}
-              
-              {blog.mid_blog_cta && (
-                <section className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.mid_blog_cta) }} />
-                </section>
-              )}
-              
-              {blog.faqs && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Frequently Asked Questions (FAQs)</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.faqs) }} />
-                </section>
-              )}
-              
-              {blog.service_areas && (
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4">Service Areas / Local Presence</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.service_areas) }} />
-                </section>
-              )}
-              
-              {blog.related_blogs && (
-                <section className="bg-gray-50 p-6 rounded-lg">
-                  <h2 className="text-2xl font-semibold mb-4">Related Blogs & Internal Links</h2>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.related_blogs) }} />
-                </section>
-              )}
-              
-              {blog.final_cta && (
-                <section className="bg-primary text-primary-foreground p-6 rounded-lg text-center">
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.final_cta) }} />
-                </section>
-              )}
-              
-              {blog.disclaimer && (
-                <section className="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
-                  <h3 className="font-semibold mb-2">Disclaimer & Compliance Notice</h3>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.disclaimer) }} />
-                </section>
-              )}
-              
-              {blog.trust_footer && (
-                <section className="bg-green-50 p-6 rounded-lg text-center">
-                  <h3 className="text-lg font-semibold mb-3">Trust & Compliance</h3>
-                  <div dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.trust_footer) }} />
-                </section>
+              {blog.image_url && (
+                <div className="lg:col-span-1">
+                  <img
+                    src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
+                    alt={blog.title}
+                    className="w-full h-64 lg:h-80 object-cover rounded-2xl shadow-2xl"
+                    onError={(e) => {
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
+                    }}
+                  />
+                </div>
               )}
             </div>
+          </div>
+        </div>
 
-            {blog.video_url && (
-              <div className="mt-8">
-                <video
-                  controls
-                  className="w-full rounded-xl"
-                  poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
-                >
-                  <source src={blog.video_url} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+        {/* Content Section */}
+        <div className="container max-w-6xl py-12">
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Table of Contents Sidebar */}
+            {blog.table_of_contents && (
+              <div className="lg:col-span-1">
+                <div className="sticky top-24">
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border">
+                    <h3 className="text-lg font-semibold mb-4 text-gray-900">📋 Table of Contents</h3>
+                    <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.table_of_contents) }} />
+                  </div>
+                </div>
               </div>
             )}
+            
+            {/* Main Content */}
+            <div className={`${blog.table_of_contents ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
+              <div className="space-y-8">
+                {blog.introduction && (
+                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
+                      <span className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl">📖</span>
+                      Introduction
+                    </h2>
+                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.introduction) }} />
+                  </section>
+                )}
+                
+                {blog.quick_info_box && (
+                  <section className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 border border-blue-200">
+                    <h3 className="text-2xl font-bold mb-6 text-blue-900 flex items-center gap-3">
+                      <span className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg">📊</span>
+                      Loan at a Glance
+                    </h3>
+                    <div className="prose prose-blue max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.quick_info_box) }} />
+                  </section>
+                )}
+                
+                {blog.emi_example && (
+                  <section className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-8 border border-green-200">
+                    <h3 className="text-2xl font-bold mb-6 text-green-900 flex items-center gap-3">
+                      <span className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-lg">💰</span>
+                      EMI Calculator Example
+                    </h3>
+                    <div className="prose prose-green max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.emi_example) }} />
+                  </section>
+                )}
+                
+                {blog.what_is_loan && (
+                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
+                      <span className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-xl">🤔</span>
+                      What is Personal Loan?
+                    </h2>
+                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.what_is_loan) }} />
+                  </section>
+                )}
+                
+                {blog.benefits && (
+                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 flex items-center gap-3">
+                      <span className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xl">✅</span>
+                      Benefits
+                    </h2>
+                    <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.benefits) }} />
+                  </section>
+                )}
+
+                {blog.faqs && (
+                  <section className="bg-white rounded-2xl p-8 shadow-lg border">
+                    <h2 className="text-3xl font-bold mb-8 text-gray-900 flex items-center gap-3">
+                      <span className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-xl">❓</span>
+                      Frequently Asked Questions
+                    </h2>
+                    <div className="space-y-4">
+                      {parseFAQs(blog.faqs).map((faq, index) => (
+                        <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
+                          <button
+                            className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-all duration-200 group"
+                            onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                          >
+                            <span className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{faq.question}</span>
+                            <div className="ml-4 flex-shrink-0">
+                              {openFAQ === index ? (
+                                <ChevronUp className="w-5 h-5 text-blue-600" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                              )}
+                            </div>
+                          </button>
+                          {openFAQ === index && (
+                            <div className="px-6 pb-4 text-gray-700 bg-gray-50 border-t border-gray-100">
+                              <p className="pt-4 leading-relaxed">{faq.answer}</p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+                
+                {blog.final_cta && (
+                  <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 text-center shadow-xl">
+                    <div className="prose prose-invert prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.final_cta) }} />
+                  </section>
+                )}
+                
+                {blog.disclaimer && (
+                  <section className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+                    <h3 className="font-bold mb-4 text-gray-800 flex items-center gap-2">
+                      <span className="text-lg">⚖️</span>
+                      Disclaimer & Compliance Notice
+                    </h3>
+                    <div className="text-sm text-gray-600 prose prose-sm" dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.disclaimer) }} />
+                  </section>
+                )}
+              </div>
+            </div>
           </div>
-        </article>
+        </div>
+
+        {blog.video_url && (
+          <div className="container max-w-4xl pb-12">
+            <div className="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 className="text-2xl font-bold mb-6 text-gray-900">📹 Video Guide</h3>
+              <video
+                controls
+                className="w-full rounded-xl"
+                poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
+              >
+                <source src={blog.video_url} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        )}
       </main>
 
       <Footer />
