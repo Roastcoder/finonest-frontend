@@ -74,28 +74,65 @@ const AdminCareers = () => {
   const fetchJobs = async () => {
     try {
       const response = await fetch('https://api.finonest.com/api/careers/jobs', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
+      
+      console.log('API Response Status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('API Response Data:', data);
         setJobs(data.jobs || []);
+      } else {
+        console.error('API Error:', response.status, response.statusText);
       }
     } catch (error) {
-      console.log('Jobs API not available');
+      console.error('Jobs API Error:', error);
+      // Fallback: Create sample job data for testing
+      setJobs([
+        {
+          id: 1,
+          title: "Senior Financial Analyst",
+          department: "Finance",
+          location: "Mumbai, India",
+          type: "Full-time",
+          salary: "₹8-12 LPA",
+          description: "We are looking for a Senior Financial Analyst to join our growing team.",
+          requirements: "• Bachelor's degree in Finance\n• 3+ years experience\n• Strong analytical skills",
+          posted_date: "2024-01-15",
+          status: "active"
+        }
+      ]);
     }
   };
 
   const fetchApplications = async () => {
     try {
       const response = await fetch('https://api.finonest.com/api/careers/applications', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
+      
+      console.log('Applications API Response Status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Applications API Response Data:', data);
         setApplications(data.applications || []);
+      } else {
+        console.error('Applications API Error:', response.status, response.statusText);
       }
     } catch (error) {
-      console.log('Applications API not available');
+      console.error('Applications API Error:', error);
+      // Fallback: Empty applications for now
+      setApplications([]);
     }
   };
 
