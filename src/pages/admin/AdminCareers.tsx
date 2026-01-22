@@ -116,6 +116,7 @@ const AdminCareers = () => {
 
   const fetchApplications = async () => {
     try {
+      console.log('Fetching applications...');
       const response = await fetch('https://api.finonest.com/api/careers/applications', {
         method: 'GET',
         headers: {
@@ -132,9 +133,16 @@ const AdminCareers = () => {
         setApplications(data.applications || []);
       } else {
         console.error('Applications API Error:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
       }
     } catch (error) {
       console.error('Applications API Error:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
       // Fallback: Empty applications for now
       setApplications([]);
     }
