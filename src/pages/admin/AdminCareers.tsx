@@ -104,7 +104,7 @@ const AdminCareers = () => {
           department: "Finance",
           location: "Mumbai, India",
           type: "Full-time",
-          salary: "₹8-12 LPA",
+          salary: "₹8,00,000 - ₹12,00,000 per annum",
           description: "We are looking for a Senior Financial Analyst to join our growing team.",
           requirements: "• Bachelor's degree in Finance\n• 3+ years experience\n• Strong analytical skills",
           posted_date: "2024-01-15",
@@ -170,7 +170,7 @@ const AdminCareers = () => {
         : 'https://api.finonest.com/api/careers/jobs';
       
       const response = await fetch(url, {
-        method: editingJob ? 'PUT' : 'POST',
+        method: editingJob ? 'POST' : 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },

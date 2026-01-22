@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import { 
   MapPin, 
   Clock, 
-  DollarSign,
+  IndianRupee,
   Briefcase,
   Calendar
 } from "lucide-react";
@@ -52,7 +52,7 @@ const Careers = () => {
           department: "Finance",
           location: "Mumbai, India",
           type: "Full-time",
-          salary: "₹8-12 LPA",
+          salary: "₹8,00,000 - ₹12,00,000 per annum",
           description: "Join our team as a Senior Financial Advisor and help clients achieve their financial goals. You will provide expert advice on investments, loans, and financial planning.",
           requirements: "Bachelor's degree in Finance, 3+ years experience",
           posted_date: "2024-01-15",
@@ -64,7 +64,7 @@ const Careers = () => {
           department: "Operations",
           location: "Delhi, India",
           type: "Full-time",
-          salary: "₹4-6 LPA",
+          salary: "₹4,00,000 - ₹6,00,000 per annum",
           description: "We are looking for a detail-oriented Loan Processing Executive to handle loan applications, documentation, and customer service.",
           requirements: "Bachelor's degree, 1-2 years banking experience",
           posted_date: "2024-01-10",
@@ -76,7 +76,7 @@ const Careers = () => {
           department: "Marketing",
           location: "Bangalore, India",
           type: "Full-time",
-          salary: "₹5-8 LPA",
+          salary: "₹5,00,000 - ₹8,00,000 per annum",
           description: "Drive our digital marketing initiatives and help grow our online presence. You will manage social media, content marketing, and digital campaigns.",
           requirements: "Marketing degree, 2+ years digital marketing experience",
           posted_date: "2024-01-08",
@@ -161,7 +161,7 @@ const Careers = () => {
                               {job.type}
                             </div>
                             <div className="flex items-center gap-1">
-                              <DollarSign className="w-4 h-4" />
+                              <IndianRupee className="w-4 h-4" />
                               {job.salary}
                             </div>
                           </div>
