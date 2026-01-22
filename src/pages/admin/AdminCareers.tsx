@@ -73,7 +73,7 @@ const AdminCareers = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('/api/admin/careers/jobs', {
+      const response = await fetch('/api/careers/jobs', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -87,7 +87,7 @@ const AdminCareers = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('/api/admin/careers/applications', {
+      const response = await fetch('/api/careers/applications', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -111,8 +111,8 @@ const AdminCareers = () => {
 
     try {
       const url = editingJob 
-        ? `/api/admin/careers/jobs/${editingJob.id}`
-        : '/api/admin/careers/jobs';
+        ? `/api/careers/jobs/${editingJob.id}`
+        : '/api/careers/jobs';
       
       const response = await fetch(url, {
         method: editingJob ? 'PUT' : 'POST',
@@ -175,7 +175,7 @@ const AdminCareers = () => {
     if (!confirm('Are you sure you want to delete this job?')) return;
 
     try {
-      await fetch(`/api/admin/careers/jobs/${jobId}`, {
+      await fetch(`/api/careers/jobs/${jobId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -196,7 +196,7 @@ const AdminCareers = () => {
 
   const updateApplicationStatus = async (applicationId: number, status: string) => {
     try {
-      await fetch(`/api/admin/careers/applications/${applicationId}`, {
+      await fetch(`/api/careers/applications/${applicationId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
