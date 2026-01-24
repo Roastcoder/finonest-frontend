@@ -77,7 +77,8 @@ const OurBranches = () => {
       
       // Group branches by location
       filteredBranches.forEach(branch => {
-        if (branch.latitude && branch.longitude) {
+        if (branch.latitude && branch.longitude && 
+            typeof branch.latitude === 'number' && typeof branch.longitude === 'number') {
           const key = `${branch.latitude.toFixed(4)},${branch.longitude.toFixed(4)}`;
           if (!locationGroups.has(key)) {
             locationGroups.set(key, []);
