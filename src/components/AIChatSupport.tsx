@@ -11,10 +11,11 @@ interface Message {
 
 const AIChatSupport = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [languageSelected, setLanguageSelected] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '🎯 Welcome to Finonest AI Assistant! I\'m powered by comprehensive knowledge of all our loan products and services.\n\n💡 I can help you with:\n\n🏠 **Home Loans** - Starting 7.3% p.a., up to ₹5Cr\n💰 **Personal Loans** - From 9.99% p.a., up to ₹40L\n🚗 **Car Loans** - Starting 8.5% p.a., new & used\n🏢 **Business Loans** - From 11% p.a., up to ₹50L\n🏘️ **Loan Against Property** - From 9% p.a.\n\n📋 **Additional Support:**\n• Eligibility criteria & documentation\n• EMI calculations & comparisons\n• Application process guidance\n• Interest rates & tenure options\n\n❓ What would you like to know about our financial services?',
+      text: '🙏 Welcome to Finonest AI Assistant!\n\nPlease choose your preferred language:\n🇮🇳 हिंदी के लिए \'हिंदी\' टाइप करें\n🇬🇧 Type \'English\' for English\n\nफिनोनेस्ट में आपका स्वागत है! कृपया अपनी भाषा चुनें।',
       isUser: false,
       timestamp: new Date()
     }
@@ -77,6 +78,29 @@ const AIChatSupport = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    
+    // Check if this is language selection
+    const lowerInput = inputMessage.toLowerCase().trim();
+    if (!languageSelected && (lowerInput === 'hindi' || lowerInput === 'हिंदी' || lowerInput === 'english' || lowerInput === 'अंग्रेजी')) {
+      setLanguageSelected(true);
+      const isHindi = lowerInput === 'hindi' || lowerInput === 'हिंदी';
+      
+      const welcomeMessage = isHindi 
+        ? '🙏 धन्यवाद! मैं फिनोनेस्ट का AI सहायक हूँ।\n\n💰 मैं आपकी इन सेवाओं में मदद कर सकता हूँ:\n\n🏠 **होम लोन** - 7.3% सालाना से शुरू, ₹5 करोड़ तक\n💰 **पर्सनल लोन** - 9.99% सालाना से, ₹40 लाख तक\n🚗 **कार लोन** - 8.5% सालाना से, नई और पुरानी\n🏢 **बिज़नेस लोन** - 11% सालाना से, ₹50 लाख तक\n\n❓ आप किस बारे में जानना चाहते हैं?'
+        : '🙏 Thank you! I\'m Finonest\'s AI Assistant.\n\n💡 I can help you with:\n\n🏠 **Home Loans** - Starting 7.3% p.a., up to ₹5Cr\n💰 **Personal Loans** - From 9.99% p.a., up to ₹40L\n🚗 **Car Loans** - Starting 8.5% p.a., new & used\n🏢 **Business Loans** - From 11% p.a., up to ₹50L\n\n❓ What would you like to know about our financial services?';
+      
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: welcomeMessage,
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+      setInputMessage('');
+      return;
+    }
+
     setInputMessage('');
     setIsLoading(true);
 
