@@ -152,7 +152,7 @@ const WhatsAppButton = () => {
   };
 
   return (
-    <div className="fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-20 lg:bottom-6 right-2 lg:right-6 z-30 flex flex-col items-end gap-4">
       {/* Chat Popup */}
       {isOpen && (
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden w-80 h-[500px] animate-slide-up flex flex-col backdrop-blur-lg">
@@ -307,7 +307,7 @@ const WhatsAppButton = () => {
       >
         {/* Pulse Ring */}
         {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-ping opacity-30" />
+          <span className="absolute inset-0 rounded-full animate-ping opacity-20" />
         )}
         
         <span className="relative flex items-center justify-center overflow-hidden rounded-full">
@@ -331,7 +331,7 @@ const WhatsAppButton = () => {
 
         {/* Notification Badge */}
         {!isOpen && (
-          <span className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white shadow-lg animate-bounce">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-white shadow-lg">
             AI
           </span>
         )}
