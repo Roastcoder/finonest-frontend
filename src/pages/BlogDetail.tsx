@@ -20,6 +20,9 @@ interface BlogPost {
   image_url?: string;
   video_url?: string;
   slug?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_tags?: string;
   table_of_contents?: string;
   introduction?: string;
   quick_info_box?: string;
@@ -223,10 +226,11 @@ const BlogDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{blog.title} | Finonest Blog</title>
-        <meta name="description" content={blog.excerpt} />
-        <meta property="og:title" content={blog.title} />
-        <meta property="og:description" content={blog.excerpt} />
+        <title>{blog.meta_title || blog.title} | Finonest Blog</title>
+        <meta name="description" content={blog.meta_description || blog.excerpt} />
+        {blog.meta_tags && <meta name="keywords" content={blog.meta_tags} />}
+        <meta property="og:title" content={blog.meta_title || blog.title} />
+        <meta property="og:description" content={blog.meta_description || blog.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://finonest.com/blog/${blog.slug || blog.id}`} />
         {blog.image_url && <meta property="og:image" content={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`} />}

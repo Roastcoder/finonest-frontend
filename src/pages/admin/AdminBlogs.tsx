@@ -22,6 +22,9 @@ interface BlogPost {
   updated_at: string;
   image_url?: string;
   video_url?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_tags?: string;
   table_of_contents?: string;
   introduction?: string;
   quick_info_box?: string;
@@ -65,6 +68,8 @@ const AdminBlogs = () => {
     status: "draft" as "draft" | "published",
     image_url: "",
     video_url: "",
+    meta_title: "",
+    meta_description: "",
     meta_tags: "",
     table_of_contents: "",
     introduction: "",
@@ -189,6 +194,8 @@ const AdminBlogs = () => {
               status: 'draft',
               image_url: '',
               video_url: '',
+              meta_title: safeString(blogData.title),
+              meta_description: safeString(blogData.excerpt),
               meta_tags: '',
               table_of_contents: safeString(blogData.table_of_contents),
               introduction: safeString(blogData.introduction),
@@ -361,6 +368,8 @@ const AdminBlogs = () => {
       status: "draft",
       image_url: "",
       video_url: "",
+      meta_title: "",
+      meta_description: "",
       meta_tags: "",
       table_of_contents: "",
       introduction: "",
@@ -398,7 +407,9 @@ const AdminBlogs = () => {
       status: blog.status,
       image_url: blog.image_url || "",
       video_url: blog.video_url || "",
-      meta_tags: "",
+      meta_title: blog.meta_title || blog.title,
+      meta_description: blog.meta_description || blog.excerpt,
+      meta_tags: blog.meta_tags || "",
       table_of_contents: blog.table_of_contents || "",
       introduction: blog.introduction || "",
       quick_info_box: blog.quick_info_box || "",
@@ -636,6 +647,31 @@ const AdminBlogs = () => {
                       onChange={(e) => setFormData({...formData, meta_tags: e.target.value})}
                       placeholder="credit score, loans, finance (comma separated)"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Meta Title (SEO)</label>
+                    <Input
+                      value={formData.meta_title}
+                      onChange={(e) => setFormData({...formData, meta_title: e.target.value})}
+                      placeholder="SEO optimized title (leave empty to use blog title)"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Recommended: 50-60 characters. Leave empty to use blog title.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Meta Description (SEO)</label>
+                    <Textarea
+                      value={formData.meta_description}
+                      onChange={(e) => setFormData({...formData, meta_description: e.target.value})}
+                      placeholder="SEO optimized description (leave empty to use excerpt)"
+                      rows={3}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Recommended: 150-160 characters. Leave empty to use excerpt.
+                    </p>
                   </div>
 
                   <div className="space-y-4">
