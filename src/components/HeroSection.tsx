@@ -23,7 +23,7 @@ const defaultSlides = [{
   title: "Your Dream Home",
   subtitle: "with Simpler Faster Friendlier Home Loans",
   description: "Get the best home loan rates with 100% paperless processing",
-  button_text: "Check Now",
+  button_text: "Apply Now",
   button_link: "/services/home-loan",
   image_url: heroHomeLoan,
   order_position: 1,
@@ -33,7 +33,7 @@ const defaultSlides = [{
   title: "Your Dream Car",
   subtitle: "with Simpler Faster Friendlier Vehicle Loans",
   description: "Get the lowest vehicle loan rates with 100% paperless processing",
-  button_text: "Check Now",
+  button_text: "Apply Now",
   button_link: "/services/car-loan",
   image_url: heroCarLoan,
   order_position: 2,
@@ -43,7 +43,7 @@ const defaultSlides = [{
   title: "Business Growth",
   subtitle: "with Simpler Faster Friendlier Business Loans",
   description: "Expand your business with quick disbursal within 48 hours",
-  button_text: "Check Now",
+  button_text: "Apply Now",
   button_link: "/services/business-loan",
   image_url: heroBusinessLoan,
   order_position: 3,
@@ -111,11 +111,12 @@ const HeroSection = () => {
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           if (activeSlides && activeSlides.length > 0) {
+            console.log('Loaded slides from API:', activeSlides);
             setSlides(activeSlides);
           }
         }
       } catch (error) {
-        console.log('Using default slides');
+        console.log('Using default slides:', error);
       }
     };
     
@@ -144,9 +145,7 @@ const HeroSection = () => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('/')) return `https://api.finonest.com${imageUrl}`;
-    // Extract just the filename and use the correct path
-    const filename = imageUrl.replace(/^.*\//, '');
-    return `https://api.finonest.com/uploads/images/${filename}`;
+    return `https://api.finonest.com/uploads/images/${imageUrl}`;
   };
   const getHighlight = (title: string) => {
     if (title.includes('Dream Home')) return 'Dream Home';
@@ -227,7 +226,16 @@ const HeroSection = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
                     <div className="relative aspect-[4/3]">
-                      <img src={getImageUrl(s.image_url)} alt={s.title} className="w-full h-full object-cover" />
+                      <img 
+                        src={getImageUrl(s.image_url)} 
+                        alt={s.title} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          console.log('Hero image failed to load:', s.image_url);
+                          target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#f3f4f6"/><text x="200" y="150" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
+                        }}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent" />
                       <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <h2 className="font-display text-2xl font-bold text-primary-foreground mb-1">
@@ -241,7 +249,7 @@ const HeroSection = () => {
                         </p>
                         <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
                           <Link to={s.button_link}>
-                            {s.button_text}
+                            {s.button_text || 'Apply Now'}
                             <ArrowRight className="w-3 h-3 ml-1" />
                           </Link>
                         </Button>
@@ -264,7 +272,16 @@ const HeroSection = () => {
         <div className="relative">
           {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
               <div className="relative aspect-[16/10]">
-                <img src={getImageUrl(s.image_url)} alt={s.title} className="w-full h-full object-cover" />
+                <img 
+                  src={getImageUrl(s.image_url)} 
+                  alt={s.title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    console.log('Mobile hero image failed to load:', s.image_url);
+                    target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#f3f4f6"/><text x="200" y="150" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
+                  }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h2 className="font-display text-xl font-bold text-primary-foreground mb-1">
@@ -275,7 +292,7 @@ const HeroSection = () => {
                   </p>
                   <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
                     <Link to={s.button_link}>
-                      {s.button_text}
+                      {s.button_text || 'Apply Now'}
                       <ArrowRight className="w-3 h-3 ml-1" />
                     </Link>
                   </Button>
