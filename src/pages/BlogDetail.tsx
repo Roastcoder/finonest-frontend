@@ -322,7 +322,7 @@ const BlogDetail = () => {
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="container max-w-full px-4 pt-24 pb-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/blog')}
@@ -333,35 +333,35 @@ const BlogDetail = () => {
               </Button>
 
               <div className="flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-full shadow-lg">
+                <span className="inline-flex items-center gap-1 px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">
                   <Tag className="w-3 h-3" />
                   {blog.category}
                 </span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-gray-900 leading-tight">
                 {blog.title}
               </h1>
               
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
                 {blog.excerpt}
               </p>
               
-              <div className="flex items-center gap-6 text-gray-500 bg-gray-50 rounded-lg p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 text-gray-500 bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     <User className="w-4 h-4 text-blue-600" />
                   </div>
-                  <span className="font-medium">{blog.author}</span>
+                  <span className="font-medium text-sm sm:text-base">{blog.author}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Calendar className="w-4 h-4 text-green-600" />
                   </div>
-                  <span>{formatDate(blog.created_at)}</span>
+                  <span className="text-sm sm:text-base">{formatDate(blog.created_at)}</span>
                 </div>
                 {navigator.share && (
-                  <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto">
+                  <Button variant="outline" size="sm" onClick={handleShare} className="sm:ml-auto">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
                   </Button>
@@ -373,13 +373,13 @@ const BlogDetail = () => {
 
         {/* Featured Image */}
         {blog.image_url && (
-          <div className="container max-w-full px-4 py-8">
-            <div className="max-w-6xl mx-auto">
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+          <div className="container max-w-full px-4 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl">
                 <img
                   src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
                   alt={blog.title}
-                  className="w-full h-64 md:h-96 object-cover transform hover:scale-105 transition-transform duration-500"
+                  className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover transform hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
                     e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
                   }}
@@ -391,46 +391,46 @@ const BlogDetail = () => {
         )}
 
         {/* Content */}
-        <div className="container max-w-full px-4 pb-12">
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-              <div className="prose prose-lg max-w-none">
+        <div className="container max-w-full px-4 pb-8 sm:pb-12">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 border border-gray-100">
+              <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
                 {sections.map((section) => {
                   const sectionData = blog[section.key as keyof BlogPost];
                   if (!sectionData) return null;
 
                   if (section.key === 'faqs' && blog.faqs) {
                     return (
-                      <div key={section.key} className="mb-16">
-                        <div className="flex items-center gap-3 mb-8">
-                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">{section.icon}</span>
+                      <div key={section.key} className="mb-8 sm:mb-12 lg:mb-16">
+                        <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-xs sm:text-sm">{section.icon}</span>
                           </div>
-                          <h2 className="text-3xl font-bold text-gray-900">
+                          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                             {section.title}
                           </h2>
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                           {parseFAQs(blog.faqs).map((faq, index) => (
-                            <div key={index} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                            <div key={index} className="border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                               <button
-                                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200"
+                                className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left flex justify-between items-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200"
                                 onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
                               >
-                                <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                                <span className="font-semibold text-gray-900 pr-4 text-sm sm:text-base">{faq.question}</span>
+                                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
                                   openFAQ === index ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'
                                 }`}>
                                   {openFAQ === index ? (
-                                    <ChevronUp className="w-4 h-4" />
+                                    <ChevronUp className="w-3 h-3 sm:w-4 sm:h-4" />
                                   ) : (
-                                    <ChevronDown className="w-4 h-4" />
+                                    <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
                                   )}
                                 </div>
                               </button>
                               {openFAQ === index && (
-                                <div className="px-6 pb-4 text-gray-700 border-t border-gray-100 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
-                                  <p className="pt-4 leading-relaxed">{faq.answer}</p>
+                                <div className="px-4 sm:px-6 pb-3 sm:pb-4 text-gray-700 border-t border-gray-100 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+                                  <p className="pt-3 sm:pt-4 leading-relaxed text-sm sm:text-base">{faq.answer}</p>
                                 </div>
                               )}
                             </div>
@@ -443,33 +443,33 @@ const BlogDetail = () => {
                   if (section.key === 'customer_testimonials' && blog.customer_testimonials) {
                     const testimonials = blog.customer_testimonials.split('\n').filter(t => t.trim());
                     return (
-                      <div key={section.key} className="mb-16">
-                        <div className="flex items-center gap-3 mb-8">
-                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">{section.icon}</span>
+                      <div key={section.key} className="mb-8 sm:mb-12 lg:mb-16">
+                        <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-xs sm:text-sm">{section.icon}</span>
                           </div>
-                          <h2 className="text-3xl font-bold text-gray-900">
+                          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                             {section.title}
                           </h2>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                           {testimonials.map((testimonial, index) => {
                             const match = testimonial.match(/"([^"]+)"\s*-\s*(.+)/);
                             if (!match) return null;
                             const [, quote, author] = match;
                             return (
-                              <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                                <div className="flex items-start gap-4">
-                                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-white font-bold text-lg">"</span>
+                              <div key={index} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-white font-bold text-base sm:text-lg">"</span>
                                   </div>
                                   <div>
-                                    <p className="text-gray-700 italic mb-4 leading-relaxed">"{quote}"</p>
+                                    <p className="text-gray-700 italic mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">"{quote}"</p>
                                     <div className="flex items-center gap-2">
-                                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                                        <User className="w-4 h-4 text-gray-600" />
+                                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
                                       </div>
-                                      <span className="font-semibold text-gray-900">{author}</span>
+                                      <span className="font-semibold text-gray-900 text-sm sm:text-base">{author}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -483,12 +483,12 @@ const BlogDetail = () => {
 
                   if (section.key === 'mid_blog_cta' && (blog.final_cta || blog.final_cta_text)) {
                     return (
-                      <div key={section.key} className="mb-16">
+                      <div key={section.key} className="mb-8 sm:mb-12 lg:mb-16">
                         <div className="text-center">
                           <Button 
                             asChild
                             size="lg"
-                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                           >
                             <a href={blog.final_cta || "https://finonest.com/apply-now"} target="_blank" rel="noopener noreferrer">
                               {blog.final_cta_text || "Apply Now"}
@@ -500,18 +500,18 @@ const BlogDetail = () => {
                   }
 
                   return (
-                    <div key={section.key} className="mb-16">
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">{section.icon}</span>
+                    <div key={section.key} className="mb-8 sm:mb-12 lg:mb-16">
+                      <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-bold text-xs sm:text-sm">{section.icon}</span>
                         </div>
-                        <h2 className="text-3xl font-bold text-gray-900">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                           {section.title}
                         </h2>
                       </div>
-                      <div className="bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-xl p-6 border-l-4 border-blue-500">
+                      <div className="bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 border-blue-500">
                         <div 
-                          className="prose-content text-gray-700 leading-relaxed"
+                          className="prose-content text-gray-700 leading-relaxed text-sm sm:text-base"
                           dangerouslySetInnerHTML={{ __html: renderFormattedText(sectionData as string) }} 
                         />
                       </div>
@@ -525,17 +525,17 @@ const BlogDetail = () => {
 
         {/* Final CTA Button */}
         {blog.final_cta && (
-          <div className="container max-w-full px-4 pb-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-center relative overflow-hidden">
+          <div className="container max-w-full px-4 pb-8 sm:pb-12">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-6 sm:p-8 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
                 <div className="relative z-10">
-                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
-                  <p className="text-blue-100 mb-6">Take the next step towards your financial goals</p>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 sm:mb-4">Ready to Get Started?</h3>
+                  <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Take the next step towards your financial goals</p>
                   <Button 
                     asChild
                     size="lg"
-                    className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    className="bg-white text-blue-600 hover:bg-gray-100 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
                     <a href={blog.final_cta} target="_blank" rel="noopener noreferrer">
                       {blog.final_cta_text || "Apply Now - Get Instant Approval!"}
@@ -549,19 +549,19 @@ const BlogDetail = () => {
 
         {/* Video */}
         {blog.video_url && (
-          <div className="container max-w-full px-4 pb-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">▶</span>
+          <div className="container max-w-full px-4 pb-8 sm:pb-12">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
+                <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-xs sm:text-sm">▶</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">Video Guide</h3>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Video Guide</h3>
                 </div>
-                <div className="relative overflow-hidden rounded-xl shadow-lg">
+                <div className="relative overflow-hidden rounded-lg sm:rounded-xl shadow-lg">
                   <video
                     controls
-                    className="w-full rounded-xl"
+                    className="w-full rounded-lg sm:rounded-xl"
                     poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
                   >
                     <source src={blog.video_url} type="video/mp4" />
