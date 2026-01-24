@@ -159,8 +159,17 @@ const WhatsAppButton = () => {
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden w-80 h-[500px] animate-slide-up flex flex-col backdrop-blur-lg">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <Bot className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+              <img 
+                src="/assets/finonest-icon.jpg" 
+                alt="Finonest AI" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <Bot className="w-6 h-6 text-white" style={{ display: 'none' }} />
             </div>
             <div className="flex-1">
               <h4 className="font-semibold text-white">Finonest AI Assistant</h4>
@@ -188,8 +197,17 @@ const WhatsAppButton = () => {
                 className={`flex gap-3 ${message.isUser ? 'justify-end' : 'justify-start'}`}
               >
                 {!message.isUser && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <Bot className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden">
+                    <img 
+                      src="/assets/finonest-icon.jpg" 
+                      alt="AI" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                    <Bot className="w-4 h-4 text-white" style={{ display: 'none' }} />
                   </div>
                 )}
                 <div
@@ -215,8 +233,17 @@ const WhatsAppButton = () => {
             ))}
             {isLoading && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <Bot className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden">
+                  <img 
+                    src="/assets/finonest-icon.jpg" 
+                    alt="AI" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                    }}
+                  />
+                  <Bot className="w-4 h-4 text-white" style={{ display: 'none' }} />
                 </div>
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-2xl rounded-bl-md shadow-sm">
                   <div className="flex space-x-2">
@@ -288,11 +315,22 @@ const WhatsAppButton = () => {
           <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-ping opacity-30" />
         )}
         
-        <span className="relative flex items-center justify-center">
+        <span className="relative flex items-center justify-center overflow-hidden rounded-full">
           {isOpen ? (
             <X className="w-7 h-7 text-white transition-transform duration-200 group-hover:rotate-90" />
           ) : (
-            <Bot className="w-7 h-7 text-white transition-transform duration-200 group-hover:scale-110" />
+            <>
+              <img 
+                src="/assets/finonest-icon.jpg" 
+                alt="Finonest AI" 
+                className="w-10 h-10 object-cover rounded-full"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <Bot className="w-7 h-7 text-white transition-transform duration-200 group-hover:scale-110" style={{ display: 'none' }} />
+            </>
           )}
         </span>
 
