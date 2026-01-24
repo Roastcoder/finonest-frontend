@@ -39,6 +39,7 @@ interface BlogPost {
   service_areas?: string;
   related_blogs?: string;
   final_cta?: string;
+  final_cta_text?: string;
   disclaimer?: string;
   trust_footer?: string;
 }
@@ -355,6 +356,23 @@ const BlogDetail = () => {
             </div>
           </div>
         </div>
+
+        {/* Final CTA Button */}
+        {blog.final_cta && (
+          <div className="container max-w-4xl pb-12">
+            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+              <Button 
+                asChild
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-semibold"
+              >
+                <a href={blog.final_cta} target="_blank" rel="noopener noreferrer">
+                  {blog.final_cta_text || "Apply Now - Get Instant Approval!"}
+                </a>
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Video */}
         {blog.video_url && (

@@ -41,6 +41,7 @@ interface BlogPost {
   service_areas?: string;
   related_blogs?: string;
   final_cta?: string;
+  final_cta_text?: string;
   disclaimer?: string;
   trust_footer?: string;
 }
@@ -81,6 +82,7 @@ const AdminBlogs = () => {
     service_areas: "",
     related_blogs: "",
     final_cta: "",
+    final_cta_text: "",
     disclaimer: "",
     trust_footer: ""
   });
@@ -231,6 +233,7 @@ const AdminBlogs = () => {
       service_areas: "",
       related_blogs: "",
       final_cta: "",
+      final_cta_text: "",
       disclaimer: "",
       trust_footer: ""
     });
@@ -267,6 +270,7 @@ const AdminBlogs = () => {
       service_areas: blog.service_areas || "",
       related_blogs: blog.related_blogs || "",
       final_cta: blog.final_cta || "",
+      final_cta_text: blog.final_cta_text || "",
       disclaimer: blog.disclaimer || "",
       trust_footer: blog.trust_footer || ""
     });
@@ -521,8 +525,21 @@ const AdminBlogs = () => {
                         <Textarea value={formData.related_blogs} onChange={(e) => setFormData({...formData, related_blogs: e.target.value})} rows={3} />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-2">Final Call to Action</label>
-                        <Textarea value={formData.final_cta} onChange={(e) => setFormData({...formData, final_cta: e.target.value})} rows={2} />
+                        <label className="block text-sm font-medium mb-2">Final Call to Action URL</label>
+                        <Input
+                          type="url"
+                          value={formData.final_cta}
+                          onChange={(e) => setFormData({...formData, final_cta: e.target.value})}
+                          placeholder="https://example.com/apply-now"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">CTA Button Text</label>
+                        <Input
+                          value={formData.final_cta_text}
+                          onChange={(e) => setFormData({...formData, final_cta_text: e.target.value})}
+                          placeholder="Apply Now - Get Instant Approval!"
+                        />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">Disclaimer & Compliance Notice</label>
