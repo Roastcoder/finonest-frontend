@@ -105,7 +105,7 @@ const About = () => {
                   Transforming Financial Services Since 2017
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6">
-                  One of the Top 3 <span className="text-gradient">Used Car Loan</span> Providers in Rajasthan
+                  One of the top <span className="text-gradient">auto loan DSA</span> in India
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   18+ branches, 50K+ happy customers and growing. We specialize in used car loans 

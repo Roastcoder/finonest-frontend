@@ -42,23 +42,7 @@ const AdminSlides = () => {
 
   useEffect(() => {
     fetchSlides();
-    // Auto-create button_text column if it doesn't exist
-    autoAlterTable();
   }, []);
-
-  const autoAlterTable = async () => {
-    try {
-      await fetch('https://api.finonest.com/api/slides.php?action=alter_table', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (error) {
-      console.log('Auto-alter table failed:', error);
-    }
-  };
 
   const fetchSlides = async () => {
     try {
