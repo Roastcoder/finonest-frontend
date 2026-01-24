@@ -108,21 +108,18 @@ const HeroSection = () => {
         const response = await fetch('https://api.finonest.com/api/slides.php');
         if (response.ok) {
           const data = await response.json();
-          console.log('API Response:', data);
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           if (activeSlides && activeSlides.length > 0) {
-            console.log('Setting API slides:', activeSlides);
-            console.log('First slide button_link:', activeSlides[0].button_link);
             setSlides(activeSlides);
           } else {
-            console.log('No active slides from API, using defaults');
+            // No active slides from API, keep defaults
           }
         } else {
-          console.log('API request failed, using defaults');
+          // API request failed, keep defaults
         }
       } catch (error) {
-        console.log('API error, using defaults:', error);
+        // API error, keep defaults
       }
     };
     
@@ -130,7 +127,6 @@ const HeroSection = () => {
     
     // Listen for slide updates from admin
     const handleSlidesUpdate = () => {
-      console.log('Slides updated event received');
       fetchSlides();
     };
     
@@ -162,6 +158,8 @@ const HeroSection = () => {
   const getImageUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
+    if (imageUrl.startsWith('/uploads/')) return `https://api.finonest.com${imageUrl}`;
+    if (imageUrl.startsWith('/assets/')) return imageUrl; // Keep assets as-is for local images
     if (imageUrl.startsWith('/')) return `https://api.finonest.com${imageUrl}`;
     return `https://api.finonest.com/uploads/images/${imageUrl}`;
   };
@@ -271,9 +269,6 @@ const HeroSection = () => {
                             <ArrowRight className="w-3 h-3 ml-1" />
                           </Link>
                         </Button>
-                        <div className="text-xs text-white/50 mt-1">
-                          Debug: {s.button_link}
-                        </div>
                       </div>
                     </div>
                   </div>)}
@@ -317,9 +312,6 @@ const HeroSection = () => {
                       <ArrowRight className="w-3 h-3 ml-1" />
                     </Link>
                   </Button>
-                  <div className="text-xs text-white/50 mt-1">
-                    Debug: {s.button_link}
-                  </div>
                 </div>
               </div>
             </div>)}
