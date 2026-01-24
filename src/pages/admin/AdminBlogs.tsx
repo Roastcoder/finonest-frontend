@@ -116,37 +116,37 @@ const AdminBlogs = () => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Create a comprehensive blog post for Finonest about: "${aiPrompt}". Return as JSON with these exact fields:
+              text: `Create a comprehensive blog post for Finonest about: "${aiPrompt}". Return ONLY a valid JSON object with these exact fields as strings:
               {
                 "title": "SEO-optimized blog title",
                 "excerpt": "Brief 2-3 sentence summary",
                 "content": "Main blog content in markdown format",
                 "category": "One of: Credit Score, Car Loan, Home Loan, Personal Loan, Business Loan, Financial Planning",
-                "table_of_contents": "Numbered list of main sections",
-                "introduction": "Engaging opening paragraph",
-                "quick_info_box": "Key facts in bullet points format",
-                "emi_example": "EMI calculation example with sample amounts",
-                "what_is_loan": "Detailed explanation of the loan type",
-                "benefits": "List of key benefits in bullet points",
-                "who_should_apply": "Target audience description",
-                "eligibility_criteria": "Detailed eligibility requirements",
-                "documents_required": "Complete list of required documents",
-                "interest_rates": "Interest rate ranges and charges disclosure",
-                "finonest_process": "Step-by-step Finonest loan process",
-                "why_choose_finonest": "Finonest advantages and unique selling points",
-                "customer_testimonials": "2-3 sample customer testimonials",
-                "common_mistakes": "Common mistakes to avoid when applying",
-                "mid_blog_cta": "Mid-blog call to action text",
-                "faqs": "5-7 frequently asked questions with answers",
-                "service_areas": "List of service areas and local presence",
-                "related_blogs": "Suggested related blog topics with internal links",
+                "table_of_contents": "1. Introduction\n2. What is [Loan Type]\n3. Benefits\n4. Eligibility\n5. Process\n6. FAQs",
+                "introduction": "Engaging opening paragraph about the loan type",
+                "quick_info_box": "• Loan Amount: ₹1 lakh to ₹50 lakhs\n• Interest Rate: 8.5% - 15% p.a.\n• Tenure: 1-7 years\n• Processing Fee: 0.5% - 2%",
+                "emi_example": "For a ₹10 lakh loan at 12% interest for 5 years, your EMI would be approximately ₹22,244. Use our EMI calculator for personalized calculations.",
+                "what_is_loan": "Detailed explanation of what this loan type is and its purpose",
+                "benefits": "• Quick approval process\n• Competitive interest rates\n• Flexible repayment options\n• Minimal documentation\n• No hidden charges",
+                "who_should_apply": "Target audience description - who would benefit from this loan",
+                "eligibility_criteria": "• Age: 21-65 years\n• Income: Minimum ₹25,000/month\n• Employment: Salaried/Self-employed\n• Credit Score: 650+\n• Work Experience: 2+ years",
+                "documents_required": "• Identity Proof (Aadhar/PAN)\n• Address Proof\n• Income Proof (Salary slips/ITR)\n• Bank Statements (6 months)\n• Employment Proof",
+                "interest_rates": "Interest rates range from 8.5% to 15% per annum depending on your credit profile. Processing fees: 0.5% to 2% of loan amount. No prepayment charges after 12 months.",
+                "finonest_process": "1. Apply Online - Fill simple application form\n2. Document Upload - Submit required documents\n3. Verification - Our team verifies details\n4. Approval - Get approval within 24-48 hours\n5. Disbursement - Funds transferred to your account",
+                "why_choose_finonest": "• 50+ banking partners for best rates\n• Quick approval in 24-48 hours\n• Expert guidance throughout\n• Transparent process, no hidden fees\n• Dedicated relationship manager",
+                "customer_testimonials": "\"Finonest helped me get my home loan approved within 2 days. Excellent service!\" - Rajesh Kumar, Mumbai\n\"Best rates and hassle-free process. Highly recommended!\" - Priya Sharma, Delhi",
+                "common_mistakes": "• Not checking credit score before applying\n• Applying to multiple lenders simultaneously\n• Incomplete documentation\n• Not comparing interest rates\n• Ignoring processing fees and charges",
+                "mid_blog_cta": "Ready to apply? Get pre-approved in just 2 minutes! Our experts will help you find the best loan offer.",
+                "faqs": "Q: What is the minimum loan amount?\nA: The minimum loan amount is ₹1 lakh.\n\nQ: How long does approval take?\nA: Approval typically takes 24-48 hours.\n\nQ: Can I prepay my loan?\nA: Yes, prepayment is allowed after 12 months without charges.",
+                "service_areas": "We serve customers across India including Mumbai, Delhi, Bangalore, Chennai, Hyderabad, Pune, Kolkata, Ahmedabad, and 500+ other cities.",
+                "related_blogs": "• How to Improve Your Credit Score\n• EMI vs Interest Rate: What Matters More\n• Top 10 Loan Mistakes to Avoid\n• Understanding Loan Processing Fees",
                 "final_cta": "https://finonest.com/apply-now",
-                "final_cta_text": "Apply Now - Get Instant Approval!",
-                "disclaimer": "Standard financial disclaimer and compliance notice",
-                "trust_footer": "Trust and compliance footer text"
+                "final_cta_text": "Apply Now - Get Instant Pre-Approval!",
+                "disclaimer": "Finonest acts as a loan facilitator. Final approval depends on lender policies. Interest rates and terms subject to change. Please read all terms carefully before applying.",
+                "trust_footer": "Finonest is a trusted financial services platform with 50+ banking partners. We are committed to transparency and helping you make informed financial decisions."
               }
               
-              Focus on Finonest's services, make it SEO-friendly, and ensure all fields are populated with relevant content.`
+              Return ONLY the JSON object, no additional text or formatting.`
             }]
           }]
         })
@@ -161,37 +161,46 @@ const AdminBlogs = () => {
           if (jsonMatch) {
             const blogData = JSON.parse(jsonMatch[0]);
             
+            // Helper function to safely extract string values
+            const safeString = (value) => {
+              if (typeof value === 'string') return value;
+              if (typeof value === 'object' && value !== null) {
+                return JSON.stringify(value).replace(/[{}"]/g, '').replace(/,/g, ', ');
+              }
+              return value ? String(value) : '';
+            };
+            
             setFormData({
-              title: blogData.title || '',
-              excerpt: blogData.excerpt || '',
-              content: blogData.content || '',
-              category: blogData.category || '',
+              title: safeString(blogData.title),
+              excerpt: safeString(blogData.excerpt),
+              content: safeString(blogData.content),
+              category: safeString(blogData.category),
               status: 'draft',
               image_url: '',
               video_url: '',
               meta_tags: '',
-              table_of_contents: blogData.table_of_contents || '',
-              introduction: blogData.introduction || '',
-              quick_info_box: blogData.quick_info_box || '',
-              emi_example: blogData.emi_example || '',
-              what_is_loan: blogData.what_is_loan || '',
-              benefits: blogData.benefits || '',
-              who_should_apply: blogData.who_should_apply || '',
-              eligibility_criteria: blogData.eligibility_criteria || '',
-              documents_required: blogData.documents_required || '',
-              interest_rates: blogData.interest_rates || '',
-              finonest_process: blogData.finonest_process || '',
-              why_choose_finonest: blogData.why_choose_finonest || '',
-              customer_testimonials: blogData.customer_testimonials || '',
-              common_mistakes: blogData.common_mistakes || '',
-              mid_blog_cta: blogData.mid_blog_cta || '',
-              faqs: blogData.faqs || '',
-              service_areas: blogData.service_areas || '',
-              related_blogs: blogData.related_blogs || '',
-              final_cta: blogData.final_cta || 'https://finonest.com/apply-now',
-              final_cta_text: blogData.final_cta_text || 'Apply Now',
-              disclaimer: blogData.disclaimer || '',
-              trust_footer: blogData.trust_footer || ''
+              table_of_contents: safeString(blogData.table_of_contents),
+              introduction: safeString(blogData.introduction),
+              quick_info_box: safeString(blogData.quick_info_box),
+              emi_example: safeString(blogData.emi_example),
+              what_is_loan: safeString(blogData.what_is_loan),
+              benefits: safeString(blogData.benefits),
+              who_should_apply: safeString(blogData.who_should_apply),
+              eligibility_criteria: safeString(blogData.eligibility_criteria),
+              documents_required: safeString(blogData.documents_required),
+              interest_rates: safeString(blogData.interest_rates),
+              finonest_process: safeString(blogData.finonest_process),
+              why_choose_finonest: safeString(blogData.why_choose_finonest),
+              customer_testimonials: safeString(blogData.customer_testimonials),
+              common_mistakes: safeString(blogData.common_mistakes),
+              mid_blog_cta: safeString(blogData.mid_blog_cta),
+              faqs: safeString(blogData.faqs),
+              service_areas: safeString(blogData.service_areas),
+              related_blogs: safeString(blogData.related_blogs),
+              final_cta: safeString(blogData.final_cta) || 'https://finonest.com/apply-now',
+              final_cta_text: safeString(blogData.final_cta_text) || 'Apply Now',
+              disclaimer: safeString(blogData.disclaimer),
+              trust_footer: safeString(blogData.trust_footer)
             });
             
             setShowForm(true);
