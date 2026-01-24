@@ -1,12 +1,18 @@
+import { useAuth } from '../contexts/AuthContext';
+
 // Utility to fetch AI configuration from backend settings
-export const getAIConfig = async () => {
+export const getAIConfig = async (token?: string) => {
   try {
-    // Get auth token (adjust based on your auth implementation)
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    // Use provided token or get from localStorage
+    const authToken = token || localStorage.getItem('token');
+    
+    if (!authToken) {
+      throw new Error('No authentication token available');
+    }
     
     const headers = {
       'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
+      'Authorization': `Bearer ${authToken}`
     };
 
     // Fetch AI settings from backend
@@ -39,4 +45,18 @@ export const getAIConfig = async () => {
       enabled: true
     };
   }
+};
+
+// React hook version for use in components
+export const useAIConfig = () => {
+  const { token } = useAuth();
+  
+  const fetchConfig = async () => {
+    if (!token) {
+      throw new Error('User not authenticated');
+    }
+    return getAIConfig(token);
+  };
+  
+  return { fetchConfig };
 };
