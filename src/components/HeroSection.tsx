@@ -152,7 +152,8 @@ const HeroSection = () => {
     if (title.includes('Business')) return 'Business Growth';
     return title.split(' ').slice(-2).join(' ');
   };
-      {/* Desktop Layout */}
+  return (
+    <section className="relative bg-gradient-to-br from-background via-background to-accent/5 overflow-hidden">
       <div className="hidden lg:block">
         <div className="container mx-auto px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
@@ -331,6 +332,7 @@ const HeroSection = () => {
         {/* Mobile Stats Bar */}
         
       </div>
-    </section>;
+    </section>
+  );
 };
 export default HeroSection;
