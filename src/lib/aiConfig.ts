@@ -1,12 +1,25 @@
 // Utility to fetch AI configuration from backend settings
 export const getAIConfig = async () => {
   try {
+    // Get auth token (adjust based on your auth implementation)
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+
     // Fetch AI settings from backend
     const [apiKeyResponse, modelResponse, enabledResponse] = await Promise.all([
-      fetch('https://api.finonest.com/api/settings/gemini_api_key'),
-      fetch('https://api.finonest.com/api/settings/gemini_model'),
-      fetch('https://api.finonest.com/api/settings/ai_enabled')
+      fetch('https://api.finonest.com/api/settings/gemini_api_key', { headers }),
+      fetch('https://api.finonest.com/api/settings/gemini_model', { headers }),
+      fetch('https://api.finonest.com/api/settings/ai_enabled', { headers })
     ]);
+
+    // Check if requests were successful
+    if (!apiKeyResponse.ok || !modelResponse.ok || !enabledResponse.ok) {
+      throw new Error('Failed to fetch settings - authentication required');
+    }
 
     const apiKeyData = await apiKeyResponse.json();
     const modelData = await modelResponse.json();
