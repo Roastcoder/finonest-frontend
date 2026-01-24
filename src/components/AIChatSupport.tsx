@@ -87,8 +87,12 @@ const AIChatSupport = () => {
         <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden w-80 h-96 animate-slide-up flex flex-col">
           {/* Header */}
           <div className="bg-gradient-primary p-4 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              <Bot className="w-6 h-6 text-primary-foreground" />
+            <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center overflow-hidden">
+              <img 
+                src="/assets/finonest-icon.jpg" 
+                alt="Finonest AI" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex-1">
               <h4 className="font-semibold text-primary-foreground">AI Assistant</h4>
@@ -110,8 +114,12 @@ const AIChatSupport = () => {
                 className={`flex gap-2 ${message.isUser ? 'justify-end' : 'justify-start'}`}
               >
                 {!message.isUser && (
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4 text-primary" />
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img 
+                      src="/assets/finonest-icon.jpg" 
+                      alt="AI" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 )}
                 <div
@@ -132,8 +140,12 @@ const AIChatSupport = () => {
             ))}
             {isLoading && (
               <div className="flex gap-2 justify-start">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-primary" />
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <img 
+                    src="/assets/finonest-icon.jpg" 
+                    alt="AI" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="bg-card border border-border p-3 rounded-xl">
                   <div className="flex space-x-1">
@@ -182,11 +194,15 @@ const AIChatSupport = () => {
           <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-25" />
         )}
         
-        <span className="relative flex items-center justify-center">
+        <span className="relative flex items-center justify-center overflow-hidden rounded-full">
           {isOpen ? (
             <X className="w-7 h-7 text-white" />
           ) : (
-            <Bot className="w-7 h-7 text-white" />
+            <img 
+              src="/assets/finonest-icon.jpg" 
+              alt="Finonest AI" 
+              className="w-10 h-10 object-cover rounded-full"
+            />
           )}
         </span>
 
