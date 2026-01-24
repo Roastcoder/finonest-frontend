@@ -97,7 +97,7 @@ const services = [{
 }];
 const rotatingWords = ["Credit Card", "Home Loan", "Personal Loan", "Car Loan"];
 const HeroSection = () => {
-  const [slides, setSlides] = useState<Slide[]>(defaultSlides);
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentWord, setCurrentWord] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -112,14 +112,12 @@ const HeroSection = () => {
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           if (activeSlides && activeSlides.length > 0) {
             setSlides(activeSlides);
-          } else {
-            // No active slides from API, keep defaults
           }
         } else {
-          // API request failed, keep defaults
+          // API request failed
         }
       } catch (error) {
-        // API error, keep defaults
+        // API error
       }
     };
     
