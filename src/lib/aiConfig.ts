@@ -28,13 +28,16 @@ Provide a helpful, detailed response based on the knowledge base above:`;
 };
 
 // Utility to fetch AI configuration from backend settings
-export const getAIConfig = async (token?: string) => {
+export const getAIConfig = async () => {
   try {
-    // Use provided token or get from localStorage
-    const authToken = token || localStorage.getItem('token');
+    const authToken = localStorage.getItem('token');
     
     if (!authToken) {
-      throw new Error('No authentication token available');
+      return {
+        apiKey: '',
+        model: 'gemini-1.5-flash',
+        enabled: false
+      };
     }
     
     const headers = {
@@ -42,48 +45,25 @@ export const getAIConfig = async (token?: string) => {
       'Authorization': `Bearer ${authToken}`
     };
 
-    // Fetch AI settings from backend
-    const [apiKeyResponse, modelResponse, enabledResponse] = await Promise.all([
-      fetch('https://api.finonest.com/api/settings/gemini_api_key', { headers }),
-      fetch('https://api.finonest.com/api/settings/gemini_model', { headers }),
-      fetch('https://api.finonest.com/api/settings/ai_enabled', { headers })
-    ]);
-
-    // Check if requests were successful
-    if (!apiKeyResponse.ok || !modelResponse.ok || !enabledResponse.ok) {
-      throw new Error('Failed to fetch settings - authentication required');
+    const response = await fetch('/api/admin/ai-config', { headers });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch AI config');
     }
 
-    const apiKeyData = await apiKeyResponse.json();
-    const modelData = await modelResponse.json();
-    const enabledData = await enabledResponse.json();
-
+    const config = await response.json();
+    
     return {
-      apiKey: process.env.VITE_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
-      model: modelData.key || 'gemini-2.5-flash-lite',
-      enabled: (enabledData.key === 'enabled') || true
+      apiKey: config.geminiApiKey || '',
+      model: config.model || 'gemini-1.5-flash',
+      enabled: config.enabled || false
     };
   } catch (error) {
     console.error('Failed to fetch AI config:', error);
-    // Return defaults if fetch fails
     return {
-      apiKey: process.env.VITE_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
-      model: 'gemini-2.5-flash-lite',
-      enabled: false // Disable if no valid key
+      apiKey: '',
+      model: 'gemini-1.5-flash',
+      enabled: false
     };
   }
-};
-
-// React hook version for use in components
-export const useAIConfig = () => {
-  const { token } = useAuth();
-  
-  const fetchConfig = async () => {
-    if (!token) {
-      throw new Error('User not authenticated');
-    }
-    return getAIConfig(token);
-  };
-  
-  return { fetchConfig };
 };

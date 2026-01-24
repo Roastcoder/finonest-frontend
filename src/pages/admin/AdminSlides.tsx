@@ -137,6 +137,7 @@ const AdminSlides = () => {
   const deleteSlide = async (id: number) => {
     if (!confirm('Are you sure you want to delete this slide?')) return;
     
+    setLoading(true);
     try {
       const response = await fetch(`https://api.finonest.com/api/slides.php/${id}`, {
         method: 'DELETE',
@@ -152,8 +153,14 @@ const AdminSlides = () => {
           title: "Success",
           description: "Slide deleted successfully",
         });
-        // Trigger hero section refresh
         window.dispatchEvent(new CustomEvent('slidesUpdated'));
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast({
+          title: "Error",
+          description: errorData.error || "Failed to delete slide",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
@@ -161,6 +168,8 @@ const AdminSlides = () => {
         description: "Failed to delete slide",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
