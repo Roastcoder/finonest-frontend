@@ -64,6 +64,7 @@ const AdminSlides = () => {
     try {
       const response = await fetch('https://api.finonest.com/api/slides.php', {
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
