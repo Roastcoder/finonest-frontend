@@ -59,7 +59,7 @@ export const getAIConfig = async (token?: string) => {
     const enabledData = await enabledResponse.json();
 
     return {
-      apiKey: apiKeyData.key || 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI',
+      apiKey: process.env.VITE_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
       model: modelData.key || 'gemini-2.5-flash-lite',
       enabled: (enabledData.key === 'enabled') || true
     };
@@ -67,9 +67,9 @@ export const getAIConfig = async (token?: string) => {
     console.error('Failed to fetch AI config:', error);
     // Return defaults if fetch fails
     return {
-      apiKey: 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI',
+      apiKey: process.env.VITE_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE',
       model: 'gemini-2.5-flash-lite',
-      enabled: true
+      enabled: false // Disable if no valid key
     };
   }
 };
