@@ -260,11 +260,22 @@ const AdminSlides = () => {
 
                     <div>
                       <label className="block text-sm font-medium mb-2">Button Link</label>
-                      <Input
+                      <select 
+                        className="w-full p-2 border rounded"
                         value={formData.button_link}
                         onChange={(e) => setFormData({...formData, button_link: e.target.value})}
-                        placeholder="/apply-now"
-                      />
+                      >
+                        <option value="">Select a link</option>
+                        <option value="/services/home-loan">Home Loan</option>
+                        <option value="/services/personal-loan">Personal Loan</option>
+                        <option value="/services/car-loan">Car Loan</option>
+                        <option value="/services/used-car-loan">Used Car Loan</option>
+                        <option value="/services/business-loan">Business Loan</option>
+                        <option value="/services/lap">Loan Against Property</option>
+                        <option value="/credit-cards">Credit Cards</option>
+                        <option value="/apply">Apply Now</option>
+                        <option value="/contact">Contact Us</option>
+                      </select>
                     </div>
                   </div>
 

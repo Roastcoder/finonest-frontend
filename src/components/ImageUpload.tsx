@@ -119,12 +119,16 @@ const ImageUpload = ({ onImageUploaded, currentImage, onRemoveImage }: ImageUplo
     <div className="space-y-4">
       {currentImage ? (
         <div className="relative">
+          <div className="mb-2 text-xs text-gray-500">
+            Preview URL: {currentImage}
+          </div>
           <img
             src={currentImage.startsWith('http') ? currentImage : `https://api.finonest.com/uploads/images/${currentImage.replace(/^.*\//, '')}`}
             alt="Slide image"
             className="w-full h-48 object-cover rounded-lg border"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
+              console.log('Image preview failed:', currentImage);
               target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#f3f4f6"/><text x="200" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
             }}
           />
