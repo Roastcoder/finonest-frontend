@@ -108,15 +108,20 @@ const HeroSection = () => {
         const response = await fetch('https://api.finonest.com/api/slides.php');
         if (response.ok) {
           const data = await response.json();
+          console.log('API Response:', data);
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           if (activeSlides && activeSlides.length > 0) {
-            console.log('Loaded slides from API:', activeSlides);
+            console.log('Setting API slides:', activeSlides);
             setSlides(activeSlides);
+          } else {
+            console.log('No active slides from API, using defaults');
           }
+        } else {
+          console.log('API request failed, using defaults');
         }
       } catch (error) {
-        console.log('Using default slides:', error);
+        console.log('API error, using defaults:', error);
       }
     };
     
@@ -124,6 +129,7 @@ const HeroSection = () => {
     
     // Listen for slide updates from admin
     const handleSlidesUpdate = () => {
+      console.log('Slides updated event received');
       fetchSlides();
     };
     
