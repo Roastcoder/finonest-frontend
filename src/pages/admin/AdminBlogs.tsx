@@ -106,7 +106,7 @@ const AdminBlogs = () => {
   const generateBlogWithAI = async () => {
     if (!aiConfig.enabled) {
       toast({
-        title: "Error",
+        title: "AI Disabled",
         description: "AI features are currently disabled. Please enable them in settings.",
         variant: "destructive",
       });
@@ -115,7 +115,7 @@ const AdminBlogs = () => {
 
     if (!aiPrompt.trim()) {
       toast({
-        title: "Error",
+        title: "Missing Prompt",
         description: "Please enter a prompt for AI blog generation",
         variant: "destructive",
       });
@@ -124,11 +124,10 @@ const AdminBlogs = () => {
 
     setIsGenerating(true);
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent?key=${aiConfig.apiKey}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': aiConfig.apiKey
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           contents: [{
@@ -170,79 +169,147 @@ const AdminBlogs = () => {
         })
       });
 
-      const data = await response.json();
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      console.log('AI API Response Status:', response.status);
       
-      if (aiResponse) {
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('AI API Error Response:', errorText);
+        
+        let errorMessage = 'Failed to generate blog with AI';
+        
         try {
-          const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const blogData = JSON.parse(jsonMatch[0]);
-            
-            // Helper function to safely extract string values
-            const safeString = (value) => {
-              if (typeof value === 'string') return value;
-              if (typeof value === 'object' && value !== null) {
-                return JSON.stringify(value).replace(/[{}"]/g, '').replace(/,/g, ', ');
-              }
-              return value ? String(value) : '';
-            };
-            
-            setFormData({
-              title: safeString(blogData.title),
-              excerpt: safeString(blogData.excerpt),
-              content: safeString(blogData.content),
-              category: safeString(blogData.category),
-              status: 'draft',
-              image_url: '',
-              video_url: '',
-              meta_title: safeString(blogData.title),
-              meta_description: safeString(blogData.excerpt),
-              meta_tags: safeString(blogData.meta_tags) || `${safeString(blogData.category)}, loans, finance, finonest`,
-              table_of_contents: safeString(blogData.table_of_contents),
-              introduction: safeString(blogData.introduction),
-              quick_info_box: safeString(blogData.quick_info_box),
-              emi_example: safeString(blogData.emi_example),
-              what_is_loan: safeString(blogData.what_is_loan),
-              benefits: safeString(blogData.benefits),
-              who_should_apply: safeString(blogData.who_should_apply),
-              eligibility_criteria: safeString(blogData.eligibility_criteria),
-              documents_required: safeString(blogData.documents_required),
-              interest_rates: safeString(blogData.interest_rates),
-              finonest_process: safeString(blogData.finonest_process),
-              why_choose_finonest: safeString(blogData.why_choose_finonest),
-              customer_testimonials: safeString(blogData.customer_testimonials),
-              common_mistakes: safeString(blogData.common_mistakes),
-              mid_blog_cta: safeString(blogData.mid_blog_cta),
-              faqs: safeString(blogData.faqs),
-              service_areas: safeString(blogData.service_areas),
-              related_blogs: safeString(blogData.related_blogs),
-              final_cta: safeString(blogData.final_cta) || 'https://finonest.com/apply-now',
-              final_cta_text: safeString(blogData.final_cta_text) || 'Apply Now',
-              disclaimer: safeString(blogData.disclaimer),
-              trust_footer: safeString(blogData.trust_footer)
-            });
-            
-            setShowForm(true);
-            setAiPrompt('');
-            
-            toast({
-              title: "Success",
-              description: "AI blog generated successfully!",
-            });
+          const errorData = JSON.parse(errorText);
+          if (errorData.error) {
+            switch (errorData.error.code) {
+              case 400:
+                errorMessage = `Bad Request: ${errorData.error.message}`;
+                break;
+              case 401:
+                errorMessage = 'Unauthorized: Invalid API key';
+                break;
+              case 403:
+                errorMessage = `Access Denied: ${errorData.error.message}`;
+                break;
+              case 429:
+                errorMessage = 'Rate limit exceeded. Please try again later';
+                break;
+              case 500:
+                errorMessage = 'AI service temporarily unavailable';
+                break;
+              default:
+                errorMessage = `API Error (${errorData.error.code}): ${errorData.error.message}`;
+            }
           }
         } catch (parseError) {
-          toast({
-            title: "Error",
-            description: "Failed to parse AI response. Please try again.",
-            variant: "destructive",
-          });
+          errorMessage = `HTTP ${response.status}: ${errorText}`;
         }
+        
+        toast({
+          title: "AI Generation Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
       }
-    } catch (error) {
+
+      const data = await response.json();
+      console.log('AI API Success Response:', data);
+      
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (!aiResponse) {
+        toast({
+          title: "AI Response Error",
+          description: "No content received from AI. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      try {
+        const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          throw new Error('No JSON found in AI response');
+        }
+        
+        const blogData = JSON.parse(jsonMatch[0]);
+        
+        // Helper function to safely extract string values
+        const safeString = (value) => {
+          if (typeof value === 'string') return value;
+          if (typeof value === 'object' && value !== null) {
+            return JSON.stringify(value).replace(/[{}"]/g, '').replace(/,/g, ', ');
+          }
+          return value ? String(value) : '';
+        };
+        
+        setFormData({
+          title: safeString(blogData.title),
+          excerpt: safeString(blogData.excerpt),
+          content: safeString(blogData.content),
+          category: safeString(blogData.category),
+          status: 'draft',
+          image_url: '',
+          video_url: '',
+          meta_title: safeString(blogData.title),
+          meta_description: safeString(blogData.excerpt),
+          meta_tags: safeString(blogData.meta_tags) || `${safeString(blogData.category)}, loans, finance, finonest`,
+          table_of_contents: safeString(blogData.table_of_contents),
+          introduction: safeString(blogData.introduction),
+          quick_info_box: safeString(blogData.quick_info_box),
+          emi_example: safeString(blogData.emi_example),
+          what_is_loan: safeString(blogData.what_is_loan),
+          benefits: safeString(blogData.benefits),
+          who_should_apply: safeString(blogData.who_should_apply),
+          eligibility_criteria: safeString(blogData.eligibility_criteria),
+          documents_required: safeString(blogData.documents_required),
+          interest_rates: safeString(blogData.interest_rates),
+          finonest_process: safeString(blogData.finonest_process),
+          why_choose_finonest: safeString(blogData.why_choose_finonest),
+          customer_testimonials: safeString(blogData.customer_testimonials),
+          common_mistakes: safeString(blogData.common_mistakes),
+          mid_blog_cta: safeString(blogData.mid_blog_cta),
+          faqs: safeString(blogData.faqs),
+          service_areas: safeString(blogData.service_areas),
+          related_blogs: safeString(blogData.related_blogs),
+          final_cta: safeString(blogData.final_cta) || 'https://finonest.com/apply-now',
+          final_cta_text: safeString(blogData.final_cta_text) || 'Apply Now',
+          disclaimer: safeString(blogData.disclaimer),
+          trust_footer: safeString(blogData.trust_footer)
+        });
+        
+        setShowForm(true);
+        setAiPrompt('');
+        
+        toast({
+          title: "Success",
+          description: "AI blog generated successfully!",
+        });
+        
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        console.log('Raw AI Response:', aiResponse);
+        
+        toast({
+          title: "Parse Error",
+          description: "Failed to parse AI response. The AI returned invalid JSON format.",
+          variant: "destructive",
+        });
+      }
+      
+    } catch (networkError) {
+      console.error('Network Error:', networkError);
+      
+      let errorMessage = 'Network error occurred';
+      if (networkError.message.includes('fetch')) {
+        errorMessage = 'Unable to connect to AI service. Check your internet connection.';
+      } else if (networkError.message.includes('timeout')) {
+        errorMessage = 'Request timed out. Please try again.';
+      }
+      
       toast({
-        title: "Error",
-        description: "Failed to generate blog with AI.",
+        title: "Network Error",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

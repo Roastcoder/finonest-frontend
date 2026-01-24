@@ -120,6 +120,7 @@ const App = () => {
                 <Route path="/careers/:slug" element={<JobDetail />} />
                 <Route path="/admin/careers" element={<AdminDashboard />} />
                 <Route path="/admin/bankers" element={<AdminDashboard />} />
+                <Route path="/admin/slides" element={<AdminDashboard />} />
                 <Route path="/admin/settings" element={<AdminDashboard />} />
                 <Route path="/branches" element={<OurBranches />} />
                 <Route path="/our-branches" element={<OurBranches />} />

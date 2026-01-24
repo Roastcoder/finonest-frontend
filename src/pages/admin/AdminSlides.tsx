@@ -1,0 +1,360 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { Plus, Edit, Trash2, Image, Save } from "lucide-react";
+import ImageUpload from "@/components/ImageUpload";
+
+interface Slide {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  image_url: string;
+  button_text: string;
+  button_link: string;
+  order_position: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+const AdminSlides = () => {
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
+  const { token } = useAuth();
+  const { toast } = useToast();
+
+  const [formData, setFormData] = useState({
+    title: "",
+    subtitle: "",
+    description: "",
+    image_url: "",
+    button_text: "",
+    button_link: "",
+    order_position: 1,
+    is_active: true
+  });
+
+  useEffect(() => {
+    fetchSlides();
+  }, []);
+
+  const fetchSlides = async () => {
+    try {
+      const response = await fetch('https://api.finonest.com/api/slides', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSlides(data.slides || []);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to fetch slides",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch slides",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const url = editingSlide 
+        ? `https://api.finonest.com/api/slides/${editingSlide.id}`
+        : 'https://api.finonest.com/api/slides';
+      
+      const method = editingSlide ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: `Slide ${editingSlide ? 'updated' : 'created'} successfully`,
+        });
+        fetchSlides();
+        resetForm();
+      } else {
+        const data = await response.json();
+        toast({
+          title: "Error",
+          description: data.error || `Failed to ${editingSlide ? 'update' : 'create'} slide`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to ${editingSlide ? 'update' : 'create'} slide`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteSlide = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this slide?')) return;
+    
+    try {
+      const response = await fetch(`https://api.finonest.com/api/slides/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setSlides(slides => slides.filter(slide => slide.id !== id));
+        toast({
+          title: "Success",
+          description: "Slide deleted successfully",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete slide",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      subtitle: "",
+      description: "",
+      image_url: "",
+      button_text: "",
+      button_link: "",
+      order_position: 1,
+      is_active: true
+    });
+    setEditingSlide(null);
+    setShowForm(false);
+  };
+
+  const editSlide = (slide: Slide) => {
+    setFormData({
+      title: slide.title,
+      subtitle: slide.subtitle,
+      description: slide.description,
+      image_url: slide.image_url,
+      button_text: slide.button_text,
+      button_link: slide.button_link,
+      order_position: slide.order_position,
+      is_active: slide.is_active
+    });
+    setEditingSlide(slide);
+    setShowForm(true);
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Home Page Slides</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Loading slides...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2">
+              <Image className="w-5 h-5" />
+              Home Page Slides ({slides.length})
+            </CardTitle>
+            <Button onClick={() => setShowForm(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Slide
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {showForm && (
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>{editingSlide ? 'Edit' : 'Create'} Slide</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Title</label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Subtitle</label>
+                    <Input
+                      value={formData.subtitle}
+                      onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Description</label>
+                    <Textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Slide Image</label>
+                    <ImageUpload
+                      onImageUploaded={(imageUrl) => setFormData({...formData, image_url: imageUrl})}
+                      currentImage={formData.image_url}
+                      onRemoveImage={() => setFormData({...formData, image_url: ""})}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Button Text</label>
+                      <Input
+                        value={formData.button_text}
+                        onChange={(e) => setFormData({...formData, button_text: e.target.value})}
+                        placeholder="Apply Now"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Button Link</label>
+                      <Input
+                        value={formData.button_link}
+                        onChange={(e) => setFormData({...formData, button_link: e.target.value})}
+                        placeholder="/apply-now"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Order Position</label>
+                      <Input
+                        type="number"
+                        value={formData.order_position}
+                        onChange={(e) => setFormData({...formData, order_position: parseInt(e.target.value)})}
+                        min="1"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Status</label>
+                      <select 
+                        className="w-full p-2 border rounded"
+                        value={formData.is_active ? 'active' : 'inactive'}
+                        onChange={(e) => setFormData({...formData, is_active: e.target.value === 'active'})}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button type="submit">
+                      <Save className="w-4 h-4 mr-2" />
+                      {editingSlide ? 'Update' : 'Create'} Slide
+                    </Button>
+                    <Button type="button" variant="outline" onClick={resetForm}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          {slides.length === 0 ? (
+            <p>No slides found.</p>
+          ) : (
+            <div className="space-y-4">
+              {slides.map((slide) => (
+                <div key={slide.id} className="border p-4 rounded-lg">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex gap-4 flex-1">
+                      {slide.image_url && (
+                        <img 
+                          src={slide.image_url} 
+                          alt={slide.title}
+                          className="w-24 h-16 object-cover rounded"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-lg">{slide.title}</h3>
+                          <span className={`px-2 py-1 text-xs rounded ${slide.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {slide.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                            Order: {slide.order_position}
+                          </span>
+                        </div>
+                        {slide.subtitle && (
+                          <p className="text-sm text-gray-600 mb-1">{slide.subtitle}</p>
+                        )}
+                        <p className="text-sm text-muted-foreground mb-2">{slide.description}</p>
+                        {slide.button_text && (
+                          <p className="text-xs text-blue-600">Button: {slide.button_text} → {slide.button_link}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => editSlide(slide)}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => deleteSlide(slide.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AdminSlides;

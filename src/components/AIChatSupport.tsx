@@ -34,11 +34,10 @@ const AIChatSupport = () => {
       // Generate enhanced prompt with knowledge base
       const enhancedPrompt = generateAIPrompt(message);
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': config.apiKey
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           contents: [{

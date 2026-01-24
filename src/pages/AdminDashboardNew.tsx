@@ -17,6 +17,7 @@ import {
   MessageSquare,
   BookOpen,
   GraduationCap,
+  Image,
   MapPin
 } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -27,9 +28,9 @@ import AdminSettings from "./admin/AdminSettings";
 import AdminBlogs from "./admin/AdminBlogs";
 import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
-
 import AdminEnrollments from "./admin/AdminEnrollments";
 import AdminCareers from "./admin/AdminCareers";
+import AdminSlides from "./admin/AdminSlides";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,6 @@ const AdminDashboard = () => {
   const getActiveTab = () => {
     const path = location.pathname;
     if (path.includes('/applications')) return 'applications';
-
     if (path.includes('/contact-forms')) return 'contacts';
     if (path.includes('/users')) return 'users';
     if (path.includes('/analytics')) return 'dashboard';
@@ -52,6 +52,7 @@ const AdminDashboard = () => {
     if (path.includes('/enrollments')) return 'enrollments';
     if (path.includes('/branches')) return 'branches';
     if (path.includes('/careers')) return 'careers';
+    if (path.includes('/slides')) return 'slides';
     return 'dashboard';
   };
 
@@ -82,15 +83,12 @@ const AdminDashboard = () => {
     navigate("/auth");
   };
 
-
-
   const renderContent = () => {
     switch(activeTab) {
       case 'dashboard':
         return <AdminAnalytics />;
       case 'applications':
         return <AdminApplications />;
-
       case 'contacts':
         return <AdminContactForms />;
       case 'users':
@@ -105,6 +103,8 @@ const AdminDashboard = () => {
         return <AdminCareers />;
       case 'branches':
         return <AdminBranches />;
+      case 'slides':
+        return <AdminSlides />;
       case 'settings':
         return <AdminSettings />;
       default:
@@ -141,6 +141,7 @@ const AdminDashboard = () => {
             </Button>
           </div>
         </header>
+        
         {/* Sidebar */}
         <div className="hidden md:flex w-64 bg-card border-r border-border flex-col fixed h-screen overflow-y-auto">
           <div className="p-6">
@@ -168,7 +169,6 @@ const AdminDashboard = () => {
               <FileText className="w-4 h-4" />
               Applications
             </Link>
-
             <Link 
               to="/admin/contact-forms"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
@@ -224,6 +224,15 @@ const AdminDashboard = () => {
               Career Management
             </Link>
             <Link 
+              to="/admin/slides"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'slides' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <Image className="w-4 h-4" />
+              Home Slides
+            </Link>
+            <Link 
               to="/admin/branches"
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'branches' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
@@ -267,7 +276,6 @@ const AdminDashboard = () => {
                 <h1 className="text-2xl font-bold">
                   {activeTab === 'dashboard' && 'Admin Dashboard'}
                   {activeTab === 'applications' && 'Applications Management'}
-
                   {activeTab === 'contacts' && 'Contact Forms'}
                   {activeTab === 'users' && 'Users Management'}
                   {activeTab === 'blogs' && 'Blog Management'}
@@ -275,12 +283,12 @@ const AdminDashboard = () => {
                   {activeTab === 'enrollments' && 'Course Enrollments'}
                   {activeTab === 'careers' && 'Career Management'}
                   {activeTab === 'branches' && 'Branch Management'}
+                  {activeTab === 'slides' && 'Home Page Slides'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
                   {activeTab === 'dashboard' && 'Overview of system performance and statistics'}
                   {activeTab === 'applications' && 'Manage and review loan applications'}
-
                   {activeTab === 'contacts' && 'Manage contact form submissions'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
@@ -288,6 +296,7 @@ const AdminDashboard = () => {
                   {activeTab === 'enrollments' && 'View and manage course enrollments and payments'}
                   {activeTab === 'careers' && 'Manage job postings and applications'}
                   {activeTab === 'branches' && 'Manage branch locations and information'}
+                  {activeTab === 'slides' && 'Manage home page carousel slides and images'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
               </div>
