@@ -239,7 +239,7 @@ const HeroSection = () => {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
-                    <div className="relative aspect-[3/4]">
+                    <div className="relative aspect-[5/3]">
                       <img 
                         src={getImageUrl(s.image_url)} 
                         alt={s.title} 
