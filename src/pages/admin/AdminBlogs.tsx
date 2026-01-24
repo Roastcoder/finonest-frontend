@@ -116,7 +116,37 @@ const AdminBlogs = () => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Create a comprehensive blog post for Finonest about: "${aiPrompt}". Return as JSON with fields: title, excerpt, content, category (from: Credit Score, Car Loan, Home Loan, Personal Loan, Business Loan, Financial Planning), table_of_contents, introduction, quick_info_box, benefits, eligibility_criteria, documents_required, finonest_process, why_choose_finonest, faqs, final_cta_text, disclaimer. Make it SEO-friendly and professional.`
+              text: `Create a comprehensive blog post for Finonest about: "${aiPrompt}". Return as JSON with these exact fields:
+              {
+                "title": "SEO-optimized blog title",
+                "excerpt": "Brief 2-3 sentence summary",
+                "content": "Main blog content in markdown format",
+                "category": "One of: Credit Score, Car Loan, Home Loan, Personal Loan, Business Loan, Financial Planning",
+                "table_of_contents": "Numbered list of main sections",
+                "introduction": "Engaging opening paragraph",
+                "quick_info_box": "Key facts in bullet points format",
+                "emi_example": "EMI calculation example with sample amounts",
+                "what_is_loan": "Detailed explanation of the loan type",
+                "benefits": "List of key benefits in bullet points",
+                "who_should_apply": "Target audience description",
+                "eligibility_criteria": "Detailed eligibility requirements",
+                "documents_required": "Complete list of required documents",
+                "interest_rates": "Interest rate ranges and charges disclosure",
+                "finonest_process": "Step-by-step Finonest loan process",
+                "why_choose_finonest": "Finonest advantages and unique selling points",
+                "customer_testimonials": "2-3 sample customer testimonials",
+                "common_mistakes": "Common mistakes to avoid when applying",
+                "mid_blog_cta": "Mid-blog call to action text",
+                "faqs": "5-7 frequently asked questions with answers",
+                "service_areas": "List of service areas and local presence",
+                "related_blogs": "Suggested related blog topics with internal links",
+                "final_cta": "https://finonest.com/apply-now",
+                "final_cta_text": "Apply Now - Get Instant Approval!",
+                "disclaimer": "Standard financial disclaimer and compliance notice",
+                "trust_footer": "Trust and compliance footer text"
+              }
+              
+              Focus on Finonest's services, make it SEO-friendly, and ensure all fields are populated with relevant content.`
             }]
           }]
         })
@@ -143,25 +173,25 @@ const AdminBlogs = () => {
               table_of_contents: blogData.table_of_contents || '',
               introduction: blogData.introduction || '',
               quick_info_box: blogData.quick_info_box || '',
-              emi_example: '',
-              what_is_loan: '',
+              emi_example: blogData.emi_example || '',
+              what_is_loan: blogData.what_is_loan || '',
               benefits: blogData.benefits || '',
-              who_should_apply: '',
+              who_should_apply: blogData.who_should_apply || '',
               eligibility_criteria: blogData.eligibility_criteria || '',
               documents_required: blogData.documents_required || '',
-              interest_rates: '',
+              interest_rates: blogData.interest_rates || '',
               finonest_process: blogData.finonest_process || '',
               why_choose_finonest: blogData.why_choose_finonest || '',
-              customer_testimonials: '',
-              common_mistakes: '',
-              mid_blog_cta: '',
+              customer_testimonials: blogData.customer_testimonials || '',
+              common_mistakes: blogData.common_mistakes || '',
+              mid_blog_cta: blogData.mid_blog_cta || '',
               faqs: blogData.faqs || '',
-              service_areas: '',
-              related_blogs: '',
-              final_cta: '',
+              service_areas: blogData.service_areas || '',
+              related_blogs: blogData.related_blogs || '',
+              final_cta: blogData.final_cta || 'https://finonest.com/apply-now',
               final_cta_text: blogData.final_cta_text || 'Apply Now',
               disclaimer: blogData.disclaimer || '',
-              trust_footer: ''
+              trust_footer: blogData.trust_footer || ''
             });
             
             setShowForm(true);
