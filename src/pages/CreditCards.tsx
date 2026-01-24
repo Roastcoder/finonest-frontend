@@ -146,11 +146,23 @@ const CreditCards = () => {
                 <CardHeader className="pb-4">
                   <div className="w-full h-48 rounded-lg overflow-hidden bg-gray-50 mb-4">
                     <img 
-                      src={product.variant_image || product.card_image} 
+                      src={product.variant_image?.startsWith('http') 
+                        ? product.variant_image 
+                        : product.variant_image 
+                          ? `https://cards.finonest.com/${product.variant_image}` 
+                          : product.card_image
+                      } 
                       alt={product.name}
                       className="w-full h-full object-contain"
                       onError={(e) => {
-                        e.currentTarget.src = product.card_image;
+                        const fallbackSrc = product.card_image?.startsWith('http') 
+                          ? product.card_image 
+                          : `https://cards.finonest.com/${product.card_image}`;
+                        if (e.currentTarget.src !== fallbackSrc) {
+                          e.currentTarget.src = fallbackSrc;
+                        } else {
+                          e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
+                        }
                       }}
                     />
                   </div>
