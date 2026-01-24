@@ -133,55 +133,85 @@ const WhatsAppButton = () => {
         : 'AI features are currently disabled. Please contact our support team at +91 9462553887.';
     }
 
-    try {
-      // Simple direct prompt
-      const prompt = selectedLanguage === 'hindi'
-        ? `आप फिनोनेस्ट के AI सहायक हैं। हिंदी में जवाब दें। फिनोनेस्ट भारत की सबसे तेजी से बढ़ने वाली लोन कंपनी है। हम होम लोन (7.3% से), पर्सनल लोन (9.99% से), बिजनेस लोन (11% से), कार लोन (8.5% से) प्रदान करते हैं। प्रश्न: ${message}`
-        : `You are Finonest's AI assistant. Respond in English. Finonest is India's fastest growing loan provider. We offer Home Loans (from 7.3%), Personal Loans (from 9.99%), Business Loans (from 11%), Car Loans (from 8.5%). Question: ${message}`;
+    // Auto-switch models if quota exceeded
+    const fallbackModels = [
+      'gemini-1.5-flash', 
+      'gemini-1.5-pro', 
+      'gemini-2.0-flash', 
+      'gemini-2.5-flash', 
+      'gemini-pro-latest', 
+      'gemini-flash-latest',
+      'gemini-pro',
+      'gemini-1.0-pro'
+    ];
+    let modelToUse = currentConfig.model;
+    
+    for (let attempt = 0; attempt < fallbackModels.length + 1; attempt++) {
+      try {
+        // Simple direct prompt
+        const prompt = selectedLanguage === 'hindi'
+          ? `आप फिनोनेस्ट के AI सहायक हैं। हिंदी में जवाब दें। फिनोनेस्ट भारत की सबसे तेजी से बढ़ने वाली लोन कंपनी है। हम होम लोन (7.3% से), पर्सनल लोन (9.99% से), बिजनेस लोन (11% से), कार लोन (8.5% से) प्रदान करते हैं। प्रश्न: ${message}`
+          : `You are Finonest's AI assistant. Respond in English. Finonest is India's fastest growing loan provider. We offer Home Loans (from 7.3%), Personal Loans (from 9.99%), Business Loans (from 11%), Car Loans (from 8.5%). Question: ${message}`;
 
-      console.log('Making API call with key:', currentConfig.apiKey ? 'Present' : 'Missing');
-      
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentConfig.model}:generateContent?key=${currentConfig.apiKey}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-          }
-        })
-      });
+        console.log('Trying model:', modelToUse);
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${currentConfig.apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 1024,
+            }
+          })
+        });
 
-      console.log('API Response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error:', response.status, errorText);
-        throw new Error(`API Error: ${response.status}`);
+        console.log('API Response status:', response.status);
+        
+        if (response.status === 429 && attempt < fallbackModels.length) {
+          // Quota exceeded, try next model
+          modelToUse = fallbackModels[attempt];
+          console.log('Quota exceeded, switching to:', modelToUse);
+          continue;
+        }
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API Error:', response.status, errorText);
+          throw new Error(`API Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('API Response data:', data);
+        
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || 
+          (selectedLanguage === 'hindi' 
+            ? 'मुझे खेद है, मैं आपकी मदद नहीं कर सका। कृपया +91 9462553887 पर संपर्क करें।'
+            : 'I apologize, I couldn\'t help with that. Please contact +91 9462553887.');
+            
+      } catch (error) {
+        console.error(`Error with model ${modelToUse}:`, error);
+        if (attempt < fallbackModels.length) {
+          modelToUse = fallbackModels[attempt];
+          console.log('Switching to fallback model:', modelToUse);
+          continue;
+        }
       }
-
-      const data = await response.json();
-      console.log('API Response data:', data);
-      
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || 
-        (selectedLanguage === 'hindi' 
-          ? 'मुझे खेद है, मैं आपकी मदद नहीं कर सका। कृपया +91 9462553887 पर संपर्क करें।'
-          : 'I apologize, I couldn\'t help with that. Please contact +91 9462553887.');
-    } catch (error) {
-      console.error('Gemini API error:', error);
-      return selectedLanguage === 'hindi'
-        ? 'तकनीकी समस्या है। कृपया +91 9462553887 पर संपर्क करें।'
-        : 'Technical issue. Please contact +91 9462553887.';
     }
+    
+    // All models failed
+    return selectedLanguage === 'hindi'
+      ? 'तकनीकी समस्या है। कृपया +91 9462553887 पर संपर्क करें।'
+      : 'Technical issue. Please contact +91 9462553887.';
   };
 
   const handleSendMessage = async () => {

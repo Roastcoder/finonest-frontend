@@ -180,11 +180,15 @@ const AdminSettings = () => {
                   <SelectValue placeholder="Select model" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash (Higher Quota)</SelectItem>
+                  <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
+                  <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
                   <SelectItem value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (Recommended)</SelectItem>
                   <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
-                  <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
                   <SelectItem value="gemini-pro-latest">Gemini Pro Latest</SelectItem>
                   <SelectItem value="gemini-flash-latest">Gemini Flash Latest</SelectItem>
+                  <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
+                  <SelectItem value="gemini-1.0-pro">Gemini 1.0 Pro</SelectItem>
                 </SelectContent>
               </Select>
               <Button 

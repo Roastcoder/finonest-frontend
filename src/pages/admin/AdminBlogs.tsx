@@ -123,8 +123,25 @@ const AdminBlogs = () => {
     }
 
     setIsGenerating(true);
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent?key=${aiConfig.apiKey}`, {
+    
+    // Auto-switch models if quota exceeded
+    const fallbackModels = [
+      'gemini-1.5-flash', 
+      'gemini-1.5-pro', 
+      'gemini-2.0-flash', 
+      'gemini-2.5-flash', 
+      'gemini-pro-latest', 
+      'gemini-flash-latest',
+      'gemini-pro',
+      'gemini-1.0-pro'
+    ];
+    let modelToUse = aiConfig.model || 'gemini-1.5-flash';
+    
+    for (let attempt = 0; attempt < fallbackModels.length + 1; attempt++) {
+      try {
+        console.log('Trying model:', modelToUse);
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${aiConfig.apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,7 +186,24 @@ const AdminBlogs = () => {
         })
       });
 
-      console.log('AI API Response Status:', response.status);
+        console.log('AI API Response Status:', response.status);
+        
+        if (response.status === 429 && attempt < fallbackModels.length) {
+          // Quota exceeded, try next model
+          modelToUse = fallbackModels[attempt];
+          console.log('Quota exceeded, switching to:', modelToUse);
+          continue;
+        }
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('AI API Error Response:', errorText);
+          
+          if (attempt < fallbackModels.length) {
+            modelToUse = fallbackModels[attempt];
+            console.log('API error, switching to:', modelToUse);
+            continue;
+          }
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -297,24 +331,26 @@ const AdminBlogs = () => {
         });
       }
       
-    } catch (networkError) {
-      console.error('Network Error:', networkError);
-      
-      let errorMessage = 'Network error occurred';
-      if (networkError.message.includes('fetch')) {
-        errorMessage = 'Unable to connect to AI service. Check your internet connection.';
-      } else if (networkError.message.includes('timeout')) {
-        errorMessage = 'Request timed out. Please try again.';
+        } finally {
+          setIsGenerating(false);
+        }
+      } catch (error) {
+        console.error(`Error with model ${modelToUse}:`, error);
+        if (attempt < fallbackModels.length) {
+          modelToUse = fallbackModels[attempt];
+          console.log('Network error, switching to:', modelToUse);
+          continue;
+        }
       }
-      
-      toast({
-        title: "Network Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsGenerating(false);
     }
+    
+    // All models failed
+    toast({
+      title: "All Models Failed",
+      description: "All AI models are currently unavailable. Please try again later.",
+      variant: "destructive",
+    });
+    setIsGenerating(false);
   };
 
   const fetchBlogs = async () => {
