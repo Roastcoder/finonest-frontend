@@ -105,7 +105,7 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await fetch('https://api.finonest.com/api/slides');
+        const response = await fetch('https://api.finonest.com/api/slides.php');
         if (response.ok) {
           const data = await response.json();
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)

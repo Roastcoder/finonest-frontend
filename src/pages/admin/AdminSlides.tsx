@@ -46,7 +46,7 @@ const AdminSlides = () => {
 
   const fetchSlides = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/slides', {
+      const response = await fetch('https://api.finonest.com/api/slides.php', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -79,8 +79,8 @@ const AdminSlides = () => {
     
     try {
       const url = editingSlide 
-        ? `https://api.finonest.com/api/slides/${editingSlide.id}`
-        : 'https://api.finonest.com/api/slides';
+        ? `https://api.finonest.com/api/slides.php/${editingSlide.id}`
+        : 'https://api.finonest.com/api/slides.php';
       
       const method = editingSlide ? 'PUT' : 'POST';
 
@@ -121,7 +121,7 @@ const AdminSlides = () => {
     if (!confirm('Are you sure you want to delete this slide?')) return;
     
     try {
-      const response = await fetch(`https://api.finonest.com/api/slides/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/slides.php/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
