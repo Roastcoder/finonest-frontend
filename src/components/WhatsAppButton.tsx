@@ -1,5 +1,5 @@
 import { X, Send, Bot, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getAIConfig } from "@/lib/aiConfig";
 
 interface Message {
@@ -22,11 +22,27 @@ const WhatsAppButton = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [aiConfig, setAiConfig] = useState({ apiKey: '', model: '', enabled: true });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Load AI configuration on component mount
     getAIConfig().then(setAiConfig);
   }, []);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end'
+      });
+    }
+  };
 
   const sendToGemini = async (message: string): Promise<string> => {
     if (!aiConfig.enabled) {
@@ -162,7 +178,10 @@ const WhatsAppButton = () => {
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+          <div 
+            ref={chatContainerRef}
+            className="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 scroll-smooth"
+          >
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -208,6 +227,8 @@ const WhatsAppButton = () => {
                 </div>
               </div>
             )}
+            {/* Invisible div for auto-scroll target */}
+            <div ref={messagesEndRef} className="h-1" />
           </div>
 
           {/* Input Area */}

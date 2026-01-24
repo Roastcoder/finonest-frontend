@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Save, Key, CreditCard, Bot } from "lucide-react";
+import { Save, Key, CreditCard, Bot, Eye, EyeOff } from "lucide-react";
 
 interface SystemSetting {
   setting_key: string;
@@ -20,6 +20,7 @@ const AdminSettings = () => {
   const [settings, setSettings] = useState<SystemSetting[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -69,23 +70,27 @@ const AdminSettings = () => {
         body: JSON.stringify({ value }),
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
         toast({
           title: "Success",
-          description: "Setting updated successfully",
+          description: `${key.replace('_', ' ')} updated successfully`,
         });
         fetchSettings(); // Refresh settings
       } else {
+        console.error('Update error:', data);
         toast({
           title: "Error",
-          description: "Failed to update setting",
+          description: data.error || "Failed to update setting",
           variant: "destructive",
         });
       }
     } catch (error) {
+      console.error('Network error:', error);
       toast({
         title: "Error",
-        description: "Failed to update setting",
+        description: "Network error. Please check your connection.",
         variant: "destructive",
       });
     } finally {
@@ -133,13 +138,24 @@ const AdminSettings = () => {
           <div>
             <Label htmlFor="gemini_api_key">Gemini API Key</Label>
             <div className="flex gap-2 mt-1">
-              <Input
-                id="gemini_api_key"
-                type="password"
-                value={getSettingValue('gemini_api_key')}
-                onChange={(e) => handleSettingChange('gemini_api_key', e.target.value)}
-                placeholder="AIzaSy..."
-              />
+              <div className="relative flex-1">
+                <Input
+                  id="gemini_api_key"
+                  type={showApiKey ? "text" : "password"}
+                  value={getSettingValue('gemini_api_key')}
+                  onChange={(e) => handleSettingChange('gemini_api_key', e.target.value)}
+                  placeholder="AIzaSy..."
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                >
+                  {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+              </div>
               <Button 
                 onClick={() => updateSetting('gemini_api_key', getSettingValue('gemini_api_key'))}
                 disabled={saving}
