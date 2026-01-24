@@ -134,13 +134,21 @@ const HeroSection = () => {
       window.removeEventListener('slidesUpdated', handleSlidesUpdate);
     };
   }, []);
+  
+  // Reset current slide if it's out of bounds
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (slides.length > 0 && currentSlide >= slides.length) {
+      setCurrentSlide(0);
+    }
+  }, [slides.length, currentSlide]);
+  
+  useEffect(() => {
+    if (!isAutoPlaying || slides.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, slides.length]);
   useEffect(() => {
     const wordInterval = setInterval(() => {
       setCurrentWord(prev => (prev + 1) % rotatingWords.length);
