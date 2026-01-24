@@ -297,22 +297,6 @@ const AdminSlides = () => {
                     <Button type="button" variant="outline" size="sm" onClick={resetForm} className="w-full sm:w-auto">
                       Cancel
                     </Button>
-                  </div>})}
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button type="submit">
-                      <Save className="w-4 h-4 mr-2" />
-                      {editingSlide ? 'Update' : 'Create'} Slide
-                    </Button>
-                    <Button type="button" variant="outline" onClick={resetForm}>
-                      Cancel
-                    </Button>
                   </div>
                 </form>
               </CardContent>
