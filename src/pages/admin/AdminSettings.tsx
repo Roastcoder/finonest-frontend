@@ -4,9 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Save, Key, CreditCard } from "lucide-react";
+import { Save, Key, CreditCard, Bot } from "lucide-react";
 
 interface SystemSetting {
   setting_key: string;
@@ -120,6 +121,99 @@ const AdminSettings = () => {
 
   return (
     <div className="space-y-6">
+      {/* AI Configuration Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bot className="w-5 h-5" />
+            AI Configuration
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="gemini_api_key">Gemini API Key</Label>
+            <div className="flex gap-2 mt-1">
+              <Input
+                id="gemini_api_key"
+                type="password"
+                value={getSettingValue('gemini_api_key')}
+                onChange={(e) => handleSettingChange('gemini_api_key', e.target.value)}
+                placeholder="AIzaSy..."
+              />
+              <Button 
+                onClick={() => updateSetting('gemini_api_key', getSettingValue('gemini_api_key'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Google Gemini API key for AI chat and blog generation
+            </p>
+          </div>
+          
+          <div>
+            <Label htmlFor="gemini_model">Gemini Model</Label>
+            <div className="flex gap-2 mt-1">
+              <Select 
+                value={getSettingValue('gemini_model')} 
+                onValueChange={(value) => handleSettingChange('gemini_model', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select model" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (Recommended)</SelectItem>
+                  <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
+                  <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
+                  <SelectItem value="gemini-pro-latest">Gemini Pro Latest</SelectItem>
+                  <SelectItem value="gemini-flash-latest">Gemini Flash Latest</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => updateSetting('gemini_model', getSettingValue('gemini_model'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Choose the Gemini model for AI operations
+            </p>
+          </div>
+          
+          <div>
+            <Label htmlFor="ai_enabled">AI Features Status</Label>
+            <div className="flex gap-2 mt-1">
+              <Select 
+                value={getSettingValue('ai_enabled')} 
+                onValueChange={(value) => handleSettingChange('ai_enabled', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="enabled">Enabled</SelectItem>
+                  <SelectItem value="disabled">Disabled</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => updateSetting('ai_enabled', getSettingValue('ai_enabled'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Enable or disable AI chat and blog generation features
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Payment Gateway Settings */}
       <Card>
         <CardHeader>

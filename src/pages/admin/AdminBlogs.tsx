@@ -53,6 +53,7 @@ const AdminBlogs = () => {
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [aiConfig, setAiConfig] = useState({ apiKey: '', model: '', enabled: true });
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -93,9 +94,19 @@ const AdminBlogs = () => {
 
   useEffect(() => {
     fetchBlogs();
+    getAIConfig().then(setAiConfig);
   }, []);
 
   const generateBlogWithAI = async () => {
+    if (!aiConfig.enabled) {
+      toast({
+        title: "Error",
+        description: "AI features are currently disabled. Please enable them in settings.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!aiPrompt.trim()) {
       toast({
         title: "Error",
@@ -107,11 +118,11 @@ const AdminBlogs = () => {
 
     setIsGenerating(true);
     try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent', {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-goog-api-key': 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI'
+          'X-goog-api-key': aiConfig.apiKey
         },
         body: JSON.stringify({
           contents: [{
