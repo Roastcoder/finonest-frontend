@@ -59,46 +59,61 @@ export const getAIConfig = async () => {
     
     // Try admin settings first if authenticated
     if (authToken) {
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
-      };
+      try {
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        };
 
-      const response = await fetch('https://api.finonest.com/api/settings', { headers });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const settings = data.settings || [];
+        const response = await fetch('https://api.finonest.com/api/settings', { headers });
         
-        const getSettingValue = (key: string) => {
-          const setting = settings.find((s: any) => s.setting_key === key);
-          return setting?.setting_value || '';
-        };
-        
-        const apiKey = getSettingValue('gemini_api_key');
-        const enabled = getSettingValue('ai_enabled') === 'enabled';
-        
-        return {
-          apiKey: apiKey || '',
-          model: getSettingValue('gemini_model') || 'gemini-1.5-flash',
-          enabled: enabled && !!apiKey
-        };
+        if (response.ok) {
+          const data = await response.json();
+          const settings = data.settings || [];
+          
+          const getSettingValue = (key: string) => {
+            const setting = settings.find((s: any) => s.setting_key === key);
+            return setting?.setting_value || '';
+          };
+          
+          const apiKey = getSettingValue('gemini_api_key');
+          const enabled = getSettingValue('ai_enabled') === 'enabled';
+          
+          if (enabled && apiKey) {
+            return {
+              apiKey: apiKey,
+              model: getSettingValue('gemini_model') || 'gemini-1.5-flash',
+              enabled: true
+            };
+          }
+        }
+      } catch (adminError) {
+        console.log('Admin settings failed:', adminError);
       }
     }
     
-    // Fallback to public endpoint for non-authenticated users
-    const publicResponse = await fetch('https://api.finonest.com/api/ai-config.php');
-    
-    if (publicResponse.ok) {
-      const config = await publicResponse.json();
-      return {
-        apiKey: config.apiKey || '',
-        model: config.model || 'gemini-1.5-flash',
-        enabled: config.enabled && !!config.apiKey
-      };
+    // Fallback to public endpoint
+    try {
+      const publicResponse = await fetch('https://api.finonest.com/api/ai-config.php');
+      
+      if (publicResponse.ok) {
+        const config = await publicResponse.json();
+        return {
+          apiKey: config.apiKey || '',
+          model: config.model || 'gemini-1.5-flash',
+          enabled: config.enabled && !!config.apiKey
+        };
+      }
+    } catch (publicError) {
+      console.log('Public endpoint failed:', publicError);
     }
     
-    throw new Error('Failed to fetch AI config');
+    // Return default disabled config if all fails
+    return {
+      apiKey: '',
+      model: 'gemini-1.5-flash',
+      enabled: false
+    };
     
   } catch (error) {
     console.error('Failed to fetch AI config:', error);
