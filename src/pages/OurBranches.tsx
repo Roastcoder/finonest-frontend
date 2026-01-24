@@ -173,36 +173,66 @@ const OurBranches = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {filteredBranches.map((branch) => (
                 <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg border border-gray-200/30 p-6 md:p-8 hover:shadow-xl hover:bg-white/90 transition-all duration-300">
-                    <div className="flex items-start justify-between mb-3 md:mb-6">
-                      <div className="bg-gray-100 p-2 md:p-4 rounded-lg md:rounded-xl">
-                        <MapPin className="w-5 h-5 md:w-8 md:h-8 text-gray-700" />
+                  <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 md:p-6 hover:shadow-xl hover:border-blue-200 transition-all duration-300 h-full">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="bg-blue-50 p-2 md:p-3 rounded-lg">
+                        <MapPin className="w-4 h-4 md:w-6 md:h-6 text-blue-600" />
                       </div>
-                      <div className="bg-green-100 text-green-800 px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-medium">
+                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
                         Active
                       </div>
                     </div>
                     
-                    <h3 className="text-lg md:text-2xl font-bold text-gray-900 mb-2 md:mb-4 line-clamp-2">{branch.name}</h3>
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-3 line-clamp-2 min-h-[2.5rem] md:min-h-[3rem]">
+                      {branch.name}
+                    </h3>
                     
-                    <div className="space-y-2 md:space-y-4 text-xs md:text-base text-gray-600 mb-4 md:mb-8">
-                      <div className="flex items-start gap-2 md:gap-3">
-                        <MapPin className="w-3 h-3 md:w-5 md:h-5 mt-0.5 text-gray-400 flex-shrink-0" />
-                        <span className="line-clamp-2">{branch.city}, {branch.state}</span>
+                    <div className="space-y-2 text-sm text-gray-600 mb-4">
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-3 h-3 md:w-4 md:h-4 mt-0.5 text-gray-400 flex-shrink-0" />
+                        <span className="line-clamp-2 leading-tight">
+                          {branch.address && branch.address.length > 30 
+                            ? `${branch.address.substring(0, 30)}...` 
+                            : branch.address || `${branch.city}, ${branch.state}`
+                          }
+                        </span>
                       </div>
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <Clock className="w-3 h-3 md:w-5 md:h-5 text-gray-400 flex-shrink-0" />
-                        <span className="truncate">{branch.working_hours}</span>
+                      
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
+                        <span className="font-medium text-gray-700">{branch.city}, {branch.state}</span>
+                      </div>
+                      
+                      {branch.phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
+                          <span className="text-blue-600 font-medium">{branch.phone}</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
+                        <span className="text-xs md:text-sm">
+                          {branch.working_hours.length > 20 
+                            ? `${branch.working_hours.substring(0, 20)}...` 
+                            : branch.working_hours
+                          }
+                        </span>
                       </div>
                     </div>
                     
-                    <div className="text-center">
-                      <span className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                        View Details →
-                      </span>
+                    <div className="pt-3 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <span className="text-blue-600 font-medium text-sm hover:text-blue-700 transition-colors">
+                          View Details
+                        </span>
+                        <div className="text-blue-600">
+                          →
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -214,79 +244,84 @@ const OurBranches = () => {
 
       {/* Branch Details Modal */}
       <Dialog open={!!selectedBranch} onOpenChange={() => setSelectedBranch(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-lg md:max-w-2xl mx-4">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg md:text-xl">
               <MapPin className="w-5 h-5" />
               {selectedBranch?.name}
             </DialogTitle>
           </DialogHeader>
           {selectedBranch && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4 md:space-y-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
                 <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Address</h4>
-                    <p className="text-gray-600 flex items-start gap-2">
-                      <MapPin className="w-4 h-4 mt-0.5 text-gray-400 flex-shrink-0" />
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Address
+                    </h4>
+                    <p className="text-gray-600 text-sm md:text-base">
                       {selectedBranch.address}, {selectedBranch.city}, {selectedBranch.state} - {selectedBranch.pincode}
                     </p>
                   </div>
 
-                  {selectedBranch.phone && (
-                    <div>
-                      <button 
-                        onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                        className="text-gray-600 flex items-center gap-2 hover:text-blue-600 transition-colors"
-                      >
-                        <Phone className="w-4 h-4 text-gray-400" />
-                        Call
-                      </button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedBranch.phone && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          <Phone className="w-4 h-4" />
+                          Phone
+                        </h4>
+                        <button 
+                          onClick={() => window.open(`tel:${selectedBranch.phone}`)}
+                          className="text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm md:text-base"
+                        >
+                          {selectedBranch.phone}
+                        </button>
+                      </div>
+                    )}
+                    
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        Working Hours
+                      </h4>
+                      <p className="text-gray-600 text-sm md:text-base">
+                        {selectedBranch.working_hours}
+                      </p>
                     </div>
-                  )}                  
+                  </div>
+                  
                   {selectedBranch.email && (
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Email</h4>
-                      <p className="text-gray-600 flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-gray-400" />
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        Email
+                      </h4>
+                      <p className="text-gray-600 text-sm md:text-base">
                         {selectedBranch.email}
                       </p>
                     </div>
                   )}
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Working Hours</h4>
-                    <p className="text-gray-600 flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-gray-400" />
-                      {selectedBranch.working_hours}
-                    </p>
-                  </div>
                   
                   {selectedBranch.manager_name && (
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Branch Manager</h4>
-                      <p className="text-gray-600 flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-400" />
+                    <div className="bg-yellow-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Branch Manager
+                      </h4>
+                      <p className="text-gray-600 text-sm md:text-base">
                         {selectedBranch.manager_name}
                       </p>
                     </div>
                   )}
-                  
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Status</h4>
-                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium inline-block">
-                      Active
-                    </div>
-                  </div>
                 </div>
               </div>
               
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
                 <Button 
                   onClick={() => openInMaps(selectedBranch)}
-                  className="flex-1 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
                   Get Directions
@@ -295,13 +330,13 @@ const OurBranches = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                    className="flex-1"
+                    className="flex-1 border-blue-200 text-blue-600 hover:bg-blue-50"
                   >
                     <Phone className="w-4 h-4 mr-2" />
-                    Call
+                    Call Now
                   </Button>
-                )}            
-                </div>
+                )}
+              </div>
             </div>
           )}
         </DialogContent>
