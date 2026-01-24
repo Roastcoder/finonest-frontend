@@ -143,8 +143,10 @@ const HeroSection = () => {
   const getImageUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
-    if (imageUrl.startsWith('/')) return `https://finonest.com${imageUrl}`;
-    return `https://api.finonest.com/uploads/images/${imageUrl}`;
+    if (imageUrl.startsWith('/')) return `https://api.finonest.com${imageUrl}`;
+    // Extract just the filename and use the correct path
+    const filename = imageUrl.replace(/^.*\//, '');
+    return `https://api.finonest.com/uploads/images/${filename}`;
   };
   const getHighlight = (title: string) => {
     if (title.includes('Dream Home')) return 'Dream Home';
@@ -153,7 +155,7 @@ const HeroSection = () => {
     return title.split(' ').slice(-2).join(' ');
   };
   return (
-    <section className="relative bg-gradient-to-br from-background via-background to-accent/5 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-background via-background to-accent/5 overflow-hidden pt-20">
       <div className="hidden lg:block">
         <div className="container mx-auto px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">

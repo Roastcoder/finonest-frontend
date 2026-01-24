@@ -156,7 +156,7 @@ const Blog = () => {
                     <div className="relative h-48 overflow-hidden bg-muted">
                       {post.image_url ? (
                         <img
-                          src={post.image_url.startsWith('http') ? post.image_url : `https://api.finonest.com${post.image_url}`}
+                          src={post.image_url.startsWith('http') ? post.image_url : (post.image_url.startsWith('/') ? `https://api.finonest.com${post.image_url}` : `https://api.finonest.com/uploads/blog-images/${post.image_url}`)}
                           alt={`Featured image for ${post.title}`}
                           loading="lazy"
                           decoding="async"

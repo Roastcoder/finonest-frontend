@@ -313,9 +313,13 @@ const AdminSlides = () => {
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 flex-1 w-full">
                       {slide.image_url && (
                         <img 
-                          src={slide.image_url} 
+                          src={slide.image_url.startsWith('http') ? slide.image_url : `https://api.finonest.com/uploads/images/${slide.image_url.replace(/^.*\//, '')}`}
                           alt={slide.title}
                           className="w-full sm:w-24 h-32 sm:h-16 object-cover rounded"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#f3f4f6"/><text x="200" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
+                          }}
                         />
                       )}
                       <div className="flex-1">
