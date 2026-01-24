@@ -258,22 +258,7 @@ const OurBranches = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedBranch.phone && (
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          Phone
-                        </h4>
-                        <button 
-                          onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                          className="text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm md:text-base"
-                        >
-                          {selectedBranch.phone}
-                        </button>
-                      </div>
-                    )}
-                    
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="bg-green-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
