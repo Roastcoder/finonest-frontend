@@ -92,7 +92,12 @@ const AIChatSupport = () => {
                 src="/assets/finonest-icon.jpg" 
                 alt="Finonest AI" 
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
               />
+              <Bot className="w-6 h-6 text-primary-foreground" style={{ display: 'none' }} />
             </div>
             <div className="flex-1">
               <h4 className="font-semibold text-primary-foreground">AI Assistant</h4>
@@ -119,7 +124,12 @@ const AIChatSupport = () => {
                       src="/assets/finonest-icon.jpg" 
                       alt="AI" 
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling.style.display = 'flex';
+                      }}
                     />
+                    <Bot className="w-4 h-4 text-primary" style={{ display: 'none' }} />
                   </div>
                 )}
                 <div
@@ -145,7 +155,12 @@ const AIChatSupport = () => {
                     src="/assets/finonest-icon.jpg" 
                     alt="AI" 
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                    }}
                   />
+                  <Bot className="w-4 h-4 text-primary" style={{ display: 'none' }} />
                 </div>
                 <div className="bg-card border border-border p-3 rounded-xl">
                   <div className="flex space-x-1">
@@ -198,11 +213,18 @@ const AIChatSupport = () => {
           {isOpen ? (
             <X className="w-7 h-7 text-white" />
           ) : (
-            <img 
-              src="/assets/finonest-icon.jpg" 
-              alt="Finonest AI" 
-              className="w-10 h-10 object-cover rounded-full"
-            />
+            <>
+              <img 
+                src="/assets/finonest-icon.jpg" 
+                alt="Finonest AI" 
+                className="w-10 h-10 object-cover rounded-full"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <Bot className="w-7 h-7 text-white" style={{ display: 'none' }} />
+            </>
           )}
         </span>
 
