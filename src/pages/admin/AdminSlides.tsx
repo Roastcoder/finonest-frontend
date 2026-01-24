@@ -94,7 +94,7 @@ const AdminSlides = () => {
     
     try {
       const url = editingSlide 
-        ? `https://api.finonest.com/api/slides.php/${editingSlide.id}`
+        ? `https://api.finonest.com/api/slides.php?id=${editingSlide.id}`
         : 'https://api.finonest.com/api/slides.php';
       
       const method = editingSlide ? 'PUT' : 'POST';
@@ -139,7 +139,7 @@ const AdminSlides = () => {
     
     setLoading(true);
     try {
-      const response = await fetch(`https://api.finonest.com/api/slides.php/${id}`, {
+      const response = await fetch(`https://api.finonest.com/api/slides.php?id=${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
