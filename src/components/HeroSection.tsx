@@ -140,13 +140,18 @@ const HeroSection = () => {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
   const slide = slides[currentSlide];
+  const getImageUrl = (imageUrl: string) => {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    if (imageUrl.startsWith('/')) return `https://finonest.com${imageUrl}`;
+    return `https://api.finonest.com/uploads/images/${imageUrl}`;
+  };
   const getHighlight = (title: string) => {
     if (title.includes('Dream Home')) return 'Dream Home';
     if (title.includes('Dream Car')) return 'Dream Car';
     if (title.includes('Business')) return 'Business Growth';
     return title.split(' ').slice(-2).join(' ');
   };
-  return <section className="relative bg-gradient-to-b from-background via-background to-primary pt-20 md:pt-24 overflow-hidden">
       {/* Desktop Layout */}
       <div className="hidden lg:block">
         <div className="container mx-auto px-6 py-8">
@@ -219,7 +224,7 @@ const HeroSection = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
                     <div className="relative aspect-[4/3]">
-                      <img src={s.image_url} alt={s.title} className="w-full h-full object-cover" />
+                      <img src={getImageUrl(s.image_url)} alt={s.title} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent" />
                       <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <h2 className="font-display text-2xl font-bold text-primary-foreground mb-1">
@@ -256,7 +261,7 @@ const HeroSection = () => {
         <div className="relative">
           {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
               <div className="relative aspect-[16/10]">
-                <img src={s.image_url} alt={s.title} className="w-full h-full object-cover" />
+                <img src={getImageUrl(s.image_url)} alt={s.title} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h2 className="font-display text-xl font-bold text-primary-foreground mb-1">

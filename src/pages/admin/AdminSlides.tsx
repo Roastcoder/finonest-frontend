@@ -192,12 +192,12 @@ const AdminSlides = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <CardTitle className="flex items-center gap-2">
               <Image className="w-5 h-5" />
-              Home Page Slides ({slides.length})
+              <span className="text-base sm:text-lg">Home Page Slides ({slides.length})</span>
             </CardTitle>
-            <Button onClick={() => setShowForm(true)}>
+            <Button onClick={() => setShowForm(true)} size="sm" className="w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               Add New Slide
             </Button>
@@ -246,7 +246,7 @@ const AdminSlides = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Button Text</label>
                       <Input
@@ -266,7 +266,7 @@ const AdminSlides = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Order Position</label>
                       <Input
@@ -283,6 +283,22 @@ const AdminSlides = () => {
                         className="w-full p-2 border rounded"
                         value={formData.is_active ? 'active' : 'inactive'}
                         onChange={(e) => setFormData({...formData, is_active: e.target.value === 'active'})}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button type="submit" size="sm" className="w-full sm:w-auto">
+                      <Save className="w-4 h-4 mr-2" />
+                      {editingSlide ? 'Update' : 'Create'} Slide
+                    </Button>
+                    <Button type="button" variant="outline" size="sm" onClick={resetForm} className="w-full sm:w-auto">
+                      Cancel
+                    </Button>
+                  </div>})}
                       >
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -309,25 +325,27 @@ const AdminSlides = () => {
           ) : (
             <div className="space-y-4">
               {slides.map((slide) => (
-                <div key={slide.id} className="border p-4 rounded-lg">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex gap-4 flex-1">
+                <div key={slide.id} className="border p-3 sm:p-4 rounded-lg">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 flex-1 w-full">
                       {slide.image_url && (
                         <img 
                           src={slide.image_url} 
                           alt={slide.title}
-                          className="w-24 h-16 object-cover rounded"
+                          className="w-full sm:w-24 h-32 sm:h-16 object-cover rounded"
                         />
                       )}
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="font-semibold text-lg">{slide.title}</h3>
-                          <span className={`px-2 py-1 text-xs rounded ${slide.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                            {slide.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
-                            Order: {slide.order_position}
-                          </span>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-base sm:text-lg">{slide.title}</h3>
+                          <div className="flex gap-2">
+                            <span className={`px-2 py-1 text-xs rounded ${slide.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                              {slide.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                            <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                              Order: {slide.order_position}
+                            </span>
+                          </div>
                         </div>
                         {slide.subtitle && (
                           <p className="text-sm text-gray-600 mb-1">{slide.subtitle}</p>
@@ -338,12 +356,14 @@ const AdminSlides = () => {
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={() => editSlide(slide)}>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <Button variant="outline" size="sm" onClick={() => editSlide(slide)} className="flex-1 sm:flex-none">
                         <Edit className="w-4 h-4" />
+                        <span className="sm:hidden ml-2">Edit</span>
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => deleteSlide(slide.id)}>
+                      <Button variant="destructive" size="sm" onClick={() => deleteSlide(slide.id)} className="flex-1 sm:flex-none">
                         <Trash2 className="w-4 h-4" />
+                        <span className="sm:hidden ml-2">Delete</span>
                       </Button>
                     </div>
                   </div>

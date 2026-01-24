@@ -120,8 +120,8 @@ const ImageUpload = ({ onImageUploaded, currentImage, onRemoveImage }: ImageUplo
       {currentImage ? (
         <div className="relative">
           <img
-            src={currentImage.startsWith('http') ? currentImage : `https://api.finonest.com${currentImage}`}
-            alt="Blog featured image"
+            src={currentImage.startsWith('http') ? currentImage : `https://finonest.com${currentImage}`}
+            alt="Slide image"
             className="w-full h-48 object-cover rounded-lg border"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
