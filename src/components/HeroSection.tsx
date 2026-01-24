@@ -259,11 +259,14 @@ const HeroSection = () => {
                           {s.description}
                         </p>
                         <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
-                          <Link to={s.button_link}>
+                          <Link to={s.button_link || '/apply'}>
                             {s.button_text || 'Apply Now'}
                             <ArrowRight className="w-3 h-3 ml-1" />
                           </Link>
                         </Button>
+                        <div className="text-xs text-white/50 mt-1">
+                          Debug: {s.button_link}
+                        </div>
                       </div>
                     </div>
                   </div>)}
@@ -302,11 +305,14 @@ const HeroSection = () => {
                     {s.description}
                   </p>
                   <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
-                    <Link to={s.button_link}>
+                    <Link to={s.button_link || '/apply'}>
                       {s.button_text || 'Apply Now'}
                       <ArrowRight className="w-3 h-3 ml-1" />
                     </Link>
                   </Button>
+                  <div className="text-xs text-white/50 mt-1">
+                    Debug: {s.button_link}
+                  </div>
                 </div>
               </div>
             </div>)}
