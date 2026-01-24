@@ -15,7 +15,7 @@ export const getAIConfig = async () => {
     return {
       apiKey: apiKeyData.key || 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI',
       model: modelData.key || 'gemini-2.5-flash-lite',
-      enabled: enabledData.key === 'enabled'
+      enabled: (enabledData.key === 'enabled') || true
     };
   } catch (error) {
     console.error('Failed to fetch AI config:', error);
