@@ -97,14 +97,15 @@ const OurBranches = () => {
       // Group branches by location
       filteredBranches.forEach(branch => {
         console.log('Branch coordinates:', branch.name, branch.latitude, branch.longitude);
-        if (branch.latitude && branch.longitude && 
-            typeof branch.latitude === 'number' && typeof branch.longitude === 'number' &&
-            !isNaN(branch.latitude) && !isNaN(branch.longitude)) {
-          const key = `${branch.latitude.toFixed(4)},${branch.longitude.toFixed(4)}`;
+        const lat = parseFloat(branch.latitude);
+        const lng = parseFloat(branch.longitude);
+        
+        if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+          const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;
           if (!locationGroups.has(key)) {
             locationGroups.set(key, []);
           }
-          locationGroups.get(key).push(branch);
+          locationGroups.get(key).push({...branch, latitude: lat, longitude: lng});
         }
       });
       
