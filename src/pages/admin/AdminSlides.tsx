@@ -42,7 +42,23 @@ const AdminSlides = () => {
 
   useEffect(() => {
     fetchSlides();
+    // Auto-create button_text column if it doesn't exist
+    autoAlterTable();
   }, []);
+
+  const autoAlterTable = async () => {
+    try {
+      await fetch('https://api.finonest.com/api/slides.php?action=alter_table', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.log('Auto-alter table failed:', error);
+    }
+  };
 
   const fetchSlides = async () => {
     try {
@@ -99,6 +115,8 @@ const AdminSlides = () => {
         });
         fetchSlides();
         resetForm();
+        // Trigger hero section refresh
+        window.dispatchEvent(new CustomEvent('slidesUpdated'));
       } else {
         const data = await response.json();
         toast({
@@ -134,6 +152,8 @@ const AdminSlides = () => {
           title: "Success",
           description: "Slide deleted successfully",
         });
+        // Trigger hero section refresh
+        window.dispatchEvent(new CustomEvent('slidesUpdated'));
       }
     } catch (error) {
       toast({

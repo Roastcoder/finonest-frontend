@@ -121,6 +121,17 @@ const HeroSection = () => {
     };
     
     fetchSlides();
+    
+    // Listen for slide updates from admin
+    const handleSlidesUpdate = () => {
+      fetchSlides();
+    };
+    
+    window.addEventListener('slidesUpdated', handleSlidesUpdate);
+    
+    return () => {
+      window.removeEventListener('slidesUpdated', handleSlidesUpdate);
+    };
   }, []);
   useEffect(() => {
     if (!isAutoPlaying) return;
