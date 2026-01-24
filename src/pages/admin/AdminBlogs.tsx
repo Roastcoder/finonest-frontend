@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Plus, Edit, Trash2, Eye, Calendar, User, Image, Video, Bot, Sparkles } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
+import { getAIConfig } from "@/lib/aiConfig";
 
 interface BlogPost {
   id: number;
