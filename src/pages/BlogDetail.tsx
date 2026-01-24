@@ -56,27 +56,26 @@ const BlogDetail = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   const sections = [
-    { key: 'table_of_contents', title: 'Table of Contents' },
-    { key: 'introduction', title: 'Introduction' },
-    { key: 'quick_info_box', title: 'Loan at a Glance' },
-    { key: 'emi_example', title: 'EMI Calculator Example' },
-    { key: 'what_is_loan', title: 'What is Personal Loan?' },
-    { key: 'benefits', title: 'Benefits' },
-    { key: 'who_should_apply', title: 'Who Should Apply?' },
-    { key: 'eligibility_criteria', title: 'Eligibility Criteria' },
-    { key: 'documents_required', title: 'Documents Required' },
-    { key: 'interest_rates', title: 'Interest Rate & Charges' },
-    { key: 'finonest_process', title: 'How Finonest Process Works' },
-    { key: 'why_choose_finonest', title: 'Why Choose Finonest?' },
-    { key: 'customer_testimonials', title: 'Customer Testimonials' },
-    { key: 'common_mistakes', title: 'Common Mistakes to Avoid' },
-    { key: 'mid_blog_cta', title: 'Apply Now' },
-    { key: 'faqs', title: 'Frequently Asked Questions' },
-    { key: 'service_areas', title: 'Service Areas' },
-    { key: 'related_blogs', title: 'Related Blogs' },
-    { key: 'final_cta', title: 'Final Call to Action' },
-    { key: 'disclaimer', title: 'Disclaimer' },
-    { key: 'trust_footer', title: 'Trust & Compliance' }
+    { key: 'table_of_contents', title: 'Table of Contents', icon: '📋' },
+    { key: 'introduction', title: 'Introduction', icon: '👋' },
+    { key: 'quick_info_box', title: 'Loan at a Glance', icon: '⚡' },
+    { key: 'emi_example', title: 'EMI Calculator Example', icon: '🧮' },
+    { key: 'what_is_loan', title: 'What is this Loan?', icon: '❓' },
+    { key: 'benefits', title: 'Benefits', icon: '✅' },
+    { key: 'who_should_apply', title: 'Who Should Apply?', icon: '👥' },
+    { key: 'eligibility_criteria', title: 'Eligibility Criteria', icon: '📋' },
+    { key: 'documents_required', title: 'Documents Required', icon: '📄' },
+    { key: 'interest_rates', title: 'Interest Rate & Charges', icon: '💰' },
+    { key: 'finonest_process', title: 'How Finonest Process Works', icon: '🔄' },
+    { key: 'why_choose_finonest', title: 'Why Choose Finonest?', icon: '🏆' },
+    { key: 'customer_testimonials', title: 'Customer Testimonials', icon: '💬' },
+    { key: 'common_mistakes', title: 'Common Mistakes to Avoid', icon: '⚠️' },
+    { key: 'mid_blog_cta', title: 'Apply Now', icon: '🚀' },
+    { key: 'faqs', title: 'Frequently Asked Questions', icon: '❓' },
+    { key: 'service_areas', title: 'Service Areas', icon: '📍' },
+    { key: 'related_blogs', title: 'Related Articles', icon: '🔗' },
+    { key: 'disclaimer', title: 'Disclaimer', icon: '⚖️' },
+    { key: 'trust_footer', title: 'Trust & Compliance', icon: '🛡️' }
   ];
 
   const parseFAQs = (faqText: string) => {
@@ -203,24 +202,71 @@ const BlogDetail = () => {
     "@type": "BlogPosting",
     "headline": blog.title,
     "description": blog.excerpt,
-    "image": blog.image_url,
+    "image": blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : "https://finonest.com/assets/logo.png",
     "author": {
       "@type": "Person",
-      "name": blog.author
+      "name": blog.author,
+      "url": "https://finonest.com/about"
     },
     "publisher": {
       "@type": "Organization",
       "name": "Finonest",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://finonest.com/logo.png"
-      }
+        "url": "https://finonest.com/assets/logo.png",
+        "width": 200,
+        "height": 60
+      },
+      "url": "https://finonest.com"
     },
     "datePublished": blog.created_at,
+    "dateModified": blog.created_at,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `https://finonest.com/blog/${blog.slug || blog.id}`
-    }
+    },
+    "articleSection": blog.category,
+    "keywords": blog.meta_tags || `${blog.category}, loans, finance, finonest`,
+    "wordCount": blog.content ? blog.content.split(' ').length : 0,
+    "inLanguage": "en-US"
+  };
+
+  const faqStructuredData = blog.faqs ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": parseFAQs(blog.faqs).map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://finonest.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://finonest.com/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": blog.title,
+        "item": `https://finonest.com/blog/${blog.slug || blog.id}`
+      }
+    ]
   };
 
   return (
@@ -228,17 +274,45 @@ const BlogDetail = () => {
       <Helmet>
         <title>{blog.meta_title || blog.title} | Finonest Blog</title>
         <meta name="description" content={blog.meta_description || blog.excerpt} />
-        {blog.meta_tags && <meta name="keywords" content={blog.meta_tags} />}
+        <meta name="keywords" content={blog.meta_tags || `${blog.category}, loans, finance, finonest`} />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content={blog.author} />
+        <meta name="article:published_time" content={blog.created_at} />
+        <meta name="article:modified_time" content={blog.created_at} />
+        <meta name="article:section" content={blog.category} />
+        <meta name="article:tag" content={blog.meta_tags || `${blog.category}, loans, finance, finonest`} />
+        
+        {/* Open Graph */}
         <meta property="og:title" content={blog.meta_title || blog.title} />
         <meta property="og:description" content={blog.meta_description || blog.excerpt} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://finonest.com/blog/${blog.slug || blog.id}`} />
+        <meta property="og:site_name" content="Finonest" />
+        <meta property="og:locale" content="en_US" />
         {blog.image_url && <meta property="og:image" content={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`} />}
-        <meta property="article:published_time" content={blog.created_at} />
-        <meta property="article:author" content={blog.author} />
+        {blog.image_url && <meta property="og:image:width" content="1200" />}
+        {blog.image_url && <meta property="og:image:height" content="630" />}
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={blog.meta_title || blog.title} />
+        <meta name="twitter:description" content={blog.meta_description || blog.excerpt} />
+        {blog.image_url && <meta name="twitter:image" content={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`} />}
+        <meta name="twitter:site" content="@finonest" />
+        
         <link rel="canonical" href={`https://finonest.com/blog/${blog.slug || blog.id}`} />
+        <link rel="alternate" type="application/rss+xml" title="Finonest Blog RSS" href="https://finonest.com/blog/rss" />
+        
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
+        </script>
+        {faqStructuredData && (
+          <script type="application/ld+json">
+            {JSON.stringify(faqStructuredData)}
+          </script>
+        )}
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbStructuredData)}
         </script>
       </Helmet>
 
@@ -247,160 +321,227 @@ const BlogDetail = () => {
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
-          <div className="container max-w-4xl pt-24 pb-8">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/blog')}
-              className="mb-6 hover:bg-blue-50 text-blue-600"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Button>
+          <div className="container max-w-full px-4 pt-24 pb-8">
+            <div className="max-w-4xl mx-auto">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate('/blog')}
+                className="mb-6 hover:bg-blue-50 text-blue-600"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Blog
+              </Button>
 
-            <div className="flex items-center gap-2 mb-4">
-              <span className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-full shadow-lg">
-                <Tag className="w-3 h-3" />
-                {blog.category}
-              </span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 leading-tight">
-              {blog.title}
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              {blog.excerpt}
-            </p>
-            
-            <div className="flex items-center gap-6 text-gray-500 bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-blue-600" />
-                </div>
-                <span className="font-medium">{blog.author}</span>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-medium rounded-full shadow-lg">
+                  <Tag className="w-3 h-3" />
+                  {blog.category}
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-green-600" />
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+                {blog.title}
+              </h1>
+              
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                {blog.excerpt}
+              </p>
+              
+              <div className="flex items-center gap-6 text-gray-500 bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="font-medium">{blog.author}</span>
                 </div>
-                <span>{formatDate(blog.created_at)}</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Calendar className="w-4 h-4 text-green-600" />
+                  </div>
+                  <span>{formatDate(blog.created_at)}</span>
+                </div>
+                {navigator.share && (
+                  <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto">
+                    <Share2 className="w-4 h-4 mr-2" />
+                    Share
+                  </Button>
+                )}
               </div>
-              {navigator.share && (
-                <Button variant="outline" size="sm" onClick={handleShare} className="ml-auto">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-              )}
             </div>
           </div>
         </div>
 
         {/* Featured Image */}
         {blog.image_url && (
-          <div className="container max-w-4xl py-8">
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-              <img
-                src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
-                alt={blog.title}
-                className="w-full h-64 md:h-96 object-cover transform hover:scale-105 transition-transform duration-500"
-                onError={(e) => {
-                  e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          <div className="container max-w-full px-4 py-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                <img
+                  src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
+                  alt={blog.title}
+                  className="w-full h-64 md:h-96 object-cover transform hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImage not available%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
             </div>
           </div>
         )}
 
         {/* Content */}
-        <div className="container max-w-4xl pb-12">
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-            <div className="prose prose-lg max-w-none">
-              {sections.map((section) => {
-                const sectionData = blog[section.key as keyof BlogPost];
-                if (!sectionData) return null;
+        <div className="container max-w-full px-4 pb-12">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
+              <div className="prose prose-lg max-w-none">
+                {sections.map((section) => {
+                  const sectionData = blog[section.key as keyof BlogPost];
+                  if (!sectionData) return null;
 
-                if (section.key === 'faqs' && blog.faqs) {
+                  if (section.key === 'faqs' && blog.faqs) {
+                    return (
+                      <div key={section.key} className="mb-16">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">{section.icon}</span>
+                          </div>
+                          <h2 className="text-3xl font-bold text-gray-900">
+                            {section.title}
+                          </h2>
+                        </div>
+                        <div className="space-y-4">
+                          {parseFAQs(blog.faqs).map((faq, index) => (
+                            <div key={index} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                              <button
+                                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200"
+                                onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
+                              >
+                                <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                                  openFAQ === index ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'
+                                }`}>
+                                  {openFAQ === index ? (
+                                    <ChevronUp className="w-4 h-4" />
+                                  ) : (
+                                    <ChevronDown className="w-4 h-4" />
+                                  )}
+                                </div>
+                              </button>
+                              {openFAQ === index && (
+                                <div className="px-6 pb-4 text-gray-700 border-t border-gray-100 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+                                  <p className="pt-4 leading-relaxed">{faq.answer}</p>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  if (section.key === 'customer_testimonials' && blog.customer_testimonials) {
+                    const testimonials = blog.customer_testimonials.split('\n').filter(t => t.trim());
+                    return (
+                      <div key={section.key} className="mb-16">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">{section.icon}</span>
+                          </div>
+                          <h2 className="text-3xl font-bold text-gray-900">
+                            {section.title}
+                          </h2>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-6">
+                          {testimonials.map((testimonial, index) => {
+                            const match = testimonial.match(/"([^"]+)"\s*-\s*(.+)/);
+                            if (!match) return null;
+                            const [, quote, author] = match;
+                            return (
+                              <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-start gap-4">
+                                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-white font-bold text-lg">"</span>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-700 italic mb-4 leading-relaxed">"{quote}"</p>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <User className="w-4 h-4 text-gray-600" />
+                                      </div>
+                                      <span className="font-semibold text-gray-900">{author}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  if (section.key === 'mid_blog_cta' && (blog.final_cta || blog.final_cta_text)) {
+                    return (
+                      <div key={section.key} className="mb-16">
+                        <div className="text-center">
+                          <Button 
+                            asChild
+                            size="lg"
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                          >
+                            <a href={blog.final_cta || "https://finonest.com/apply-now"} target="_blank" rel="noopener noreferrer">
+                              {blog.final_cta_text || "Apply Now"}
+                            </a>
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  }
+
                   return (
                     <div key={section.key} className="mb-16">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">?</span>
+                          <span className="text-white font-bold text-sm">{section.icon}</span>
                         </div>
                         <h2 className="text-3xl font-bold text-gray-900">
                           {section.title}
                         </h2>
                       </div>
-                      <div className="space-y-4">
-                        {parseFAQs(blog.faqs).map((faq, index) => (
-                          <div key={index} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                            <button
-                              className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200"
-                              onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                            >
-                              <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-                                openFAQ === index ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'
-                              }`}>
-                                {openFAQ === index ? (
-                                  <ChevronUp className="w-4 h-4" />
-                                ) : (
-                                  <ChevronDown className="w-4 h-4" />
-                                )}
-                              </div>
-                            </button>
-                            {openFAQ === index && (
-                              <div className="px-6 pb-4 text-gray-700 border-t border-gray-100 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
-                                <p className="pt-4 leading-relaxed">{faq.answer}</p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                      <div className="bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-xl p-6 border-l-4 border-blue-500">
+                        <div 
+                          className="prose-content text-gray-700 leading-relaxed"
+                          dangerouslySetInnerHTML={{ __html: renderFormattedText(sectionData as string) }} 
+                        />
                       </div>
                     </div>
                   );
-                }
-
-                return (
-                  <div key={section.key} className="mb-16">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">#</span>
-                      </div>
-                      <h2 className="text-3xl font-bold text-gray-900">
-                        {section.title}
-                      </h2>
-                    </div>
-                    <div className="bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-xl p-6 border-l-4 border-blue-500">
-                      <div 
-                        className="prose-content text-gray-700 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: renderFormattedText(sectionData as string) }} 
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+                })}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Final CTA Button */}
         {blog.final_cta && (
-          <div className="container max-w-4xl pb-12">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
-              <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
-                <p className="text-blue-100 mb-6">Take the next step towards your financial goals</p>
-                <Button 
-                  asChild
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                >
-                  <a href={blog.final_cta} target="_blank" rel="noopener noreferrer">
-                    {blog.final_cta_text || "Apply Now - Get Instant Approval!"}
-                  </a>
-                </Button>
+          <div className="container max-w-full px-4 pb-12">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-bold text-white mb-4">Ready to Get Started?</h3>
+                  <p className="text-blue-100 mb-6">Take the next step towards your financial goals</p>
+                  <Button 
+                    asChild
+                    size="lg"
+                    className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    <a href={blog.final_cta} target="_blank" rel="noopener noreferrer">
+                      {blog.final_cta_text || "Apply Now - Get Instant Approval!"}
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -408,23 +549,25 @@ const BlogDetail = () => {
 
         {/* Video */}
         {blog.video_url && (
-          <div className="container max-w-4xl pb-12">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">▶</span>
+          <div className="container max-w-full px-4 pb-12">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">▶</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Video Guide</h3>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Video Guide</h3>
-              </div>
-              <div className="relative overflow-hidden rounded-xl shadow-lg">
-                <video
-                  controls
-                  className="w-full rounded-xl"
-                  poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
-                >
-                  <source src={blog.video_url} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <div className="relative overflow-hidden rounded-xl shadow-lg">
+                  <video
+                    controls
+                    className="w-full rounded-xl"
+                    poster={blog.image_url ? (blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`) : undefined}
+                  >
+                    <source src={blog.video_url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
             </div>
           </div>

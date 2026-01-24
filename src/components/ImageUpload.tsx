@@ -46,26 +46,32 @@ const ImageUpload = ({ onImageUploaded, currentImage, onRemoveImage }: ImageUplo
 
     try {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('file', file); // Changed from 'image' to 'file'
 
       const response = await fetch('https://api.finonest.com/api/upload-image', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
+          // Don't set Content-Type for FormData, let browser set it with boundary
         },
         body: formData,
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Upload failed: ${response.status} - ${errorText}`);
+      }
+
       const data = await response.json();
 
-      if (response.ok && data.success) {
-        onImageUploaded(data.image_url);
+      if (data.success) {
+        onImageUploaded(data.image_url || data.url || data.path);
         toast({
           title: 'Success',
           description: 'Image uploaded successfully',
         });
       } else {
-        throw new Error(data.error || 'Upload failed');
+        throw new Error(data.error || data.message || 'Upload failed');
       }
     } catch (error) {
       toast({
