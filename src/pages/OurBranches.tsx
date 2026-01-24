@@ -72,13 +72,34 @@ const OurBranches = () => {
         minZoom: 3
       }).addTo(leafletMapRef.current);
       
+      // Fix cursor styles
+      const mapContainer = leafletMapRef.current.getContainer();
+      mapContainer.style.cursor = 'grab';
+      
+      leafletMapRef.current.on('mousedown', () => {
+        mapContainer.style.cursor = 'grabbing';
+      });
+      
+      leafletMapRef.current.on('mouseup', () => {
+        mapContainer.style.cursor = 'grab';
+      });
+      
+      // Add a test marker first
+      const testMarker = window.L.marker([28.6139, 77.2090]) // Delhi coordinates
+        .addTo(leafletMapRef.current)
+        .bindPopup('Test Marker - Delhi');
+      
+      console.log('Test marker added at Delhi');
+      
       // Add markers for filtered branches with different colors for same locations
       const locationGroups = new Map();
       
       // Group branches by location
       filteredBranches.forEach(branch => {
+        console.log('Branch coordinates:', branch.name, branch.latitude, branch.longitude);
         if (branch.latitude && branch.longitude && 
-            typeof branch.latitude === 'number' && typeof branch.longitude === 'number') {
+            typeof branch.latitude === 'number' && typeof branch.longitude === 'number' &&
+            !isNaN(branch.latitude) && !isNaN(branch.longitude)) {
           const key = `${branch.latitude.toFixed(4)},${branch.longitude.toFixed(4)}`;
           if (!locationGroups.has(key)) {
             locationGroups.set(key, []);
@@ -86,6 +107,8 @@ const OurBranches = () => {
           locationGroups.get(key).push(branch);
         }
       });
+      
+      console.log('Location groups:', locationGroups.size);
       
       // Create markers with different colors based on count
       locationGroups.forEach((branchesAtLocation, locationKey) => {
@@ -100,12 +123,12 @@ const OurBranches = () => {
                        count >= 4 ? '#7c2d12' : '#2563eb'; // Dark red for 4+ branches
         }
         
-        // Create custom colored marker
+        // Create custom colored marker with better visibility
         const customIcon = window.L.divIcon({
-          html: `<div style="background-color: ${markerColor}; width: 25px; height: 25px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">${count > 1 ? count : ''}</div>`,
+          html: `<div style="background-color: ${markerColor}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer;">${count > 1 ? count : '📍'}</div>`,
           className: 'custom-marker',
-          iconSize: [25, 25],
-          iconAnchor: [12, 12]
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
         });
         
         // Create popup content
@@ -140,9 +163,12 @@ const OurBranches = () => {
           `;
         }
         
-        const marker = window.L.marker([lat, lng], { icon: customIcon })
+        // Use standard Leaflet marker instead of custom divIcon
+        const marker = window.L.marker([lat, lng])
           .addTo(leafletMapRef.current)
           .bindPopup(popupContent, { maxWidth: 300 });
+        
+        console.log('Added marker at:', lat, lng);
       });
     }
   }, [filteredBranches]);
@@ -193,7 +219,7 @@ const OurBranches = () => {
               </div>
               
               <div className="relative overflow-hidden rounded-none md:rounded-2xl shadow-xl">
-                <div ref={mapRef} className="w-full h-[300px] md:h-[500px]" style={{ zIndex: 1 }}></div>
+                <div ref={mapRef} className="w-full h-[300px] md:h-[500px] cursor-crosshair" style={{ zIndex: 1 }}></div>
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-gray-900/5 to-transparent"></div>
               </div>
             </div>
