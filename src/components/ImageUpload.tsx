@@ -46,7 +46,7 @@ const ImageUpload = ({ onImageUploaded, currentImage, onRemoveImage }: ImageUplo
 
     try {
       const formData = new FormData();
-      formData.append('file', file); // Changed from 'image' to 'file'
+      formData.append('image', file);
 
       const response = await fetch('https://api.finonest.com/api/upload-image', {
         method: 'POST',
