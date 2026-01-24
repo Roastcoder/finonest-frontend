@@ -1,5 +1,6 @@
 import { X, Send, Bot, User } from "lucide-react";
 import { useState } from "react";
+import { generateAIPrompt, getAIConfig } from "@/lib/aiConfig";
 
 interface Message {
   id: string;
@@ -13,7 +14,7 @@ const AIChatSupport = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '👋 Hi! I\'m your AI assistant. I can help you with loan information, eligibility criteria, and answer any questions about our financial services.',
+      text: '🎯 Welcome to Finonest AI Assistant! I\'m powered by comprehensive knowledge of all our loan products and services.\n\n💡 I can help you with:\n\n🏠 **Home Loans** - Starting 7.3% p.a., up to ₹5Cr\n💰 **Personal Loans** - From 9.99% p.a., up to ₹40L\n🚗 **Car Loans** - Starting 8.5% p.a., new & used\n🏢 **Business Loans** - From 11% p.a., up to ₹50L\n🏘️ **Loan Against Property** - From 9% p.a.\n\n📋 **Additional Support:**\n• Eligibility criteria & documentation\n• EMI calculations & comparisons\n• Application process guidance\n• Interest rates & tenure options\n\n❓ What would you like to know about our financial services?',
       isUser: false,
       timestamp: new Date()
     }
@@ -23,26 +24,46 @@ const AIChatSupport = () => {
 
   const sendToGemini = async (message: string): Promise<string> => {
     try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      // Get AI configuration
+      const config = await getAIConfig();
+      
+      if (!config.enabled) {
+        return 'AI chat is currently unavailable. Please contact our support team at +919462553887 for assistance.';
+      }
+
+      // Generate enhanced prompt with knowledge base
+      const enhancedPrompt = generateAIPrompt(message);
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-goog-api-key': 'AIzaSyDKyUSPZ5RAyIr9bo4PZ1ekgzLoW4I9zWE'
+          'X-goog-api-key': config.apiKey
         },
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are a helpful financial assistant for Finonest, a loan and financial services company. Answer questions about loans, eligibility, interest rates, and financial services. Keep responses concise and helpful. User question: ${message}`
+              text: enhancedPrompt
             }]
-          }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          }
         })
       });
 
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
       const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I couldn\'t process your request. Please try again.';
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I couldn\'t process your request. Please try rephrasing your question or contact our support team at +919462553887.';
     } catch (error) {
       console.error('Gemini API error:', error);
-      return 'I\'m having trouble connecting right now. Please try again in a moment or contact our support team directly.';
+      return 'I\'m having trouble connecting right now. Please try again in a moment or contact our support team directly at +919462553887 for immediate assistance.';
     }
   };
 
