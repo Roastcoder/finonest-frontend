@@ -1,6 +1,6 @@
 import { X, Send, Bot, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { getAIConfig } from "@/lib/aiConfig";
+import { getAIConfig, generateAIPrompt } from "@/lib/aiConfig";
 
 interface Message {
   id: string;
@@ -12,6 +12,7 @@ interface Message {
 const WhatsAppButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [languageSelected, setLanguageSelected] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<'hindi' | 'english' | null>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -47,6 +48,7 @@ const WhatsAppButton = () => {
 
   const handleLanguageSelect = (language: 'hindi' | 'english') => {
     setLanguageSelected(true);
+    setSelectedLanguage(language);
     
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -71,10 +73,16 @@ const WhatsAppButton = () => {
 
   const sendToGemini = async (message: string): Promise<string> => {
     if (!aiConfig.enabled) {
-      return 'AI features are currently disabled. Please contact our support team at +91 9462553887.';
+      return selectedLanguage === 'hindi' 
+        ? 'AI सुविधा वर्तमान में अनुपलब्ध है। कृपया हमारी सपोर्ट टीम से +91 9462553887 पर संपर्क करें।'
+        : 'AI features are currently disabled. Please contact our support team at +91 9462553887.';
     }
 
     try {
+      // Create a language-aware message for the AI
+      const languagePrefix = selectedLanguage === 'hindi' ? 'हिंदी' : message;
+      const enhancedPrompt = generateAIPrompt(languagePrefix + ' ' + message);
+
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent?key=${aiConfig.apiKey}`, {
         method: 'POST',
         headers: {
@@ -83,15 +91,10 @@ const WhatsAppButton = () => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are Finonest's official AI assistant with web search capabilities. You can search for current finance and loan information from the web, but ONLY provide information related to:
-              1. Finonest's services and company information
-              2. General finance and loan topics (interest rates, loan types, eligibility criteria)
-              3. Current financial market trends
-              
-              DO NOT provide information about other specific companies or competitors.
+              text: `You are Finonest's official AI assistant with comprehensive knowledge. ${selectedLanguage === 'hindi' ? 'Respond in Hindi (Devanagari script) as the user has selected Hindi language.' : 'Respond in English as the user has selected English language.'}
               
               About Finonest:
-              Finonest is a leading financial services company that helps customers find the best loan options. We work with multiple banks and NBFCs to provide competitive rates and quick approvals.
+              Finonest is India's fastest growing loan provider that helps customers find the best loan options. We work with 50+ banks and NBFCs to provide competitive rates and quick approvals.
               
               Meet the Visionary Leaders:
               
@@ -110,35 +113,52 @@ const WhatsAppButton = () => {
               Atishay Jain - Co-Founder and Director:
               Plays pivotal role in shaping vision, culture, and strategy. Oversees key operations, drives innovation, and ensures seamless execution across teams.
               
-              Finonest offers:
-              - Home Loans
-              - Personal Loans  
-              - Business Loans
-              - Car Loans
-              - Loan Against Property
-              - Credit Cards
-              - Used Car Loans
+              Finonest Services:
+              - Home Loans: Starting 7.3% p.a., up to ₹5 Crores
+              - Personal Loans: From 9.99% p.a., up to ₹40 Lakhs
+              - Business Loans: From 11% p.a., up to ₹50 Lakhs
+              - Car Loans: Starting 8.5% p.a., new & used
+              - Loan Against Property: From 9% p.a.
+              - Credit Cards: Multiple options available
+              - Used Car Loans: Competitive rates
               
               Key Benefits:
-              - Quick loan approvals
+              - Quick loan approvals (24-48 hours)
               - Competitive interest rates
-              - Multiple banking partners
-              - Expert guidance
-              - Simple application process
+              - 50+ banking partners
+              - Expert guidance throughout process
+              - Simple online application
+              - Transparent process with no hidden charges
               
-              You can provide general finance information and current market trends. If asked about specific Finonest details not available, direct to finonest.com or contact team.
+              Contact Information:
+              - Website: finonest.com
+              - Phone: +91 9462553887
+              - Apply online for personalized assistance
+              
+              ${enhancedPrompt}
               
               User question: ${message}`
             }]
-          }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          }
         })
       });
 
       const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'I don\'t have that specific information available. Please check our website at finonest.com or contact our team directly at +91 9462553887.';
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || 
+        (selectedLanguage === 'hindi' 
+          ? 'मुझे खेद है, लेकिन मैं आपके अनुरोध को प्रोसेस नहीं कर सका। कृपया finonest.com पर जाएं या +91 9462553887 पर संपर्क करें।'
+          : 'I don\'t have that specific information available. Please check our website at finonest.com or contact our team directly at +91 9462553887.');
     } catch (error) {
       console.error('Gemini API error:', error);
-      return 'I don\'t have that information available right now. Please visit finonest.com or contact our support team at +91 9462553887.';
+      return selectedLanguage === 'hindi'
+        ? 'मुझे अभी यह जानकारी उपलब्ध नहीं है। कृपया finonest.com पर जाएं या +91 9462553887 पर संपर्क करें।'
+        : 'I don\'t have that information available right now. Please visit finonest.com or contact our support team at +91 9462553887.';
     }
   };
 
