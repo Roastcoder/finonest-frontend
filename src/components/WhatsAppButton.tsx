@@ -11,10 +11,11 @@ interface Message {
 
 const WhatsAppButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [languageSelected, setLanguageSelected] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: '👋 Hi! I\'m your Finonest AI assistant. I can only help with questions about Finonest\'s loan services - Home Loans, Personal Loans, Business Loans, Car Loans, and Credit Cards. For detailed information, you can continue on WhatsApp!',
+      text: '🙏 Welcome to Finonest AI Assistant!\n\nPlease choose your preferred language:',
       isUser: false,
       timestamp: new Date()
     }
@@ -42,6 +43,30 @@ const WhatsAppButton = () => {
         block: 'end'
       });
     }
+  };
+
+  const handleLanguageSelect = (language: 'hindi' | 'english') => {
+    setLanguageSelected(true);
+    
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: language === 'hindi' ? '🇮🇳 हिंदी' : '🇬🇧 English',
+      isUser: true,
+      timestamp: new Date()
+    };
+    
+    const welcomeMessage = language === 'hindi'
+      ? '🙏 धन्यवाद! मैं फिनोनेस्ट का AI सहायक हूँ। मैं केवल फिनोनेस्ट की लोन सेवाओं के बारे में मदद कर सकता हूँ - होम लोन, पर्सनल लोन, बिज़नेस लोन, कार लोन, और क्रेडिट कार्ड। विस्तृत जानकारी के लिए, आप WhatsApp पर जारी रख सकते हैं!'
+      : '🙏 Thank you! I\'m your Finonest AI assistant. I can only help with questions about Finonest\'s loan services - Home Loans, Personal Loans, Business Loans, Car Loans, and Credit Cards. For detailed information, you can continue on WhatsApp!';
+    
+    const aiMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: welcomeMessage,
+      isUser: false,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage, aiMessage]);
   };
 
   const sendToGemini = async (message: string): Promise<string> => {
@@ -128,6 +153,29 @@ const WhatsAppButton = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    
+    // Check if this is language selection
+    const lowerInput = inputMessage.toLowerCase().trim();
+    if (!languageSelected && (lowerInput === 'hindi' || lowerInput === 'हिंदी' || lowerInput === 'english' || lowerInput === 'अंग्रेजी')) {
+      setLanguageSelected(true);
+      const isHindi = lowerInput === 'hindi' || lowerInput === 'हिंदी';
+      
+      const welcomeMessage = isHindi 
+        ? '🙏 धन्यवाद! मैं फिनोनेस्ट का AI सहायक हूँ। मैं केवल फिनोनेस्ट की लोन सेवाओं के बारे में मदद कर सकता हूँ - होम लोन, पर्सनल लोन, बिज़नेस लोन, कार लोन, और क्रेडिट कार्ड। विस्तृत जानकारी के लिए, आप WhatsApp पर जारी रख सकते हैं!'
+        : '🙏 Thank you! I\'m your Finonest AI assistant. I can only help with questions about Finonest\'s loan services - Home Loans, Personal Loans, Business Loans, Car Loans, and Credit Cards. For detailed information, you can continue on WhatsApp!';
+      
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: welcomeMessage,
+        isUser: false,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, aiMessage]);
+      setInputMessage('');
+      return;
+    }
+
     setInputMessage('');
     setIsLoading(true);
 
@@ -230,6 +278,24 @@ const WhatsAppButton = () => {
                 )}
               </div>
             ))}
+            
+            {/* Language Selection Buttons */}
+            {!languageSelected && messages.length === 1 && (
+              <div className="flex flex-col gap-3 mt-4">
+                <button
+                  onClick={() => handleLanguageSelect('hindi')}
+                  className="w-full p-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-2xl font-medium flex items-center justify-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  🇮🇳 हिंदी (Hindi)
+                </button>
+                <button
+                  onClick={() => handleLanguageSelect('english')}
+                  className="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-2xl font-medium flex items-center justify-center gap-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  🇬🇧 English
+                </button>
+              </div>
+            )}
             {isLoading && (
               <div className="flex gap-3 justify-start">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden">
