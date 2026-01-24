@@ -101,10 +101,10 @@ const AIChatSupport = () => {
   };
 
   return (
-    <div className="fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-20 lg:bottom-6 right-2 lg:right-6 z-40 flex flex-col items-end gap-3">
       {/* Chat Popup */}
       {isOpen && (
-        <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden w-80 h-96 animate-slide-up flex flex-col">
+        <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden w-80 sm:w-80 w-[calc(100vw-2rem)] max-w-sm h-96 sm:h-96 h-[70vh] max-h-[500px] animate-slide-up flex flex-col">
           {/* Header */}
           <div className="bg-gradient-primary p-4 flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center overflow-hidden">
@@ -121,7 +121,7 @@ const AIChatSupport = () => {
             </div>
             <div className="flex-1">
               <h4 className="font-semibold text-primary-foreground">AI Assistant</h4>
-              <p className="text-xs text-primary-foreground/80">Powered by Gemini AI</p>
+              <p className="text-xs text-primary-foreground/80">AI Assistant</p>
             </div>
             <button 
               onClick={() => setIsOpen(false)}

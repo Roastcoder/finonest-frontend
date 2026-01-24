@@ -175,7 +175,7 @@ const WhatsAppButton = () => {
               <h4 className="font-semibold text-white">Finonest AI Assistant</h4>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <p className="text-xs text-white/80">Online • Powered by Gemini AI</p>
+                <p className="text-xs text-white/80">Online • AI Assistant</p>
               </div>
             </div>
             <button 
