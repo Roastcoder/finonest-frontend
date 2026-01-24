@@ -258,22 +258,7 @@ const OurBranches = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedBranch.phone && (
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          Phone
-                        </h4>
-                        <button 
-                          onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                          className="text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm md:text-base"
-                        >
-                          {selectedBranch.phone}
-                        </button>
-                      </div>
-                    )}
-                    
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="bg-green-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
@@ -311,24 +296,14 @@ const OurBranches = () => {
                 </div>
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+              <div className="flex flex-col gap-3 pt-4 border-t">
                 <Button 
                   onClick={() => openInMaps(selectedBranch)}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
                   Get Directions
                 </Button>
-                {selectedBranch.phone && (
-                  <Button 
-                    variant="outline" 
-                    onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                    className="flex-1 border-blue-200 text-blue-600 hover:bg-blue-50"
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Now
-                  </Button>
-                )}
               </div>
             </div>
           )}
