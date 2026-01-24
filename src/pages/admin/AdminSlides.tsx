@@ -238,6 +238,9 @@ const AdminSlides = () => {
 
                   <div>
                     <label className="block text-sm font-medium mb-2">Slide Image</label>
+                    <div className="mb-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
+                      <strong>📐 Image Guidelines:</strong> Upload 1200x800px (3:2 ratio) for best results
+                    </div>
                     <ImageUpload
                       onImageUploaded={(imageUrl) => setFormData({...formData, image_url: imageUrl})}
                       currentImage={formData.image_url}
