@@ -23,11 +23,11 @@ const WhatsAppButton = () => {
 
   const sendToGemini = async (message: string): Promise<string> => {
     try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-goog-api-key': 'AIzaSyDKyUSPZ5RAyIr9bo4PZ1ekgzLoW4I9zWE'
+          'X-goog-api-key': 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI'
         },
         body: JSON.stringify({
           contents: [{

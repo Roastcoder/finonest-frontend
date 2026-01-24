@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Plus, Edit, Trash2, Eye, Calendar, User, Image, Video } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Calendar, User, Image, Video, Bot, Sparkles } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 
 interface BlogPost {
@@ -51,6 +51,8 @@ const AdminBlogs = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
   const { token } = useAuth();
   const { toast } = useToast();
 
@@ -92,6 +94,102 @@ const AdminBlogs = () => {
   useEffect(() => {
     fetchBlogs();
   }, []);
+
+  const generateBlogWithAI = async () => {
+    if (!aiPrompt.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a prompt for AI blog generation",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': 'AIzaSyDZ8XZq09tzFqvuTAbcJlQscS_WUNDbkAI'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Create a comprehensive blog post for Finonest about: "${aiPrompt}". Return as JSON with fields: title, excerpt, content, category (from: Credit Score, Car Loan, Home Loan, Personal Loan, Business Loan, Financial Planning), table_of_contents, introduction, quick_info_box, benefits, eligibility_criteria, documents_required, finonest_process, why_choose_finonest, faqs, final_cta_text, disclaimer. Make it SEO-friendly and professional.`
+            }]
+          }]
+        })
+      });
+
+      const data = await response.json();
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (aiResponse) {
+        try {
+          const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const blogData = JSON.parse(jsonMatch[0]);
+            
+            setFormData({
+              title: blogData.title || '',
+              excerpt: blogData.excerpt || '',
+              content: blogData.content || '',
+              category: blogData.category || '',
+              status: 'draft',
+              image_url: '',
+              video_url: '',
+              meta_tags: '',
+              table_of_contents: blogData.table_of_contents || '',
+              introduction: blogData.introduction || '',
+              quick_info_box: blogData.quick_info_box || '',
+              emi_example: '',
+              what_is_loan: '',
+              benefits: blogData.benefits || '',
+              who_should_apply: '',
+              eligibility_criteria: blogData.eligibility_criteria || '',
+              documents_required: blogData.documents_required || '',
+              interest_rates: '',
+              finonest_process: blogData.finonest_process || '',
+              why_choose_finonest: blogData.why_choose_finonest || '',
+              customer_testimonials: '',
+              common_mistakes: '',
+              mid_blog_cta: '',
+              faqs: blogData.faqs || '',
+              service_areas: '',
+              related_blogs: '',
+              final_cta: '',
+              final_cta_text: blogData.final_cta_text || 'Apply Now',
+              disclaimer: blogData.disclaimer || '',
+              trust_footer: ''
+            });
+            
+            setShowForm(true);
+            setAiPrompt('');
+            
+            toast({
+              title: "Success",
+              description: "AI blog generated successfully!",
+            });
+          }
+        } catch (parseError) {
+          toast({
+            title: "Error",
+            description: "Failed to parse AI response. Please try again.",
+            variant: "destructive",
+          });
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate blog with AI.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const fetchBlogs = async () => {
     try {
@@ -299,13 +397,54 @@ const AdminBlogs = () => {
             <CardTitle className="flex items-center gap-2">
               Blog Management ({blogs.length})
             </CardTitle>
-            <Button onClick={() => setShowForm(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              New Blog Post
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setShowForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                New Blog Post
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
+          {/* AI Blog Generator */}
+          <Card className="mb-6 border-2 border-dashed border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <Bot className="w-5 h-5" />
+                AI Blog Generator
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Blog Topic/Prompt</label>
+                  <Textarea
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    placeholder="e.g., 'Write a comprehensive guide about home loans for first-time buyers in India'"
+                    rows={3}
+                  />
+                </div>
+                <Button 
+                  onClick={generateBlogWithAI} 
+                  disabled={isGenerating || !aiPrompt.trim()}
+                  className="w-full"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Generating Blog...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Generate Blog with AI
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
           {showForm && (
             <Card className="mb-6">
               <CardHeader>
