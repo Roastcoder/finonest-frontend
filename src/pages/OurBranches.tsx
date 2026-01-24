@@ -72,22 +72,76 @@ const OurBranches = () => {
         minZoom: 3
       }).addTo(leafletMapRef.current);
       
-      // Add markers for filtered branches
+      // Add markers for filtered branches with different colors for same locations
+      const locationGroups = new Map();
+      
+      // Group branches by location
       filteredBranches.forEach(branch => {
         if (branch.latitude && branch.longitude) {
-          const marker = window.L.marker([branch.latitude, branch.longitude])
-            .addTo(leafletMapRef.current)
-            .bindPopup(`
-              <div>
-                <b>${branch.name}</b><br>
-                ${branch.city}, ${branch.state}<br>
-                <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}', '_blank')" 
-                        style="background: #2563eb; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;">
-                  Get Directions →
-                </button>
-              </div>
-            `);
+          const key = `${branch.latitude.toFixed(4)},${branch.longitude.toFixed(4)}`;
+          if (!locationGroups.has(key)) {
+            locationGroups.set(key, []);
+          }
+          locationGroups.get(key).push(branch);
         }
+      });
+      
+      // Create markers with different colors based on count
+      locationGroups.forEach((branchesAtLocation, locationKey) => {
+        const [lat, lng] = locationKey.split(',').map(Number);
+        const count = branchesAtLocation.length;
+        
+        // Define marker colors based on count
+        let markerColor = '#2563eb'; // Default blue
+        if (count > 1) {
+          markerColor = count === 2 ? '#dc2626' : // Red for 2 branches
+                       count === 3 ? '#ea580c' : // Orange for 3 branches  
+                       count >= 4 ? '#7c2d12' : '#2563eb'; // Dark red for 4+ branches
+        }
+        
+        // Create custom colored marker
+        const customIcon = window.L.divIcon({
+          html: `<div style="background-color: ${markerColor}; width: 25px; height: 25px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">${count > 1 ? count : ''}</div>`,
+          className: 'custom-marker',
+          iconSize: [25, 25],
+          iconAnchor: [12, 12]
+        });
+        
+        // Create popup content
+        let popupContent = '';
+        if (count === 1) {
+          const branch = branchesAtLocation[0];
+          popupContent = `
+            <div>
+              <b>${branch.name}</b><br>
+              ${branch.city}, ${branch.state}<br>
+              <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}', '_blank')" 
+                      style="background: #2563eb; color: white; padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; margin-top: 8px;">
+                Get Directions →
+              </button>
+            </div>
+          `;
+        } else {
+          popupContent = `
+            <div>
+              <b>${count} Branches at this location:</b><br><br>
+              ${branchesAtLocation.map(branch => `
+                <div style="margin-bottom: 8px; padding: 4px; border-left: 3px solid ${markerColor}; padding-left: 8px;">
+                  <strong>${branch.name}</strong><br>
+                  <small>${branch.address}</small><br>
+                  <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}', '_blank')" 
+                          style="background: ${markerColor}; color: white; padding: 2px 6px; border: none; border-radius: 3px; cursor: pointer; margin-top: 4px; font-size: 11px;">
+                    Directions
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+        
+        const marker = window.L.marker([lat, lng], { icon: customIcon })
+          .addTo(leafletMapRef.current)
+          .bindPopup(popupContent, { maxWidth: 300 });
       });
     }
   }, [filteredBranches]);
@@ -106,7 +160,7 @@ const OurBranches = () => {
   };
 
   const getUniqueStates = () => {
-    const states = [...new Set(branches.map(branch => branch.state))];
+    const states = [...new Set(branches.map(branch => branch.state).filter(Boolean))];
     return states.sort();
   };
 
