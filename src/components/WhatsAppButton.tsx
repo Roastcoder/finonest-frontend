@@ -23,13 +23,64 @@ const WhatsAppButton = () => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [aiConfig, setAiConfig] = useState({ apiKey: '', model: '', enabled: true });
+  const [aiConfig, setAiConfig] = useState({ apiKey: '', model: 'gemini-1.5-flash', enabled: false });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Load AI configuration on component mount
-    getAIConfig().then(setAiConfig);
+    getAIConfig().then(config => {
+      console.log('AI Config loaded:', config);
+      
+      // If the public endpoint returns disabled, try to use admin settings
+      if (!config.enabled || !config.apiKey) {
+        console.log('Public endpoint disabled, trying admin settings...');
+        
+        // Try to get admin settings if user has token
+        const authToken = localStorage.getItem('token');
+        if (authToken) {
+          fetch('https://api.finonest.com/api/settings', {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.settings) {
+              const settings = data.settings;
+              const getSettingValue = (key: string) => {
+                const setting = settings.find((s: any) => s.setting_key === key);
+                return setting?.setting_value || '';
+              };
+              
+              const adminConfig = {
+                apiKey: getSettingValue('gemini_api_key'),
+                model: getSettingValue('gemini_model') || 'gemini-1.5-flash',
+                enabled: getSettingValue('ai_enabled') === 'enabled'
+              };
+              
+              console.log('Admin config loaded:', adminConfig);
+              if (adminConfig.enabled && adminConfig.apiKey) {
+                setAiConfig(adminConfig);
+                return;
+              }
+            }
+            
+            // If admin settings also fail, use the original config
+            setAiConfig(config);
+          })
+          .catch(error => {
+            console.error('Failed to load admin settings:', error);
+            setAiConfig(config);
+          });
+        } else {
+          setAiConfig(config);
+        }
+      } else {
+        setAiConfig(config);
+      }
+    });
   }, []);
 
   // Auto-scroll to bottom when messages change
@@ -72,18 +123,25 @@ const WhatsAppButton = () => {
   };
 
   const sendToGemini = async (message: string): Promise<string> => {
-    if (!aiConfig.enabled) {
+    // Always try to get fresh config
+    const currentConfig = await getAIConfig();
+    console.log('Current AI config:', currentConfig);
+    
+    if (!currentConfig.enabled && !currentConfig.apiKey) {
       return selectedLanguage === 'hindi' 
         ? 'AI सुविधा वर्तमान में अनुपलब्ध है। कृपया हमारी सपोर्ट टीम से +91 9462553887 पर संपर्क करें।'
         : 'AI features are currently disabled. Please contact our support team at +91 9462553887.';
     }
 
     try {
-      // Create a language-aware message for the AI
-      const languagePrefix = selectedLanguage === 'hindi' ? 'हिंदी' : message;
-      const enhancedPrompt = generateAIPrompt(languagePrefix + ' ' + message);
+      // Simple direct prompt
+      const prompt = selectedLanguage === 'hindi'
+        ? `आप फिनोनेस्ट के AI सहायक हैं। हिंदी में जवाब दें। फिनोनेस्ट भारत की सबसे तेजी से बढ़ने वाली लोन कंपनी है। हम होम लोन (7.3% से), पर्सनल लोन (9.99% से), बिजनेस लोन (11% से), कार लोन (8.5% से) प्रदान करते हैं। प्रश्न: ${message}`
+        : `You are Finonest's AI assistant. Respond in English. Finonest is India's fastest growing loan provider. We offer Home Loans (from 7.3%), Personal Loans (from 9.99%), Business Loans (from 11%), Car Loans (from 8.5%). Question: ${message}`;
 
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent?key=${aiConfig.apiKey}`, {
+      console.log('Making API call with key:', currentConfig.apiKey ? 'Present' : 'Missing');
+      
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentConfig.model}:generateContent?key=${currentConfig.apiKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -91,53 +149,7 @@ const WhatsAppButton = () => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `You are Finonest's official AI assistant with comprehensive knowledge. ${selectedLanguage === 'hindi' ? 'Respond in Hindi (Devanagari script) as the user has selected Hindi language.' : 'Respond in English as the user has selected English language.'}
-              
-              About Finonest:
-              Finonest is India's fastest growing loan provider that helps customers find the best loan options. We work with 50+ banks and NBFCs to provide competitive rates and quick approvals.
-              
-              Meet the Visionary Leaders:
-              
-              Surya Mohan Roy - Managing Director and Founder:
-              The visionary leader behind Finonest's purpose, culture, and long-term strategy. With strong entrepreneurial insight and commitment to innovation, he established the organization with goals of delivering excellence, trust, and value in every service.
-              
-              Sanam Makkar - Director & Chief Technology Officer (CTO):
-              Leads technology vision, product innovation, and digital transformation initiatives. Oversees product development, system architecture, cybersecurity, and cloud infrastructure.
-              
-              CA Prateek Somani - Chief Financial Officer:
-              Leads financial strategy with precision, overseeing budgeting, financial planning, compliance, and risk management for long-term stability.
-              
-              Prateek Rathore - Executive Director (Sales):
-              Leads sales strategy and revenue growth initiatives, overseeing business development, client acquisition, and market expansion.
-              
-              Atishay Jain - Co-Founder and Director:
-              Plays pivotal role in shaping vision, culture, and strategy. Oversees key operations, drives innovation, and ensures seamless execution across teams.
-              
-              Finonest Services:
-              - Home Loans: Starting 7.3% p.a., up to ₹5 Crores
-              - Personal Loans: From 9.99% p.a., up to ₹40 Lakhs
-              - Business Loans: From 11% p.a., up to ₹50 Lakhs
-              - Car Loans: Starting 8.5% p.a., new & used
-              - Loan Against Property: From 9% p.a.
-              - Credit Cards: Multiple options available
-              - Used Car Loans: Competitive rates
-              
-              Key Benefits:
-              - Quick loan approvals (24-48 hours)
-              - Competitive interest rates
-              - 50+ banking partners
-              - Expert guidance throughout process
-              - Simple online application
-              - Transparent process with no hidden charges
-              
-              Contact Information:
-              - Website: finonest.com
-              - Phone: +91 9462553887
-              - Apply online for personalized assistance
-              
-              ${enhancedPrompt}
-              
-              User question: ${message}`
+              text: prompt
             }]
           }],
           generationConfig: {
@@ -149,16 +161,26 @@ const WhatsAppButton = () => {
         })
       });
 
+      console.log('API Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', response.status, errorText);
+        throw new Error(`API Error: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('API Response data:', data);
+      
       return data.candidates?.[0]?.content?.parts?.[0]?.text || 
         (selectedLanguage === 'hindi' 
-          ? 'मुझे खेद है, लेकिन मैं आपके अनुरोध को प्रोसेस नहीं कर सका। कृपया finonest.com पर जाएं या +91 9462553887 पर संपर्क करें।'
-          : 'I don\'t have that specific information available. Please check our website at finonest.com or contact our team directly at +91 9462553887.');
+          ? 'मुझे खेद है, मैं आपकी मदद नहीं कर सका। कृपया +91 9462553887 पर संपर्क करें।'
+          : 'I apologize, I couldn\'t help with that. Please contact +91 9462553887.');
     } catch (error) {
       console.error('Gemini API error:', error);
       return selectedLanguage === 'hindi'
-        ? 'मुझे अभी यह जानकारी उपलब्ध नहीं है। कृपया finonest.com पर जाएं या +91 9462553887 पर संपर्क करें।'
-        : 'I don\'t have that information available right now. Please visit finonest.com or contact our support team at +91 9462553887.';
+        ? 'तकनीकी समस्या है। कृपया +91 9462553887 पर संपर्क करें।'
+        : 'Technical issue. Please contact +91 9462553887.';
     }
   };
 
