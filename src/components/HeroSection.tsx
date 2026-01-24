@@ -113,6 +113,7 @@ const HeroSection = () => {
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           if (activeSlides && activeSlides.length > 0) {
             console.log('Setting API slides:', activeSlides);
+            console.log('First slide button_link:', activeSlides[0].button_link);
             setSlides(activeSlides);
           } else {
             console.log('No active slides from API, using defaults');
