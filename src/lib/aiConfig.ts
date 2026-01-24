@@ -45,18 +45,24 @@ export const getAIConfig = async () => {
       'Authorization': `Bearer ${authToken}`
     };
 
-    const response = await fetch('/api/admin/ai-config', { headers });
+    const response = await fetch('https://api.finonest.com/api/settings', { headers });
     
     if (!response.ok) {
       throw new Error('Failed to fetch AI config');
     }
 
-    const config = await response.json();
+    const data = await response.json();
+    const settings = data.settings || [];
+    
+    const getSettingValue = (key: string) => {
+      const setting = settings.find((s: any) => s.setting_key === key);
+      return setting?.setting_value || '';
+    };
     
     return {
-      apiKey: config.geminiApiKey || '',
-      model: config.model || 'gemini-1.5-flash',
-      enabled: config.enabled || false
+      apiKey: getSettingValue('gemini_api_key'),
+      model: getSettingValue('gemini_model') || 'gemini-1.5-flash',
+      enabled: getSettingValue('ai_enabled') === 'enabled'
     };
   } catch (error) {
     console.error('Failed to fetch AI config:', error);
