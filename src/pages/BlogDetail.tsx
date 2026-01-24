@@ -321,10 +321,11 @@ const BlogDetail = () => {
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
-          <div className="container max-w-full px-4 pt-24 pb-8">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="w-full px-2 sm:px-4 pt-24 pb-8">
+            <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-6">
               <Button 
                 variant="ghost" 
+                size="sm"
                 onClick={() => navigate('/blog')}
                 className="mb-6 hover:bg-blue-50 text-blue-600"
               >
@@ -361,7 +362,7 @@ const BlogDetail = () => {
                   <span className="text-sm sm:text-base">{formatDate(blog.created_at)}</span>
                 </div>
                 {navigator.share && (
-                  <Button variant="outline" size="sm" onClick={handleShare} className="sm:ml-auto">
+                  <Button variant="outline" size="sm" onClick={handleShare} className="sm:ml-auto text-xs px-2 py-1">
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
                   </Button>
@@ -373,8 +374,8 @@ const BlogDetail = () => {
 
         {/* Featured Image */}
         {blog.image_url && (
-          <div className="container max-w-full px-4 py-6 sm:py-8">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="w-full px-2 sm:px-4 py-6 sm:py-8">
+            <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
               <div className="relative overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl">
                 <img
                   src={blog.image_url.startsWith('http') ? blog.image_url : `https://api.finonest.com${blog.image_url}`}
@@ -391,8 +392,8 @@ const BlogDetail = () => {
         )}
 
         {/* Content */}
-        <div className="container max-w-full px-4 pb-8 sm:pb-12">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="w-full px-2 sm:px-4 pb-8 sm:pb-12">
+          <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 border border-gray-100">
               <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
                 {sections.map((section) => {
@@ -487,8 +488,8 @@ const BlogDetail = () => {
                         <div className="text-center">
                           <Button 
                             asChild
-                            size="lg"
-                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                            size="sm"
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-3 py-2 text-sm font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                           >
                             <a href={blog.final_cta || "https://finonest.com/apply-now"} target="_blank" rel="noopener noreferrer">
                               {blog.final_cta_text || "Apply Now"}
@@ -525,8 +526,8 @@ const BlogDetail = () => {
 
         {/* Final CTA Button */}
         {blog.final_cta && (
-          <div className="container max-w-full px-4 pb-8 sm:pb-12">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="w-full px-2 sm:px-4 pb-8 sm:pb-12">
+            <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-6 sm:p-8 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
                 <div className="relative z-10">
@@ -534,8 +535,8 @@ const BlogDetail = () => {
                   <p className="text-blue-100 mb-4 sm:mb-6 text-sm sm:text-base">Take the next step towards your financial goals</p>
                   <Button 
                     asChild
-                    size="lg"
-                    className="bg-white text-blue-600 hover:bg-gray-100 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    size="sm"
+                    className="bg-white text-blue-600 hover:bg-gray-100 px-3 py-2 text-sm font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
                     <a href={blog.final_cta} target="_blank" rel="noopener noreferrer">
                       {blog.final_cta_text || "Apply Now - Get Instant Approval!"}
@@ -549,8 +550,8 @@ const BlogDetail = () => {
 
         {/* Video */}
         {blog.video_url && (
-          <div className="container max-w-full px-4 pb-8 sm:pb-12">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="w-full px-2 sm:px-4 pb-8 sm:pb-12">
+            <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
               <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
                 <div className="flex items-center gap-3 mb-4 sm:mb-6">
                   <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center">
