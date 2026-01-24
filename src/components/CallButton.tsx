@@ -9,18 +9,18 @@ const CallButton = () => {
   };
 
   return (
-    <div className="fixed bottom-36 lg:bottom-24 right-4 lg:right-6 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-36 lg:bottom-24 right-2 lg:right-6 z-35 flex flex-col items-end gap-3">
 
       {/* Floating Button */}
       <button
         onClick={handleCallClick}
-        className="group relative w-14 h-14 lg:w-16 lg:h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 bg-blue-600 hover:bg-blue-700"
+        className="group relative w-10 h-10 lg:w-12 lg:h-12 rounded-full transition-all duration-300 hover:scale-110"
       >
         {/* Pulse Ring */}
-        <span className="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-25" />
+        <span className="absolute inset-0 rounded-full animate-ping opacity-20" />
         
         <span className="relative flex items-center justify-center">
-          <Phone className="w-7 h-7 text-white" />
+          <Phone className="w-5 h-5 text-blue-600" />
         </span>
 
         {/* Notification Badge */}

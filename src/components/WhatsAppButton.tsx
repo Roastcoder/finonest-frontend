@@ -50,11 +50,10 @@ const WhatsAppButton = () => {
     }
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.model}:generateContent?key=${aiConfig.apiKey}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'X-goog-api-key': aiConfig.apiKey
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           contents: [{
@@ -175,7 +174,7 @@ const WhatsAppButton = () => {
               <h4 className="font-semibold text-white">Finonest AI Assistant</h4>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <p className="text-xs text-white/80">Online • AI Assistant</p>
+                <p className="text-xs text-white/80">Online</p>
               </div>
             </div>
             <button 
@@ -304,11 +303,7 @@ const WhatsAppButton = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group relative w-16 h-16 lg:w-18 lg:h-18 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 transform ${
-          isOpen 
-            ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700" 
-            : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-        }`}
+        className="group relative w-10 h-10 lg:w-12 lg:h-12 rounded-full transition-all duration-300 hover:scale-110 transform"
       >
         {/* Pulse Ring */}
         {!isOpen && (
@@ -317,19 +312,19 @@ const WhatsAppButton = () => {
         
         <span className="relative flex items-center justify-center overflow-hidden rounded-full">
           {isOpen ? (
-            <X className="w-7 h-7 text-white transition-transform duration-200 group-hover:rotate-90" />
+            <X className="w-4 h-4 text-red-500 transition-transform duration-200 group-hover:rotate-90" />
           ) : (
             <>
               <img 
                 src="/assets/finonest-icon.jpg" 
                 alt="Finonest AI" 
-                className="w-10 h-10 object-cover rounded-full"
+                className="w-8 h-8 object-cover rounded-full"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling.style.display = 'flex';
                 }}
               />
-              <Bot className="w-7 h-7 text-white transition-transform duration-200 group-hover:scale-110" style={{ display: 'none' }} />
+              <Bot className="w-5 h-5 text-blue-500 transition-transform duration-200 group-hover:scale-110" style={{ display: 'none' }} />
             </>
           )}
         </span>

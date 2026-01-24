@@ -101,7 +101,7 @@ const AIChatSupport = () => {
   };
 
   return (
-    <div className="fixed bottom-20 lg:bottom-6 right-2 lg:right-6 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-20 lg:bottom-6 right-2 lg:right-6 z-40 flex flex-col items-end gap-4">
       {/* Chat Popup */}
       {isOpen && (
         <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden w-80 sm:w-80 w-[calc(100vw-2rem)] max-w-sm h-96 sm:h-96 h-[70vh] max-h-[500px] animate-slide-up flex flex-col">
