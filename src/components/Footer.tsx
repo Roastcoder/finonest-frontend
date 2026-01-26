@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Linkedin, Youtube, ArrowUp, MapPin, Star } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Youtube, ArrowUp, MapPin, Star, Instagram } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import ContactWidget from "@/components/ContactWidget";
 
@@ -135,31 +135,43 @@ const Footer = () => {
             <div>
               <h5 className="text-xs lg:text-sm font-medium mb-1 lg:mb-4">Follow Us</h5>
               <div className="flex gap-2">
-                <a href="#" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                <a href="https://www.instagram.com/finonest.india?igsh=d3VrZWxpbHZnemJt" target="_blank" rel="noopener noreferrer" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                  <Instagram className="w-3 h-3 lg:w-4 lg:h-4" />
+                </a>
+                <a href="https://www.facebook.com/share/1BvuzXGCqx/" target="_blank" rel="noopener noreferrer" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
                   <Facebook className="w-3 h-3 lg:w-4 lg:h-4" />
                 </a>
-                <a href="#" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
-                  <Twitter className="w-3 h-3 lg:w-4 lg:h-4" />
-                </a>
-                <a href="#" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                <a href="https://www.linkedin.com/in/finonest-india-79876b365" target="_blank" rel="noopener noreferrer" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
                   <Linkedin className="w-3 h-3 lg:w-4 lg:h-4" />
                 </a>
-                <a href="#" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
+                <a href="https://www.youtube.com/@FinonestIndia" target="_blank" rel="noopener noreferrer" className="w-7 h-7 lg:w-9 lg:h-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
                   <Youtube className="w-3 h-3 lg:w-4 lg:h-4" />
                 </a>
               </div>
             </div>
             <div className="mt-1 lg:mt-4">
-              <a 
-                href="https://search.google.com/local/writereview?placeid=ChIJI1TNZRqzbTkRo9RLFM5zasw" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 px-2 lg:px-4 py-1 lg:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs lg:text-sm font-medium"
-              >
-                <Star className="w-3 lg:w-4 h-3 lg:h-4" />
-                <span className="hidden sm:inline">Leave a Review on Google</span>
-                <span className="sm:hidden">Review Us</span>
-              </a>
+              <div className="space-y-2">
+                <a 
+                  href="https://share.google/WGCdWihMYfP1kTzHy" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 lg:px-4 py-1 lg:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs lg:text-sm font-medium mr-2"
+                >
+                  <MapPin className="w-3 lg:w-4 h-3 lg:h-4" />
+                  <span className="hidden sm:inline">Head Office</span>
+                  <span className="sm:hidden">Head Office</span>
+                </a>
+                <a 
+                  href="https://search.google.com/local/writereview?placeid=ChIJI1TNZRqzbTkRo9RLFM5zasw" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 lg:px-4 py-1 lg:py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors text-xs lg:text-sm font-medium"
+                >
+                  <Star className="w-3 lg:w-4 h-3 lg:h-4" />
+                  <span className="hidden sm:inline">Leave a Review on Google</span>
+                  <span className="sm:hidden">Review Us</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
