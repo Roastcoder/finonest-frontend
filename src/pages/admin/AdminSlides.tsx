@@ -347,7 +347,7 @@ const AdminSlides = () => {
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             console.log('Image failed to load:', slide.image_url);
-                            target.src = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#f3f4f6"/><text x="200" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="#9ca3af">Image not found</text></svg>');
+                            target.style.display = 'none';
                           }}
                         />
                       )}
@@ -367,8 +367,11 @@ const AdminSlides = () => {
                           <p className="text-sm text-gray-600 mb-1">{slide.subtitle}</p>
                         )}
                         <p className="text-sm text-muted-foreground mb-2">{slide.description}</p>
-                        {slide.button_text && (
+                        {slide.button_text && slide.button_link && (
                           <p className="text-xs text-blue-600">Button: {slide.button_text} → {slide.button_link}</p>
+                        )}
+                        {!slide.button_text && slide.button_link && (
+                          <p className="text-xs text-blue-600">Button: Apply Now → {slide.button_link}</p>
                         )}
                       </div>
                     </div>

@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, MapPin, Building2, IndianRupee, Home, Briefcase, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroHomeLoan from "@/assets/hero-home-loan.jpg";
-import heroCarLoan from "@/assets/hero-car-loan.jpg";
-import heroBusinessLoan from "@/assets/hero-business-loan.jpg";
 
 interface Slide {
   id: number;
@@ -18,37 +15,7 @@ interface Slide {
   is_active: boolean;
 }
 
-const defaultSlides = [{
-  id: 1,
-  title: "Your Dream Home",
-  subtitle: "with Simpler Faster Friendlier Home Loans",
-  description: "Get the best home loan rates with 100% paperless processing",
-  button_text: "Apply Now",
-  button_link: "/services/home-loan",
-  image_url: heroHomeLoan,
-  order_position: 1,
-  is_active: true
-}, {
-  id: 2,
-  title: "Your Dream Car",
-  subtitle: "with Simpler Faster Friendlier Vehicle Loans",
-  description: "Get the lowest vehicle loan rates with 100% paperless processing",
-  button_text: "Apply Now",
-  button_link: "/services/car-loan",
-  image_url: heroCarLoan,
-  order_position: 2,
-  is_active: true
-}, {
-  id: 3,
-  title: "Business Growth",
-  subtitle: "with Simpler Faster Friendlier Business Loans",
-  description: "Expand your business with quick disbursal within 48 hours",
-  button_text: "Apply Now",
-  button_link: "/services/business-loan",
-  image_url: heroBusinessLoan,
-  order_position: 3,
-  is_active: true
-}];
+
 const stats = [{
   icon: Users,
   value: "5.8 Lacs",
@@ -104,20 +71,27 @@ const HeroSection = () => {
   
   useEffect(() => {
     const fetchSlides = async () => {
+      console.log('Fetching slides from API...');
       try {
         const response = await fetch('https://api.finonest.com/api/slides.php');
+        console.log('API response status:', response.status);
         if (response.ok) {
           const data = await response.json();
+          console.log('API data received:', data);
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
+          console.log('Active slides:', activeSlides);
           if (activeSlides && activeSlides.length > 0) {
             setSlides(activeSlides);
+            console.log('Slides set successfully');
+          } else {
+            console.log('No active slides found');
           }
         } else {
-          // API request failed
+          console.error('API request failed with status:', response.status);
         }
       } catch (error) {
-        // API error
+        console.error('Failed to fetch slides:', error);
       }
     };
     
@@ -165,7 +139,6 @@ const HeroSection = () => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('/uploads/')) return `https://api.finonest.com${imageUrl}`;
-    if (imageUrl.startsWith('/assets/')) return imageUrl; // Keep assets as-is for local images
     if (imageUrl.startsWith('/')) return `https://api.finonest.com${imageUrl}`;
     return `https://api.finonest.com/uploads/images/${imageUrl}`;
   };
@@ -177,6 +150,11 @@ const HeroSection = () => {
   };
   return (
     <section className="relative bg-gradient-to-br from-background via-background to-accent/5 overflow-hidden pt-20">
+      {slides.length === 0 ? (
+        <div className="container mx-auto px-6 py-20 text-center">
+          <p className="text-muted-foreground">No slides available</p>
+        </div>
+      ) : (
       <div className="hidden lg:block">
         <div className="container mx-auto px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
@@ -269,12 +247,21 @@ const HeroSection = () => {
                         <p className="text-xs text-primary-foreground/70 mb-4 max-w-[200px]">
                           {s.description}
                         </p>
-                        <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
-                          <Link to={s.button_link || '/apply'}>
-                            {s.button_text || 'Apply Now'}
-                            <ArrowRight className="w-3 h-3 ml-1" />
-                          </Link>
-                        </Button>
+                        {(s.button_link && s.button_text) ? (
+                          <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
+                            <Link to={s.button_link}>
+                              {s.button_text}
+                              <ArrowRight className="w-3 h-3 ml-1" />
+                            </Link>
+                          </Button>
+                        ) : s.button_link ? (
+                          <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
+                            <Link to={s.button_link}>
+                              Apply Now
+                              <ArrowRight className="w-3 h-3 ml-1" />
+                            </Link>
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
                   </div>)}
@@ -312,12 +299,21 @@ const HeroSection = () => {
                   <p className="text-xs text-primary-foreground/80 mb-3">
                     {s.description}
                   </p>
-                  <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
-                    <Link to={s.button_link || '/apply'}>
-                      {s.button_text || 'Apply Now'}
-                      <ArrowRight className="w-3 h-3 ml-1" />
-                    </Link>
-                  </Button>
+                  {(s.button_link && s.button_text) ? (
+                    <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
+                      <Link to={s.button_link}>
+                        {s.button_text}
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  ) : s.button_link ? (
+                    <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
+                      <Link to={s.button_link}>
+                        Apply Now
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Link>
+                    </Button>
+                  ) : null}
                 </div>
               </div>
             </div>)}
@@ -373,6 +369,7 @@ const HeroSection = () => {
         {/* Mobile Stats Bar */}
         
       </div>
+      )}
     </section>
   );
 };
