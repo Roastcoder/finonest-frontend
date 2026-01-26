@@ -1,6 +1,7 @@
 import { X, Send, Bot, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { getAIConfig, generateAIPrompt } from "@/lib/aiConfig";
+import { askFinonestRAG, OLLAMA_MODELS } from "@/lib/ollamaRAG";
 
 interface Message {
   id: string;
@@ -24,6 +25,8 @@ const WhatsAppButton = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [aiConfig, setAiConfig] = useState({ apiKey: '', model: 'gemini-1.5-flash', enabled: false });
+  const [useOllama, setUseOllama] = useState(false);
+  const [ollamaModel, setOllamaModel] = useState('llama3.1:8b');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +34,12 @@ const WhatsAppButton = () => {
     // Load AI configuration on component mount
     getAIConfig().then(config => {
       console.log('AI Config loaded:', config);
+      
+      // Auto-switch to Ollama if Gemini is disabled or has no API key
+      if (!config.enabled || !config.apiKey) {
+        console.log('Gemini unavailable, auto-switching to Ollama');
+        setUseOllama(true);
+      }
       
       // If the public endpoint returns disabled, try to use admin settings
       if (!config.enabled || !config.apiKey) {
@@ -120,6 +129,31 @@ const WhatsAppButton = () => {
     };
     
     setMessages(prev => [...prev, userMessage, aiMessage]);
+  };
+
+  const sendToAI = async (message: string): Promise<string> => {
+    // Try Ollama first if enabled or if Gemini fails
+    if (useOllama) {
+      try {
+        console.log('Using Ollama RAG with model:', ollamaModel);
+        const response = await askFinonestRAG(message, selectedLanguage || 'english', ollamaModel);
+        return response;
+      } catch (error) {
+        console.error('Ollama failed:', error);
+        // Auto-switch to Gemini if Ollama fails
+        setUseOllama(false);
+      }
+    }
+    
+    // Try Gemini API with auto-switch models
+    try {
+      return await sendToGemini(message);
+    } catch (error) {
+      console.error('Gemini failed, switching to Ollama:', error);
+      // Auto-switch to Ollama if all Gemini models fail
+      setUseOllama(true);
+      return await askFinonestRAG(message, selectedLanguage || 'english', ollamaModel);
+    }
   };
 
   const sendToGemini = async (message: string): Promise<string> => {
@@ -251,7 +285,7 @@ const WhatsAppButton = () => {
     setInputMessage('');
     setIsLoading(true);
 
-    const aiResponse = await sendToGemini(inputMessage);
+    const aiResponse = await sendToAI(inputMessage);
     
     const aiMessage: Message = {
       id: (Date.now() + 1).toString(),
