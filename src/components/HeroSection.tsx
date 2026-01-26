@@ -81,6 +81,7 @@ const HeroSection = () => {
           const activeSlides = data.slides?.filter((slide: Slide) => slide.is_active)
             .sort((a: Slide, b: Slide) => a.order_position - b.order_position);
           console.log('Active slides:', activeSlides);
+          console.log('Slide button links:', activeSlides?.map(slide => ({ id: slide.id, title: slide.title, button_link: slide.button_link })));
           if (activeSlides && activeSlides.length > 0) {
             setSlides(activeSlides);
             console.log('Slides set successfully');
@@ -134,7 +135,6 @@ const HeroSection = () => {
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
-  const slide = slides[currentSlide];
   const getImageUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
@@ -250,14 +250,14 @@ const HeroSection = () => {
                         </p>
                         {(s.button_link && s.button_text) ? (
                           <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
-                            <Link to={s.button_link}>
+                            <Link to={s.button_link} onClick={() => console.log('Desktop slide link clicked:', s.button_link)}>
                               {s.button_text}
                               <ArrowRight className="w-3 h-3 ml-1" />
                             </Link>
                           </Button>
                         ) : s.button_link ? (
                           <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
-                            <Link to={s.button_link}>
+                            <Link to={s.button_link} onClick={() => console.log('Desktop slide link clicked (fallback):', s.button_link)}>
                               Apply Now
                               <ArrowRight className="w-3 h-3 ml-1" />
                             </Link>
