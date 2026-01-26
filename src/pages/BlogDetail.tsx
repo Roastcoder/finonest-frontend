@@ -277,6 +277,7 @@ const BlogDetail = () => {
         <meta name="keywords" content={blog.meta_tags || ''} />
         <meta name="robots" content="index, follow" />
         <meta name="author" content={blog.author} />
+        <meta name="publisher" content="Finonest" />
         <meta name="article:published_time" content={blog.created_at} />
         <meta name="article:modified_time" content={blog.created_at} />
         <meta name="article:section" content={blog.category} />
