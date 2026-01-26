@@ -687,18 +687,12 @@ const AdminBlogs = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">Category</label>
-                      <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        placeholder="Enter category (e.g., Credit Score, Home Loan, etc.)"
+                        required
+                      />
                     </div>
 
                     <div>
