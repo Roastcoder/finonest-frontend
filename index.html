@@ -7,6 +7,9 @@
     <meta name="description" content="Finonest - India's fastest growing loan provider. Get home loans, car loans, personal loans & business loans with quick approval and best interest rates." />
     <meta name="keywords" content="loan, home loan, car loan, personal loan, business loan, India, Finonest, financial services" />
     <meta name="author" content="Finonest India Pvt. Ltd." />
+    <meta name="publisher" content="Finonest India Pvt. Ltd." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://finonest.com/" />
     <link rel="icon" type="image/jpeg" href="/assets/finonest-icon.jpg" />
 
     <!-- PWA Meta Tags -->
@@ -41,16 +44,22 @@
     
     <!-- Facebook Pixel Code -->
     <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '2298553847296489');
-      fbq('track', 'PageView');
+      (function() {
+        try {
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '2298553847296489');
+          fbq('track', 'PageView');
+        } catch(e) {
+          console.log('Facebook Pixel blocked by ad blocker');
+        }
+      })();
     </script>
     <!-- End Facebook Pixel Code -->
   </head>

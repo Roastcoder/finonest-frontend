@@ -116,11 +116,11 @@ const OurBranches = () => {
         const count = branchesAtLocation.length;
         
         // Define marker colors based on count
-        let markerColor = '#2563eb'; // Default blue
+        let markerColor = '#10b981'; // Green for single branch
         if (count > 1) {
-          markerColor = count === 2 ? '#dc2626' : // Red for 2 branches
-                       count === 3 ? '#ea580c' : // Orange for 3 branches  
-                       count >= 4 ? '#7c2d12' : '#2563eb'; // Dark red for 4+ branches
+          markerColor = count === 2 ? '#f59e0b' : // Amber for 2 branches
+                       count === 3 ? '#ef4444' : // Red for 3 branches  
+                       count >= 4 ? '#8b5cf6' : '#10b981'; // Purple for 4+ branches
         }
         
         // Create custom colored marker with better visibility
