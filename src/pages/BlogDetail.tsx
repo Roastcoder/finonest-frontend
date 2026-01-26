@@ -272,8 +272,8 @@ const BlogDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{blog.meta_title || blog.title} | Finonest Blog</title>
-        <meta name="description" content={blog.meta_description || blog.excerpt} />
+        <title>{(blog.meta_title || blog.title).replace(/&#39;/g, "'").replace(/&amp;/g, "&")} | Finonest Blog</title>
+        <meta name="description" content={(blog.meta_description || blog.excerpt).replace(/&#39;/g, "'").replace(/&amp;/g, "&")} />
         <meta name="keywords" content={blog.meta_tags || ''} />
         <meta name="robots" content="index, follow" />
         <meta name="author" content={blog.author} />
