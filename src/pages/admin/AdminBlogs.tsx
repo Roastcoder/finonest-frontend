@@ -204,47 +204,43 @@ const AdminBlogs = () => {
             console.log('API error, switching to:', modelToUse);
             continue;
           }
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('AI API Error Response:', errorText);
-        
-        let errorMessage = 'Failed to generate blog with AI';
-        
-        try {
-          const errorData = JSON.parse(errorText);
-          if (errorData.error) {
-            switch (errorData.error.code) {
-              case 400:
-                errorMessage = `Bad Request: ${errorData.error.message}`;
-                break;
-              case 401:
-                errorMessage = 'Unauthorized: Invalid API key';
-                break;
-              case 403:
-                errorMessage = `Access Denied: ${errorData.error.message}`;
-                break;
-              case 429:
-                errorMessage = 'Rate limit exceeded. Please try again later';
-                break;
-              case 500:
-                errorMessage = 'AI service temporarily unavailable';
-                break;
-              default:
-                errorMessage = `API Error (${errorData.error.code}): ${errorData.error.message}`;
+          
+          let errorMessage = 'Failed to generate blog with AI';
+          
+          try {
+            const errorData = JSON.parse(errorText);
+            if (errorData.error) {
+              switch (errorData.error.code) {
+                case 400:
+                  errorMessage = `Bad Request: ${errorData.error.message}`;
+                  break;
+                case 401:
+                  errorMessage = 'Unauthorized: Invalid API key';
+                  break;
+                case 403:
+                  errorMessage = `Access Denied: ${errorData.error.message}`;
+                  break;
+                case 429:
+                  errorMessage = 'Rate limit exceeded. Please try again later';
+                  break;
+                case 500:
+                  errorMessage = 'AI service temporarily unavailable';
+                  break;
+                default:
+                  errorMessage = `API Error (${errorData.error.code}): ${errorData.error.message}`;
+              }
             }
+          } catch (parseError) {
+            errorMessage = `HTTP ${response.status}: ${errorText}`;
           }
-        } catch (parseError) {
-          errorMessage = `HTTP ${response.status}: ${errorText}`;
+          
+          toast({
+            title: "AI Generation Failed",
+            description: errorMessage,
+            variant: "destructive",
+          });
+          return;
         }
-        
-        toast({
-          title: "AI Generation Failed",
-          description: errorMessage,
-          variant: "destructive",
-        });
-        return;
-      }
 
       const data = await response.json();
       console.log('AI API Success Response:', data);
@@ -331,9 +327,8 @@ const AdminBlogs = () => {
         });
       }
       
-        } finally {
-          setIsGenerating(false);
-        }
+        break; // Success, exit the retry loop
+        
       } catch (error) {
         console.error(`Error with model ${modelToUse}:`, error);
         if (attempt < fallbackModels.length) {
