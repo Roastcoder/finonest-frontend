@@ -255,10 +255,12 @@ const OurBranches = () => {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {filteredBranches.map((branch) => (
+              {filteredBranches.map((branch) => {
+                const branchSlug = branch.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                return (
                 <Link 
                   key={branch.id} 
-                  to={`/${branch.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}
+                  to={`/${branchSlug}`}
                   className="group cursor-pointer block"
                 >
                   <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 md:p-6 hover:shadow-xl hover:border-blue-200 transition-all duration-300 h-full">
@@ -314,7 +316,8 @@ const OurBranches = () => {
                     </div>
                   </div>
                 </Link>
-              ))
+                );
+              })}
             </div>
           </div>
         </div>
