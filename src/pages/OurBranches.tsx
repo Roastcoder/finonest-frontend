@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, User, Filter, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -38,7 +37,6 @@ const OurBranches = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [filteredBranches, setFilteredBranches] = useState<Branch[]>([]);
   const [selectedState, setSelectedState] = useState<string>("");
-  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<any>(null);
 
@@ -316,96 +314,12 @@ const OurBranches = () => {
                     </div>
                   </div>
                 </Link>
-              ))}}
+              ))
             </div>
           </div>
         </div>
       </div>
 
-      {/* Branch Details Modal */}
-      <Dialog open={!!selectedBranch} onOpenChange={() => setSelectedBranch(null)}>
-        <DialogContent className="max-w-[95vw] w-full md:max-w-2xl mx-auto my-4 max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-lg md:text-xl">
-              <MapPin className="w-5 h-5" />
-              {selectedBranch?.name}
-            </DialogTitle>
-          </DialogHeader>
-          {selectedBranch && (
-            <div className="space-y-4 md:space-y-6">
-              <div className="grid grid-cols-1 gap-4 md:gap-6">
-                <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      Address
-                    </h4>
-                    <p className="text-gray-600 text-sm md:text-base">
-                      {selectedBranch.address}, {selectedBranch.city}, {selectedBranch.state} - {selectedBranch.pincode}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Working Hours
-                      </h4>
-                      <p className="text-gray-600 text-sm md:text-base">
-                        {selectedBranch.working_hours}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {selectedBranch.email && (
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        Email
-                      </h4>
-                      <p className="text-gray-600 text-sm md:text-base">
-                        {selectedBranch.email}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {selectedBranch.manager_name && (
-                    <div className="bg-yellow-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        Branch Manager
-                      </h4>
-                      <p className="text-gray-600 text-sm md:text-base">
-                        {selectedBranch.manager_name}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
-                <Button 
-                  onClick={() => openInMaps(selectedBranch)}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-                >
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Get Directions
-                </Button>
-                {selectedBranch.phone && (
-                  <Button 
-                    variant="outline" 
-                    onClick={() => window.open(`tel:${selectedBranch.phone}`)}
-                    className="flex-1 border-blue-200 text-blue-600 hover:bg-blue-50"
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Now
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
       <Footer />
     </>
   );
