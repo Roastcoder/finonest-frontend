@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, User, Filter, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -257,7 +258,11 @@ const OurBranches = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {filteredBranches.map((branch) => (
-                <div key={branch.id} className="group cursor-pointer" onClick={() => setSelectedBranch(branch)}>
+                <Link 
+                  key={branch.id} 
+                  to={`/${branch.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}
+                  className="group cursor-pointer block"
+                >
                   <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 md:p-6 hover:shadow-xl hover:border-blue-200 transition-all duration-300 h-full">
                     <div className="flex items-start justify-between mb-4">
                       <div className="bg-blue-50 p-2 md:p-3 rounded-lg">
@@ -310,8 +315,8 @@ const OurBranches = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                </Link>
+              ))}}
             </div>
           </div>
         </div>

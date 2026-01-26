@@ -41,6 +41,7 @@ import EMICalculatorPage from "./pages/EMICalculatorPage";
 import BankerForm from "./pages/BankerForm";
 import Careers from "./pages/Careers";
 import JobDetail from "./pages/JobDetail";
+import BranchDetail from "./pages/BranchDetail";
 import Sitemap from "./pages/Sitemap";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -130,6 +131,7 @@ const App = () => {
                 <Route path="/banking-partners" element={<BankingPartnersPage />} />
                 <Route path="/partners" element={<BankingPartnersPage />} />
                 <Route path="/banker-form" element={<BankerForm />} />
+                <Route path="/:branchName" element={<BranchDetail />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
