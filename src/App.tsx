@@ -130,7 +130,6 @@ const App = () => {
                 <Route path="/banking-partners" element={<BankingPartnersPage />} />
                 <Route path="/partners" element={<BankingPartnersPage />} />
                 <Route path="/banker-form" element={<BankerForm />} />
-                <Route path="/sitemap.xml" element={<Sitemap />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
