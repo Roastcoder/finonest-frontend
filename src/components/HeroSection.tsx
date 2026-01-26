@@ -225,7 +225,8 @@ const HeroSection = () => {
             {/* Right Side - Banner Carousel */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
+                {slides.map((s, index) => (
+                  <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100 relative" : "opacity-0 absolute inset-0 pointer-events-none"}`}>
                     <div className="relative aspect-[5/3]">
                       <img 
                         src={getImageUrl(s.image_url)} 
@@ -265,7 +266,8 @@ const HeroSection = () => {
                         ) : null}
                       </div>
                     </div>
-                  </div>)}
+                  </div>
+                ))}
                 
                 {/* Navigation Dots */}
                 <div className="absolute bottom-4 right-4 flex gap-1.5">
@@ -280,7 +282,8 @@ const HeroSection = () => {
       {/* Mobile Layout - Banner only */}
       <div className="lg:hidden">
         <div className="relative">
-          {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
+          {slides.map((s, index) => (
+            <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100 relative" : "opacity-0 absolute inset-0 pointer-events-none"}`}>
               <div className="relative aspect-[16/10]">
                 <img 
                   src={getImageUrl(s.image_url)} 
@@ -317,7 +320,8 @@ const HeroSection = () => {
                   ) : null}
                 </div>
               </div>
-            </div>)}
+            </div>
+          ))}
 
           {/* Navigation Dots */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
