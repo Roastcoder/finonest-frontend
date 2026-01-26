@@ -51,6 +51,7 @@ const BlogDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState<BlogPost | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -135,6 +136,15 @@ const BlogDetail = () => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBlog(data.blog);
+        
+        // Fetch related blogs for backlinks
+        const relatedRes = await fetch('https://api.finonest.com/api/blogs');
+        if (relatedRes.ok) {
+          const relatedData = await relatedRes.json();
+          const allBlogs = relatedData.blogs || [];
+          const filtered = allBlogs.filter((b: any) => b.id !== data.blog.id).slice(0, 5);
+          setRelatedBlogs(filtered);
+        }
       } catch (err) {
         console.error(err);
         setError('Failed to load blog post.');
@@ -618,6 +628,52 @@ const BlogDetail = () => {
                     <source src={blog.video_url} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Related Articles Backlinks */}
+        {relatedBlogs.length > 0 && (
+          <div className="w-full px-2 sm:px-4 pb-8 sm:pb-12">
+            <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
+                <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-xs sm:text-sm">🔗</span>
+                  </div>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Related Articles</h3>
+                </div>
+                <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {relatedBlogs.map((relatedBlog) => (
+                    <div key={relatedBlog.id} className="group">
+                      <Link 
+                        to={`/blog/${relatedBlog.slug || relatedBlog.id}`}
+                        className="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 hover:border-purple-300"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-purple-600 font-bold text-sm">{relatedBlog.category.charAt(0)}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900 text-sm group-hover:text-purple-600 transition-colors line-clamp-2 mb-1">
+                              {relatedBlog.title}
+                            </h4>
+                            <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+                              {relatedBlog.excerpt}
+                            </p>
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                              <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
+                                {relatedBlog.category}
+                              </span>
+                              <span>{formatDate(relatedBlog.created_at)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
