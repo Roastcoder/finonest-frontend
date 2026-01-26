@@ -155,7 +155,8 @@ const HeroSection = () => {
           <p className="text-muted-foreground">No slides available</p>
         </div>
       ) : (
-      <div className="hidden lg:block">
+        <>
+          <div className="hidden lg:block">
         <div className="container mx-auto px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             {/* Left Side - Tagline, Stats, Services */}
@@ -369,6 +370,7 @@ const HeroSection = () => {
         {/* Mobile Stats Bar */}
         
       </div>
+        </>
       )}
     </section>
   );
