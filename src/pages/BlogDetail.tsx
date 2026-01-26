@@ -396,30 +396,58 @@ const BlogDetail = () => {
           <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 border border-gray-100">
               <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
-                {/* Main Content Section */}
-                {blog.content && (
-                  <div className="mb-8 sm:mb-12 lg:mb-16">
-                    <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-xs sm:text-sm">📝</span>
-                      </div>
-                      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                        Article Content
-                      </h2>
-                    </div>
-                    <div className="bg-gradient-to-r from-green-50/30 to-teal-50/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 border-green-500">
-                      <div 
-                        className="prose-content text-gray-700 leading-relaxed text-sm sm:text-base"
-                        dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }} 
-                      />
-                    </div>
-                  </div>
-                )}
-                
                 {/* Other Sections */}
                 {sections.map((section) => {
                   const sectionData = blog[section.key as keyof BlogPost];
                   if (!sectionData) return null;
+
+                  // Show Article Content after Introduction
+                  if (section.key === 'introduction') {
+                    return (
+                      <div key="introduction-and-content">
+                        {/* Introduction Section */}
+                        <div className="mb-8 sm:mb-12 lg:mb-16">
+                          <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-xs sm:text-sm">{section.icon}</span>
+                            </div>
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                              {section.title}
+                            </h2>
+                          </div>
+                          <div className="bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 border-blue-500">
+                            <div 
+                              className="prose-content text-gray-700 leading-relaxed text-sm sm:text-base"
+                              dangerouslySetInnerHTML={{ __html: renderFormattedText(sectionData as string) }} 
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Main Content Section */}
+                        {blog.content && (
+                          <div className="mb-8 sm:mb-12 lg:mb-16">
+                            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                                <span className="text-white font-bold text-xs sm:text-sm">📝</span>
+                              </div>
+                              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                                Article Content
+                              </h2>
+                            </div>
+                            <div className="bg-gradient-to-r from-green-50/30 to-teal-50/30 rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 border-green-500">
+                              <div 
+                                className="prose-content text-gray-700 leading-relaxed text-sm sm:text-base"
+                                dangerouslySetInnerHTML={{ __html: renderFormattedText(blog.content) }} 
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  // Skip introduction as it's handled above
+                  if (section.key === 'introduction') return null;
 
                   if (section.key === 'faqs' && blog.faqs) {
                     return (
