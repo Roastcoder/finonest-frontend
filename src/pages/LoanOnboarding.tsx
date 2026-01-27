@@ -157,6 +157,29 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
+    
+    // Check if mobile already exists in any database
+    const existingApplications = JSON.parse(localStorage.getItem('loanApplications') || '[]');
+    const existingCompleted = JSON.parse(localStorage.getItem('completedApplications') || '[]');
+    const existingCredit = JSON.parse(localStorage.getItem('creditScoreData') || '[]');
+    
+    const existingMobile = [...existingApplications, ...existingCompleted, ...existingCredit]
+      .find((app: any) => app.mobile === mobile);
+    
+    if (existingMobile) {
+      setDataSource('Database: Mobile number found in existing records');
+      // Auto-populate known data
+      setUserData(prev => ({ 
+        ...prev, 
+        mobile,
+        pan: existingMobile.pan || '',
+        panName: existingMobile.panName || '',
+        creditScore: existingMobile.creditScore || 0
+      }));
+    } else {
+      setDataSource('New mobile number - proceeding with fresh application');
+    }
+    
     await new Promise(resolve => setTimeout(resolve, 1500));
     setUserData(prev => ({ ...prev, mobile }));
     setLoading(false);
@@ -676,33 +699,69 @@ const LoanOnboarding: React.FC = () => {
           lastUpdated: "Dec 2024"
         };
 
+        // Extract real credit data from creditReport if available
+        const creditReport = userData?.creditReport;
+        const realCreditData = creditReport ? {
+          totalAccounts: creditReport.ACCOUNT_SUMMARY?.total_accounts || 1,
+          activeAccounts: creditReport.ACCOUNT_SUMMARY?.active_accounts || 1,
+          closedAccounts: creditReport.ACCOUNT_SUMMARY?.closed_accounts || 0,
+          overdueAccounts: creditReport.ACCOUNT_SUMMARY?.overdue_accounts || 0,
+          totalOutstanding: creditReport.ACCOUNT_SUMMARY?.total_outstanding || ((userData?.vehicleValue ?? 800000) * 0.65),
+          totalSanctioned: creditReport.ACCOUNT_SUMMARY?.total_sanctioned || ((userData?.vehicleValue ?? 800000) * 0.8),
+          monthlyEMI: creditReport.ACCOUNT_SUMMARY?.monthly_emi || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60),
+          enquiries30: creditReport.ENQUIRY_SUMMARY?.last_30_days || 1,
+          enquiries60: creditReport.ENQUIRY_SUMMARY?.last_60_days || 2,
+          enquiries90: creditReport.ENQUIRY_SUMMARY?.last_90_days || 3,
+          autoLoanEnquiries30: creditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || 1,
+          autoLoanEnquiries60: creditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || 1,
+          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || 2
+        } : null;
+
         const newAccounts = {
-          secured: { count: 1, amount: `₹${((userData?.vehicleValue ?? 0) / 100000).toFixed(1)}L` },
+          secured: { 
+            count: realCreditData?.totalAccounts || 1, 
+            amount: `₹${((userData?.vehicleValue ?? 800000) / 100000).toFixed(1)}L` 
+          },
           unsecured: { count: 0, amount: "₹0" },
-          autoLoans: { count: 1, amount: `₹${((userData?.vehicleValue ?? 0) * 0.8 / 100000).toFixed(1)}L` }
+          autoLoans: { 
+            count: 1, 
+            amount: `₹${((userData?.vehicleValue ?? 800000) * 0.8 / 100000).toFixed(1)}L` 
+          }
         };
 
         const autoLoanSummary = {
-          sanctionedAmount: `₹${((userData?.vehicleValue ?? 0) * 0.8).toLocaleString() || '8,20,000'}`,
-          principalOutstanding: `₹${((userData?.vehicleValue ?? 0) * 0.65).toLocaleString() || '6,45,000'}`,
+          sanctionedAmount: `₹${(realCreditData?.totalSanctioned || ((userData?.vehicleValue ?? 800000) * 0.8)).toLocaleString()}`,
+          principalOutstanding: `₹${(realCreditData?.totalOutstanding || ((userData?.vehicleValue ?? 800000) * 0.65)).toLocaleString()}`,
           overdueAmount: "₹0",
           accountOpenDate: vehicleData.registrationDate,
           dpdHistory: [0, 0, 0, 0, 0, 0]
         };
 
         const creditSummary = {
-          outstandingBalance: `₹${((userData?.vehicleValue ?? 0) * 0.65).toLocaleString() || '9,25,000'}`,
-          activeAccounts: 1,
-          monthlyEMI: `₹${Math.round(((userData?.vehicleValue ?? 0) * 0.8) / 60).toLocaleString() || '18,450'}`,
-          highestSanction: `₹${((userData?.vehicleValue ?? 0) * 0.8).toLocaleString() || '8,20,000'}`,
-          overdueAccounts: 0,
+          outstandingBalance: `₹${(realCreditData?.totalOutstanding || ((userData?.vehicleValue ?? 800000) * 0.65)).toLocaleString()}`,
+          activeAccounts: realCreditData?.activeAccounts || 1,
+          monthlyEMI: `₹${(realCreditData?.monthlyEMI || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60)).toLocaleString()}`,
+          highestSanction: `₹${(realCreditData?.totalSanctioned || ((userData?.vehicleValue ?? 800000) * 0.8)).toLocaleString()}`,
+          overdueAccounts: realCreditData?.overdueAccounts || 0,
           dpdCount: 0
         };
 
         const creditEnquiries = {
-          "30days": { total: 1, autoLoans: 1, others: 0 },
-          "60days": { total: 2, autoLoans: 1, others: 1 },
-          "90days": { total: 3, autoLoans: 2, others: 1 }
+          "30days": { 
+            total: realCreditData?.enquiries30 || 1, 
+            autoLoans: realCreditData?.autoLoanEnquiries30 || 1, 
+            others: (realCreditData?.enquiries30 || 1) - (realCreditData?.autoLoanEnquiries30 || 1) 
+          },
+          "60days": { 
+            total: realCreditData?.enquiries60 || 2, 
+            autoLoans: realCreditData?.autoLoanEnquiries60 || 1, 
+            others: (realCreditData?.enquiries60 || 2) - (realCreditData?.autoLoanEnquiries60 || 1) 
+          },
+          "90days": { 
+            total: realCreditData?.enquiries90 || 3, 
+            autoLoans: realCreditData?.autoLoanEnquiries90 || 2, 
+            others: (realCreditData?.enquiries90 || 3) - (realCreditData?.autoLoanEnquiries90 || 2) 
+          }
         };
 
         const getCreditScoreColor = (score: number) => {
@@ -730,9 +789,21 @@ const LoanOnboarding: React.FC = () => {
                 <h1 className="text-2xl font-bold">Loan Application Successful!</h1>
               </div>
               <p className="text-green-100 mb-4">Your loan application has been submitted successfully. Here's your complete credit profile overview.</p>
-              <div className="flex items-center gap-2 text-sm">
-                <Shield className="w-4 h-4" />
-                <span>Application ID: #{userData?.applicationId || 'FN' + Date.now()}</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm">
+                  <Shield className="w-4 h-4" />
+                  <span>Application ID: #{userData?.applicationId || 'FN' + Date.now()}</span>
+                </div>
+                {realCreditData && (
+                  <div className="text-xs bg-white/20 px-3 py-1 rounded-full">
+                    📊 Real Credit Bureau Data
+                  </div>
+                )}
+                {!realCreditData && (
+                  <div className="text-xs bg-white/20 px-3 py-1 rounded-full">
+                    🔮 Simulated Credit Data
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1029,7 +1100,7 @@ const LoanOnboarding: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="bg-gradient-hero flex items-center justify-center p-4 min-h-[calc(100vh-140px)]">
+      <div className="bg-gradient-hero flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 80px)', paddingTop: '80px' }}>
         {currentStep === 6 ? (
           <div className="w-full max-w-7xl">
             {renderStep()}
