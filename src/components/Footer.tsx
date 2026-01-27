@@ -66,6 +66,11 @@ const Footer = () => {
                   Banker Form
                 </Link>
               </li>
+              <li>
+                <Link to="/loan-onboarding" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
+                  Quick Loan
+                </Link>
+              </li>
             </ul>
           </div>
 

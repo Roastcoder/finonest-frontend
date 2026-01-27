@@ -43,6 +43,7 @@ import Careers from "./pages/Careers";
 import JobDetail from "./pages/JobDetail";
 import BranchDetail from "./pages/BranchDetail";
 import Sitemap from "./pages/Sitemap";
+import LoanOnboarding from "./pages/LoanOnboarding";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -131,6 +132,7 @@ const App = () => {
                 <Route path="/banking-partners" element={<BankingPartnersPage />} />
                 <Route path="/partners" element={<BankingPartnersPage />} />
                 <Route path="/banker-form" element={<BankerForm />} />
+                <Route path="/loan-onboarding" element={<LoanOnboarding />} />
                 <Route path="/:branchName" element={<BranchDetail />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>
