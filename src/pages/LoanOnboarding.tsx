@@ -732,15 +732,19 @@ const LoanOnboarding: React.FC = () => {
           autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || 2
         } : null;
 
+        const vehicleValue = userData?.vehicleValue || 800000;
+        const loanAmount = vehicleValue * 0.8; // 80% LTV
+        const outstandingAmount = vehicleValue * 0.65; // 65% outstanding
+
         const newAccounts = {
           secured: { 
-            count: realCreditData?.totalAccounts || 1, 
-            amount: `₹${((userData?.vehicleValue ?? 800000) / 100000).toFixed(1)}L` 
+            count: 1, 
+            amount: `₹${(vehicleValue / 100000).toFixed(1)}L` 
           },
           unsecured: { count: 0, amount: "₹0" },
           autoLoans: { 
             count: 1, 
-            amount: `₹${((userData?.vehicleValue ?? 800000) * 0.8 / 100000).toFixed(1)}L` 
+            amount: `₹${(loanAmount / 100000).toFixed(1)}L` 
           }
         };
 
