@@ -460,8 +460,18 @@ const LoanOnboarding: React.FC = () => {
   const handlePersonalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as any;
-    const income = parseInt(form.income.value);
+    const income = parseInt(form.income.value) || 0;
     const employment = form.employment.value;
+
+    if (!income || income <= 0) {
+      showError('income', 'Please enter a valid monthly income');
+      return;
+    }
+
+    if (!employment) {
+      showError('employment', 'Please select employment type');
+      return;
+    }
 
     setLoading(true);
     
@@ -658,7 +668,10 @@ const LoanOnboarding: React.FC = () => {
                   type="number"
                   placeholder="50000"
                   className="mt-1"
+                  required
+                  min="1"
                 />
+                {errors.income && <p className="text-red-500 text-sm mt-1">{errors.income}</p>}
               </div>
               <div className="mb-4">
                 <Label htmlFor="employment">Employment Type</Label>
@@ -666,12 +679,14 @@ const LoanOnboarding: React.FC = () => {
                   id="employment"
                   name="employment"
                   className="w-full p-2 border border-gray-300 rounded-md mt-1"
+                  required
                 >
                   <option value="">Select employment type</option>
                   <option value="salaried">Salaried</option>
                   <option value="self-employed">Self Employed</option>
                   <option value="business">Business Owner</option>
                 </select>
+                {errors.employment && <p className="text-red-500 text-sm mt-1">{errors.employment}</p>}
               </div>
               <Button type="submit" className="w-full btn-hero">Continue</Button>
             </form>
@@ -1109,7 +1124,7 @@ const LoanOnboarding: React.FC = () => {
           <Card className="w-full max-w-md glass">
             <CardHeader className="bg-gradient-primary text-white text-center">
               <h1 className="text-2xl font-bold font-display">Finonest</h1>
-              <Progress value={getProgressValue()} className="mt-4 bg-white/20" />
+              <Progress value={getProgressValue()} className="mt-4 bg-white/20 [&>div]:bg-green-500" />
               <p className="text-sm mt-2 text-white/90">Step {currentStep} of 6</p>
             </CardHeader>
             <CardContent className="p-6">
