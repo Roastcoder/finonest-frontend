@@ -31,6 +31,7 @@ import AdminBranches from "./admin/AdminBranches";
 import AdminEnrollments from "./admin/AdminEnrollments";
 import AdminCareers from "./admin/AdminCareers";
 import AdminLoanOnboarding from "./admin/AdminLoanOnboarding";
+import AdminLoanProducts from "./admin/AdminLoanProducts";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ const AdminDashboard = () => {
     if (path.includes('/branches')) return 'branches';
     if (path.includes('/careers')) return 'careers';
     if (path.includes('/loan-onboarding')) return 'loan-onboarding';
+    if (path.includes('/loan-products')) return 'loan-products';
     return 'dashboard';
   };
 
@@ -105,6 +107,8 @@ const AdminDashboard = () => {
         return <AdminBranches />;
       case 'loan-onboarding':
         return <AdminLoanOnboarding />;
+      case 'loan-products':
+        return <AdminLoanProducts />;
       case 'slides':
         return <AdminSlides />;
       case 'settings':
@@ -179,6 +183,15 @@ const AdminDashboard = () => {
             >
               <FileText className="w-4 h-4" />
               Loan Onboarding
+            </Link>
+            <Link 
+              to="/admin/loan-products"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'loan-products' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              Loan Products
             </Link>
             <Link 
               to="/admin/contact-forms"
@@ -295,6 +308,7 @@ const AdminDashboard = () => {
                   {activeTab === 'careers' && 'Career Management'}
                   {activeTab === 'branches' && 'Branch Management'}
                   {activeTab === 'loan-onboarding' && 'Loan Onboarding Management'}
+                  {activeTab === 'loan-products' && 'Loan Products Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -308,6 +322,7 @@ const AdminDashboard = () => {
                   {activeTab === 'careers' && 'Manage job postings and applications'}
                   {activeTab === 'branches' && 'Manage branch locations and information'}
                   {activeTab === 'loan-onboarding' && 'Manage loan onboarding applications and data'}
+                  {activeTab === 'loan-products' && 'Manage loan products, interest rates, and LTV ratios'}
                   {activeTab === 'slides' && 'Manage home page carousel slides and images'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>

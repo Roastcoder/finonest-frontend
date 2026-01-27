@@ -35,20 +35,37 @@ const EligibleProducts: React.FC<{ userData: UserData }> = ({ userData }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://api.finonest.com/api/policy-engine.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            creditScore: userData.creditScore,
-            fuelType: userData.fuelType,
-            employment: userData.employment,
-            income: userData.income,
-            loanType: 'purchase'
-          })
-        });
-        const data = await response.json();
-        if (data.success) {
-          setProducts(data.eligible_products);
+        // First try to get products from localStorage (admin configured)
+        const savedProducts = localStorage.getItem('loanProducts');
+        if (savedProducts) {
+          const localProducts = JSON.parse(savedProducts);
+          const eligibleProducts = localProducts
+            .filter((product: any) => product.status === 'active')
+            .map((product: any) => ({
+              lender_name: product.lender_name,
+              product_name: product.product_name,
+              roi_min: product.roi_min,
+              roi_max: product.roi_max,
+              max_ltv_purchase: product.max_ltv_purchase
+            }));
+          setProducts(eligibleProducts);
+        } else {
+          // Fallback to API call
+          const response = await fetch('https://api.finonest.com/api/policy-engine.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              creditScore: userData.creditScore,
+              fuelType: userData.fuelType,
+              employment: userData.employment,
+              income: userData.income,
+              loanType: 'purchase'
+            })
+          });
+          const data = await response.json();
+          if (data.success) {
+            setProducts(data.eligible_products);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch products');
