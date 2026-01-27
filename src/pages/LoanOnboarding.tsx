@@ -1097,12 +1097,39 @@ const LoanOnboarding: React.FC = () => {
             <div className="bg-white rounded-2xl p-6 shadow-lg border-0">
               <div className="text-center space-y-4">
                 <h3 className="text-xl font-bold text-gray-800">What's Next?</h3>
-                <p className="text-gray-600">Your loan application is being processed. You'll receive updates via SMS and email.</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold">
-                    Track Application Status
-                  </Button>
-                  <Button variant="outline" className="border-2 border-gray-300 hover:border-gray-400 px-8 py-3 rounded-xl font-semibold">
+                <p className="text-gray-600">Your loan application has been submitted successfully. Download your application copy below.</p>
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={() => {
+                      const appData = {
+                        applicationId: userData?.applicationId || 'FN' + Date.now(),
+                        applicantName: userData?.panName || 'N/A',
+                        mobile: userData?.mobile || 'N/A',
+                        pan: userData?.pan || 'N/A',
+                        creditScore: userData?.creditScore || 'N/A',
+                        vehicleDetails: `${vehicleData.make} ${vehicleData.model} (${vehicleData.year})`,
+                        vehicleRC: vehicleData.registrationNumber,
+                        loanAmount: `₹${(loanAmount / 100000).toFixed(1)}L`,
+                        vehicleValue: `₹${(vehicleValue / 100000).toFixed(1)}L`,
+                        income: userData?.income ? `₹${userData.income.toLocaleString()}` : 'N/A',
+                        employment: userData?.employment || 'N/A',
+                        submissionDate: new Date().toLocaleDateString('en-IN')
+                      };
+                      
+                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nAPPLICANT DETAILS:\nName: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${appData.employment}\n\nVEHICLE DETAILS:\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nVehicle Value: ${appData.vehicleValue}\n\nLOAN DETAILS:\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\n\nStatus: Application Submitted Successfully\n\nContact: info@finonest.com | +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018`;
+                      
+                      const blob = new Blob([content], { type: 'text/plain' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `Finonest_Application_${appData.applicationId}.txt`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold"
+                  >
                     Download Application Copy
                   </Button>
                 </div>
