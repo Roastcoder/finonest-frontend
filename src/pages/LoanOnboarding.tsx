@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Loader2 } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 interface Product {
   lender_name: string;
@@ -362,7 +364,7 @@ const LoanOnboarding: React.FC = () => {
                 />
                 {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
               </div>
-              <Button type="submit" className="w-full">Continue</Button>
+              <Button type="submit" className="w-full btn-hero">Continue</Button>
             </form>
           </div>
         );
@@ -386,7 +388,7 @@ const LoanOnboarding: React.FC = () => {
                 />
                 {errors.pan && <p className="text-red-500 text-sm mt-1">{errors.pan}</p>}
               </div>
-              <Button type="submit" className="w-full">Verify PAN</Button>
+              <Button type="submit" className="w-full btn-hero">Verify PAN</Button>
             </form>
           </div>
         );
@@ -402,7 +404,7 @@ const LoanOnboarding: React.FC = () => {
               </div>
               <div className="text-4xl font-bold text-green-600 mb-2">{userData.creditScore}</div>
               <p className="text-gray-600 mb-6">Your credit score looks good!</p>
-              <Button onClick={() => setCurrentStep(4)} className="w-full">Continue</Button>
+              <Button onClick={() => setCurrentStep(4)} className="w-full btn-hero">Continue</Button>
             </div>
           </div>
         );
@@ -425,7 +427,7 @@ const LoanOnboarding: React.FC = () => {
                 />
                 {errors.vehicleRC && <p className="text-red-500 text-sm mt-1">{errors.vehicleRC}</p>}
               </div>
-              <Button type="submit" className="w-full">Verify RC</Button>
+              <Button type="submit" className="w-full btn-hero">Verify RC</Button>
             </form>
           </div>
         );
@@ -460,7 +462,7 @@ const LoanOnboarding: React.FC = () => {
                   <option value="business">Business Owner</option>
                 </select>
               </div>
-              <Button type="submit" className="w-full">Continue</Button>
+              <Button type="submit" className="w-full btn-hero">Continue</Button>
             </form>
           </div>
         );
@@ -470,16 +472,16 @@ const LoanOnboarding: React.FC = () => {
           <div>
             <h2 className="text-xl font-semibold mb-2">Application Summary</h2>
             <div className="space-y-4 mb-6">
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-2">Personal Details</h3>
+              <div className="glass p-4 rounded-lg">
+                <h3 className="font-semibold mb-2 text-primary">Personal Details</h3>
                 <p>Name: {userData.panName}</p>
                 <p>Mobile: {userData.mobile}</p>
                 <p>PAN: {userData.pan}</p>
                 <p>DOB: {userData.dob}</p>
                 <p>Credit Score: {userData.creditScore}</p>
               </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-2">Vehicle Details</h3>
+              <div className="glass p-4 rounded-lg">
+                <h3 className="font-semibold mb-2 text-primary">Vehicle Details</h3>
                 <p>RC: {userData.vehicleRC}</p>
                 <p>Model: {userData.vehicleModel}</p>
                 <p>Make: {userData.vehicleMake}</p>
@@ -489,7 +491,7 @@ const LoanOnboarding: React.FC = () => {
                 <p>Market Value: ₹{userData.vehicleValue?.toLocaleString()}</p>
                 <p>Owner: {userData.ownerName}</p>
                 {userData.vehicleResponse?.data && (
-                  <div className="mt-2 text-xs text-gray-500">
+                  <div className="mt-2 text-xs text-muted-foreground">
                     <p>Engine: {userData.vehicleResponse.data.cubic_capacity} CC</p>
                     <p>Category: {userData.vehicleResponse.data.vehicle_category_description}</p>
                     <p>Body Type: {userData.vehicleResponse.data.body_type}</p>
@@ -504,8 +506,8 @@ const LoanOnboarding: React.FC = () => {
                   </div>
                 )}
               </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <h3 className="font-semibold mb-2">Income Details</h3>
+              <div className="glass p-4 rounded-lg">
+                <h3 className="font-semibold mb-2 text-primary">Income Details</h3>
                 <p>Monthly Income: ₹{userData.income?.toLocaleString()}</p>
                 <p>Employment: {userData.employment}</p>
               </div>
@@ -521,17 +523,21 @@ const LoanOnboarding: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="bg-blue-600 text-white text-center">
-          <h1 className="text-2xl font-bold">Finonest</h1>
-          <Progress value={getProgressValue()} className="mt-4 bg-blue-500" />
-          <p className="text-sm mt-2 text-blue-100">Step {currentStep} of 6</p>
-        </CardHeader>
-        <CardContent className="p-6">
-          {renderStep()}
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="bg-gradient-hero flex items-center justify-center p-4 min-h-[calc(100vh-140px)]">
+        <Card className="w-full max-w-md glass">
+          <CardHeader className="bg-gradient-primary text-white text-center">
+            <h1 className="text-2xl font-bold font-display">Finonest</h1>
+            <Progress value={getProgressValue()} className="mt-4 bg-white/20" />
+            <p className="text-sm mt-2 text-white/90">Step {currentStep} of 6</p>
+          </CardHeader>
+          <CardContent className="p-6">
+            {renderStep()}
+          </CardContent>
+        </Card>
+      </div>
+      <Footer />
     </div>
   );
 };

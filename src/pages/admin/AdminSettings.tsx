@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Save, Key, CreditCard, Bot, Eye, EyeOff } from "lucide-react";
+import { Save, Key, CreditCard, Bot, Eye, EyeOff, Shield, Car, Database, Plus } from "lucide-react";
 
 interface SystemSetting {
   setting_key: string;
@@ -20,13 +21,27 @@ const AdminSettings = () => {
   const [settings, setSettings] = useState<SystemSetting[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [showApiKey, setShowApiKey] = useState(false);
+  const [creatingTable, setCreatingTable] = useState(false);
   const { token } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  const toggleSecret = (key: string) => {
+    setShowSecrets(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const isSecretField = (key: string) => {
+    return key.includes('secret') || key.includes('key') || key.includes('token');
+  };
+
+  const getSettingsByCategory = (category: string) => {
+    return settings.filter(s => s.setting_key.startsWith(category));
+  };
 
   const fetchSettings = async () => {
     try {
@@ -109,6 +124,40 @@ const AdminSettings = () => {
         ? { ...setting, setting_value: value }
         : setting
     ));
+  };
+
+  const createLoanOnboardingTable = async () => {
+    setCreatingTable(true);
+    try {
+      const response = await fetch('https://api.finonest.com/setup-database.php', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Database tables created successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to create tables",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Network error. Please check your connection.",
+        variant: "destructive",
+      });
+    } finally {
+      setCreatingTable(false);
+    }
   };
 
   if (loading) {
@@ -333,6 +382,34 @@ const AdminSettings = () => {
                 <Save className="w-4 h-4" />
               </Button>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Database Management */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Database className="w-5 h-5" />
+            Database Management
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Auto Create Tables</Label>
+            <div className="flex gap-2 mt-1">
+              <Button 
+                onClick={createLoanOnboardingTable}
+                disabled={creatingTable}
+                className="flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                {creatingTable ? 'Creating...' : 'Setup Database'}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Creates loan_applications, system_settings, and lender_policies tables with sample data
+            </p>
           </div>
         </CardContent>
       </Card>
