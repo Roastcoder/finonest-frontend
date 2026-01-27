@@ -23,7 +23,7 @@ const EligibleProducts: React.FC<{ userData: UserData }> = ({ userData }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/policy-engine.php', {
+        const response = await fetch('https://api.finonest.com/api/policy-engine.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -147,7 +147,7 @@ const LoanOnboarding: React.FC = () => {
     setLoading(true);
     
     try {
-      const response = await fetch('/api/pan-verify.php', {
+      const response = await fetch('https://api.finonest.com/api/pan-verify.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -159,7 +159,7 @@ const LoanOnboarding: React.FC = () => {
       
       if (data.success && data.data.status === '1') {
         // Get credit report with PAN data
-        const creditResponse = await fetch('/api/credit-report.php', {
+        const creditResponse = await fetch('https://api.finonest.com/api/credit-report.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -216,7 +216,7 @@ const LoanOnboarding: React.FC = () => {
     
     try {
       // Try SurePass API first
-      const response = await fetch('/api/rc-surepass.php', {
+      const response = await fetch('https://api.finonest.com/api/rc-surepass.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -248,7 +248,7 @@ const LoanOnboarding: React.FC = () => {
         const city = extractCity(data.data.present_address || data.data.permanent_address || '');
         
         // Get car valuation using Gemini AI
-        const valuationResponse = await fetch('/api/car-valuation.php', {
+        const valuationResponse = await fetch('https://api.finonest.com/api/car-valuation.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -304,7 +304,7 @@ const LoanOnboarding: React.FC = () => {
     
     // Save all data to database
     try {
-      const response = await fetch('/api/loan-application.php', {
+      const response = await fetch('https://api.finonest.com/api/loan-application.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
