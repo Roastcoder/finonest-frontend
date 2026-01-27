@@ -43,7 +43,7 @@ const AdminLoanOnboarding = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('https://api.finonest.com/api/loan-applications', {
+      const response = await fetch('https://api.finonest.com/api/loan-applications.php', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
