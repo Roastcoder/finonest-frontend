@@ -276,7 +276,7 @@ const AdminLoanOnboarding = () => {
                   </CardContent>
                 </Card>
 
-                {/* Application Status */}tatus */}
+                {/* Application Status */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Application Status</CardTitle>
