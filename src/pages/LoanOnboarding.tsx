@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Loader2, 
+  Car, 
+  TrendingUp, 
+  Calendar, 
+  CreditCard, 
+  CheckCircle,
+  Shield,
+  Target,
+  Activity,
+  Search
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -468,52 +480,368 @@ const LoanOnboarding: React.FC = () => {
         );
 
       case 6:
+        const vehicleData = {
+          image: "/api/placeholder/400/250",
+          registrationNumber: userData?.vehicleRC || "MH01AB1234",
+          registrationDate: userData?.vehicleResponse?.data?.registration_date || "15 Mar 2020",
+          make: userData?.vehicleMake || "Maruti Suzuki",
+          model: userData?.vehicleModel || "Swift VDI",
+          year: userData?.vehicleYear || "2020",
+          color: userData?.vehicleColor || "White",
+          fuelType: userData?.fuelType || "Petrol"
+        };
+
+        const creditScore = {
+          score: userData?.creditScore || 742,
+          maxScore: 900,
+          category: (userData?.creditScore ?? 0) >= 750 ? "Excellent" : 
+                    (userData?.creditScore ?? 0) >= 700 ? "Good" : 
+                    (userData?.creditScore ?? 0) >= 650 ? "Fair" : "Poor",
+          lastUpdated: "Dec 2024"
+        };
+
+        const newAccounts = {
+          secured: { count: 1, amount: `₹${((userData?.vehicleValue ?? 0) / 100000).toFixed(1)}L` },
+          unsecured: { count: 0, amount: "₹0" },
+          autoLoans: { count: 1, amount: `₹${((userData?.vehicleValue ?? 0) * 0.8 / 100000).toFixed(1)}L` }
+        };
+
+        const autoLoanSummary = {
+          sanctionedAmount: `₹${((userData?.vehicleValue ?? 0) * 0.8).toLocaleString() || '8,20,000'}`,
+          principalOutstanding: `₹${((userData?.vehicleValue ?? 0) * 0.65).toLocaleString() || '6,45,000'}`,
+          overdueAmount: "₹0",
+          accountOpenDate: vehicleData.registrationDate,
+          dpdHistory: [0, 0, 0, 0, 0, 0]
+        };
+
+        const creditSummary = {
+          outstandingBalance: `₹${((userData?.vehicleValue ?? 0) * 0.65).toLocaleString() || '9,25,000'}`,
+          activeAccounts: 1,
+          monthlyEMI: `₹${Math.round(((userData?.vehicleValue ?? 0) * 0.8) / 60).toLocaleString() || '18,450'}`,
+          highestSanction: `₹${((userData?.vehicleValue ?? 0) * 0.8).toLocaleString() || '8,20,000'}`,
+          overdueAccounts: 0,
+          dpdCount: 0
+        };
+
+        const creditEnquiries = {
+          "30days": { total: 1, autoLoans: 1, others: 0 },
+          "60days": { total: 2, autoLoans: 1, others: 1 },
+          "90days": { total: 3, autoLoans: 2, others: 1 }
+        };
+
+        const getCreditScoreColor = (score: number) => {
+          if (score >= 750) return "text-green-600";
+          if (score >= 700) return "text-blue-600";
+          if (score >= 650) return "text-yellow-600";
+          return "text-red-600";
+        };
+
+        const getCreditScoreGradient = (score: number) => {
+          if (score >= 750) return "from-green-500 to-green-600";
+          if (score >= 700) return "from-blue-500 to-blue-600";
+          if (score >= 650) return "from-yellow-500 to-yellow-600";
+          return "from-red-500 to-red-600";
+        };
+
         return (
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Application Summary</h2>
-            <div className="space-y-4 mb-6">
-              <div className="glass p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-primary">Personal Details</h3>
-                <p>Name: {userData.panName}</p>
-                <p>Mobile: {userData.mobile}</p>
-                <p>PAN: {userData.pan}</p>
-                <p>DOB: {userData.dob}</p>
-                <p>Credit Score: {userData.creditScore}</p>
+          <div className="space-y-6 max-w-6xl mx-auto">
+            {/* Success Header */}
+            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-white/20 p-2 rounded-full">
+                  <CheckCircle className="w-6 h-6" />
+                </div>
+                <h1 className="text-2xl font-bold">Loan Application Successful!</h1>
               </div>
-              <div className="glass p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-primary">Vehicle Details</h3>
-                <p>RC: {userData.vehicleRC}</p>
-                <p>Model: {userData.vehicleModel}</p>
-                <p>Make: {userData.vehicleMake}</p>
-                <p>Year: {userData.vehicleYear}</p>
-                <p>Fuel: {userData.fuelType}</p>
-                <p>Color: {userData.vehicleColor}</p>
-                <p>Market Value: ₹{userData.vehicleValue?.toLocaleString()}</p>
-                <p>Owner: {userData.ownerName}</p>
-                {userData.vehicleResponse?.data && (
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    <p>Engine: {userData.vehicleResponse.data.cubic_capacity} CC</p>
-                    <p>Category: {userData.vehicleResponse.data.vehicle_category_description}</p>
-                    <p>Body Type: {userData.vehicleResponse.data.body_type}</p>
-                    <p>Seats: {userData.vehicleResponse.data.seat_capacity}</p>
-                    <p>Registration: {userData.vehicleResponse.data.registration_date}</p>
-                    <p>Insurance: {userData.vehicleResponse.data.insurance_company}</p>
-                    <p>Insurance Valid: {userData.vehicleResponse.data.insurance_upto}</p>
-                    <p>Financed: {userData.vehicleResponse.data.financed ? 'Yes' : 'No'}</p>
-                    {userData.vehicleResponse.data.financer && (
-                      <p>Financer: {userData.vehicleResponse.data.financer}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="glass p-4 rounded-lg">
-                <h3 className="font-semibold mb-2 text-primary">Income Details</h3>
-                <p>Monthly Income: ₹{userData.income?.toLocaleString()}</p>
-                <p>Employment: {userData.employment}</p>
+              <p className="text-green-100 mb-4">Your loan application has been submitted successfully. Here's your complete credit profile overview.</p>
+              <div className="flex items-center gap-2 text-sm">
+                <Shield className="w-4 h-4" />
+                <span>Application ID: #{userData?.applicationId || 'FN' + Date.now()}</span>
               </div>
             </div>
-            
+
+            {/* Top Row - Vehicle Card & Credit Score */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Vehicle Card */}
+              <Card className="overflow-hidden shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Car className="w-5 h-5" />
+                    Your Vehicle
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <img 
+                      src={vehicleData.image} 
+                      alt="Vehicle" 
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-white text-gray-900 shadow-md font-semibold">
+                        {vehicleData.year}
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-4 left-4">
+                      <Badge className="bg-black/70 text-white">
+                        {vehicleData.fuelType}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="p-6 bg-gradient-to-r from-gray-50 to-white">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600 font-medium">Registration Number</p>
+                        <p className="font-bold text-lg text-blue-700">{vehicleData.registrationNumber}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 font-medium">Registration Date</p>
+                        <p className="font-semibold flex items-center gap-1">
+                          <Calendar className="w-4 h-4 text-blue-600" />
+                          {vehicleData.registrationDate}
+                        </p>
+                      </div>
+                      <div className="col-span-2">
+                        <p className="text-sm text-gray-600 font-medium">Vehicle Details</p>
+                        <p className="font-bold text-lg text-gray-800">{vehicleData.make} {vehicleData.model}</p>
+                        <p className="text-sm text-gray-600">{vehicleData.color} • {vehicleData.fuelType}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Credit Score Gauge */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    Credit Score Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center py-8 bg-gradient-to-b from-purple-50 to-white">
+                  <div className="relative w-48 h-48 mb-6">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        stroke="currentColor"
+                        strokeWidth="6"
+                        fill="transparent"
+                        className="text-gray-200"
+                      />
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        stroke="currentColor"
+                        strokeWidth="6"
+                        fill="transparent"
+                        strokeDasharray={`${(creditScore.score / creditScore.maxScore) * 251.2} 251.2`}
+                        className={`${getCreditScoreColor(creditScore.score)} transition-all duration-2000`}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className={`text-4xl font-bold ${getCreditScoreColor(creditScore.score)}`}>
+                        {creditScore.score}
+                      </span>
+                      <span className="text-sm text-gray-600">/{creditScore.maxScore}</span>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <Badge className={`bg-gradient-to-r ${getCreditScoreGradient(creditScore.score)} text-white mb-3 px-4 py-2 text-sm font-semibold`}>
+                      {creditScore.category} Credit Score
+                    </Badge>
+                    <p className="text-sm text-gray-600">Last updated: {creditScore.lastUpdated}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* New Accounts Summary */}
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Account Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-bold text-green-800">Secured Loans</h3>
+                      <div className="bg-green-500 p-2 rounded-full">
+                        <Shield className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-green-700 mb-1">{newAccounts.secured.count}</p>
+                    <p className="text-sm text-green-600 font-medium">Total: {newAccounts.secured.amount}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-bold text-blue-800">Unsecured Loans</h3>
+                      <div className="bg-blue-500 p-2 rounded-full">
+                        <CreditCard className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-blue-700 mb-1">{newAccounts.unsecured.count}</p>
+                    <p className="text-sm text-blue-600 font-medium">Total: {newAccounts.unsecured.amount}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-bold text-purple-800">Auto Loans</h3>
+                      <div className="bg-purple-500 p-2 rounded-full">
+                        <Car className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-purple-700 mb-1">{newAccounts.autoLoans.count}</p>
+                    <p className="text-sm text-purple-600 font-medium">Total: {newAccounts.autoLoans.amount}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Auto Loan Summary & Credit Summary */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Auto Loan Summary */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-5 h-5" />
+                    Auto Loan Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Sanctioned Amount</p>
+                      <p className="font-bold text-xl text-gray-800">{autoLoanSummary.sanctionedAmount}</p>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Principal Outstanding</p>
+                      <p className="font-bold text-xl text-blue-600">{autoLoanSummary.principalOutstanding}</p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Overdue Amount</p>
+                      <p className="font-bold text-xl text-green-600">{autoLoanSummary.overdueAmount}</p>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Account Open Date</p>
+                      <p className="font-bold text-lg text-purple-600">{autoLoanSummary.accountOpenDate}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 font-medium mb-3">Payment History (Last 6 months)</p>
+                    <div className="flex gap-2">
+                      {autoLoanSummary.dpdHistory.map((_, index) => (
+                        <div
+                          key={index}
+                          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-green-100 text-green-700 border-2 border-green-200"
+                        >
+                          ✓
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-green-600 mt-2 font-medium">Perfect payment record</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Credit Summary */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-teal-500 to-teal-600 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="w-5 h-5" />
+                    Credit Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Outstanding Balance</p>
+                      <p className="font-bold text-xl text-blue-600">{creditSummary.outstandingBalance}</p>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Active Accounts</p>
+                      <p className="font-bold text-xl text-gray-800">{creditSummary.activeAccounts}</p>
+                    </div>
+                    <div className="bg-orange-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Monthly EMI</p>
+                      <p className="font-bold text-xl text-orange-600">{creditSummary.monthlyEMI}</p>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Highest Sanction</p>
+                      <p className="font-bold text-xl text-purple-600">{creditSummary.highestSanction}</p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">Overdue Accounts</p>
+                      <p className="font-bold text-xl text-green-600">{creditSummary.overdueAccounts}</p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 font-medium">DPD Count</p>
+                      <p className="font-bold text-xl text-green-600">{creditSummary.dpdCount}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Credit Enquiry Section */}
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="w-5 h-5" />
+                  Credit Enquiry History
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {Object.entries(creditEnquiries).map(([period, data]) => (
+                    <div key={period} className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
+                      <h3 className="font-bold text-gray-800 mb-4 text-lg">
+                        Last {period.replace('days', ' Days')}
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-medium">Total Enquiries</span>
+                          <span className="font-bold text-lg bg-blue-100 text-blue-700 px-3 py-1 rounded-full">{data.total}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-medium">Auto Loans</span>
+                          <span className="font-bold text-lg bg-purple-100 text-purple-700 px-3 py-1 rounded-full">{data.autoLoans}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 font-medium">Others</span>
+                          <span className="font-bold text-lg bg-gray-100 text-gray-700 px-3 py-1 rounded-full">{data.others}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Eligible Products */}
             <EligibleProducts userData={userData} />
+
+            {/* Action Buttons */}
+            <div className="bg-white rounded-2xl p-6 shadow-lg border-0">
+              <div className="text-center space-y-4">
+                <h3 className="text-xl font-bold text-gray-800">What's Next?</h3>
+                <p className="text-gray-600">Your loan application is being processed. You'll receive updates via SMS and email.</p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold">
+                    Track Application Status
+                  </Button>
+                  <Button variant="outline" className="border-2 border-gray-300 hover:border-gray-400 px-8 py-3 rounded-xl font-semibold">
+                    Download Application Copy
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         );
 
@@ -526,16 +854,22 @@ const LoanOnboarding: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="bg-gradient-hero flex items-center justify-center p-4 min-h-[calc(100vh-140px)]">
-        <Card className="w-full max-w-md glass">
-          <CardHeader className="bg-gradient-primary text-white text-center">
-            <h1 className="text-2xl font-bold font-display">Finonest</h1>
-            <Progress value={getProgressValue()} className="mt-4 bg-white/20" />
-            <p className="text-sm mt-2 text-white/90">Step {currentStep} of 6</p>
-          </CardHeader>
-          <CardContent className="p-6">
+        {currentStep === 6 ? (
+          <div className="w-full max-w-7xl">
             {renderStep()}
-          </CardContent>
-        </Card>
+          </div>
+        ) : (
+          <Card className="w-full max-w-md glass">
+            <CardHeader className="bg-gradient-primary text-white text-center">
+              <h1 className="text-2xl font-bold font-display">Finonest</h1>
+              <Progress value={getProgressValue()} className="mt-4 bg-white/20" />
+              <p className="text-sm mt-2 text-white/90">Step {currentStep} of 6</p>
+            </CardHeader>
+            <CardContent className="p-6">
+              {renderStep()}
+            </CardContent>
+          </Card>
+        )}
       </div>
       <Footer />
     </div>
