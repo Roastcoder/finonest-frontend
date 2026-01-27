@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, Eye, User, Car, CreditCard } from "lucide-react";
@@ -140,6 +140,9 @@ const AdminLoanOnboarding = () => {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedApp?.pan_name || selectedApp?.mobile} - Onboarding Details</DialogTitle>
+            <DialogDescription>
+              Complete loan onboarding application details and progress.
+            </DialogDescription>
           </DialogHeader>
           {selectedApp && (
             <div className="space-y-6">

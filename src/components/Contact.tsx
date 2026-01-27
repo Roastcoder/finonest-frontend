@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -300,6 +300,9 @@ const Contact = () => {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Terms and Conditions of Service</DialogTitle>
+            <DialogDescription>
+              Please read our terms and conditions carefully before proceeding.
+            </DialogDescription>
           </DialogHeader>
           <div className="prose prose-sm max-w-none">
             <p className="text-sm text-muted-foreground mb-4">For FINONEST INDIA PVT LTD - Last Updated: December 25, 2024</p>
