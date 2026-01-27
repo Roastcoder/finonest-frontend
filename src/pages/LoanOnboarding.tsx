@@ -19,6 +19,14 @@ import {
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { 
+  getAccountStatusDescription, 
+  getAccountTypeDescription, 
+  getEmploymentStatusDescription,
+  getGenderDescription,
+  getStateDescription,
+  getPaymentHistoryDescription
+} from '../constants/fbaCodes';
 
 interface Product {
   lender_name: string;
@@ -682,9 +690,10 @@ const LoanOnboarding: React.FC = () => {
                   required
                 >
                   <option value="">Select employment type</option>
-                  <option value="salaried">Salaried</option>
-                  <option value="self-employed">Self Employed</option>
-                  <option value="business">Business Owner</option>
+                  <option value="S">Salaried</option>
+                  <option value="E">Self-employed</option>
+                  <option value="P">Self-employed Professional</option>
+                  <option value="N">Non-Salaried</option>
                 </select>
                 {errors.employment && <p className="text-red-500 text-sm mt-1">{errors.employment}</p>}
               </div>
@@ -729,8 +738,23 @@ const LoanOnboarding: React.FC = () => {
           enquiries90: creditReport.ENQUIRY_SUMMARY?.last_90_days || 3,
           autoLoanEnquiries30: creditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || 1,
           autoLoanEnquiries60: creditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || 1,
-          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || 2
+          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || 2,
+          // Process account details with FBA codes
+          accounts: creditReport.ACCOUNTS?.map((account: any) => ({
+            ...account,
+            accountTypeDesc: getAccountTypeDescription(account.account_type),
+            accountStatusDesc: getAccountStatusDescription(account.account_status),
+            paymentHistoryDesc: account.payment_history?.map((ph: string) => getPaymentHistoryDescription(ph))
+          })) || []
         } : null;
+        
+        // Process personal information with FBA codes
+        const personalInfo = {
+          name: userData?.panName || 'N/A',
+          gender: userData?.gender ? getGenderDescription(userData.gender) : 'N/A',
+          employment: userData?.employment ? getEmploymentStatusDescription(userData.employment) : 'N/A',
+          dob: userData?.dob || 'N/A'
+        };
 
         const vehicleValue = userData?.vehicleValue || 800000;
         const loanAmount = vehicleValue * 0.8; // 80% LTV
@@ -871,6 +895,8 @@ const LoanOnboarding: React.FC = () => {
                         <p className="text-sm text-gray-600 font-medium">Vehicle Details</p>
                         <p className="font-bold text-lg text-gray-800">{vehicleData.make} {vehicleData.model}</p>
                         <p className="text-sm text-gray-600">{vehicleData.color} • {vehicleData.fuelType}</p>
+                        <p className="text-sm text-blue-600">Owner: {userData?.ownerName || personalInfo.name}</p>
+                        <p className="text-sm text-blue-600">Market Value: ₹{(vehicleValue / 100000).toFixed(1)}L</p>
                       </div>
                     </div>
                   </div>
@@ -1090,6 +1116,40 @@ const LoanOnboarding: React.FC = () => {
               </CardContent>
             </Card>
 
+            {/* Real Account Details */}
+            {realCreditData?.accounts && realCreditData.accounts.length > 0 && (
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="w-5 h-5" />
+                    Real Credit Accounts ({realCreditData.accounts.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {realCreditData.accounts.slice(0, 6).map((account: any, index: number) => (
+                      <div key={index} className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                        <p className="font-bold text-indigo-800">{account.accountTypeDesc || 'Unknown Account'}</p>
+                        <p className="text-sm text-indigo-600">Status: {account.accountStatusDesc || 'Unknown'}</p>
+                        <p className="text-sm text-indigo-600">Balance: ₹{account.current_balance?.toLocaleString() || '0'}</p>
+                        <p className="text-sm text-indigo-600">Limit: ₹{account.credit_limit?.toLocaleString() || 'N/A'}</p>
+                        <p className="text-sm text-indigo-600">EMI: ₹{account.emi_amount?.toLocaleString() || 'N/A'}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <p className="text-sm font-bold text-yellow-800 mb-2">Real Bureau Summary:</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-yellow-700">
+                      <div>Total: {realCreditData.totalAccounts}</div>
+                      <div>Active: {realCreditData.activeAccounts}</div>
+                      <div>Closed: {realCreditData.closedAccounts}</div>
+                      <div>Overdue: {realCreditData.overdueAccounts}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Eligible Products */}
             <EligibleProducts userData={userData} />
 
@@ -1112,11 +1172,11 @@ const LoanOnboarding: React.FC = () => {
                         loanAmount: `₹${(loanAmount / 100000).toFixed(1)}L`,
                         vehicleValue: `₹${(vehicleValue / 100000).toFixed(1)}L`,
                         income: userData?.income ? `₹${userData.income.toLocaleString()}` : 'N/A',
-                        employment: userData?.employment || 'N/A',
+                        employment: personalInfo.employment,
                         submissionDate: new Date().toLocaleDateString('en-IN')
                       };
                       
-                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nAPPLICANT DETAILS:\nName: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${appData.employment}\n\nVEHICLE DETAILS:\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nVehicle Value: ${appData.vehicleValue}\n\nLOAN DETAILS:\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\n\nStatus: Application Submitted Successfully\n\nContact: info@finonest.com | +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018`;
+                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nAPPLICANT DETAILS:\nName: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nGender: ${personalInfo.gender}\nDOB: ${personalInfo.dob}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${personalInfo.employment}\n\nVEHICLE DETAILS:\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nOwner: ${userData?.ownerName || personalInfo.name}\nFuel Type: ${vehicleData.fuelType}\nColor: ${vehicleData.color}\nRegistration Date: ${vehicleData.registrationDate}\nMarket Value: ${appData.vehicleValue}\n\nCREDIT SUMMARY:\nTotal Accounts: ${realCreditData?.totalAccounts || 1}\nActive Accounts: ${realCreditData?.activeAccounts || 1}\nClosed Accounts: ${realCreditData?.closedAccounts || 0}\nOverdue Accounts: ${realCreditData?.overdueAccounts || 0}\nTotal Outstanding: ${creditSummary.outstandingBalance}\nMonthly EMI: ${creditSummary.monthlyEMI}\n\nLOAN DETAILS:\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\nSanctioned Amount: ${autoLoanSummary.sanctionedAmount}\nPrincipal Outstanding: ${autoLoanSummary.principalOutstanding}\n\nENQUIRY SUMMARY:\nLast 30 Days: ${creditEnquiries['30days'].total} (Auto: ${creditEnquiries['30days'].autoLoans})\nLast 60 Days: ${creditEnquiries['60days'].total} (Auto: ${creditEnquiries['60days'].autoLoans})\nLast 90 Days: ${creditEnquiries['90days'].total} (Auto: ${creditEnquiries['90days'].autoLoans})\n\nData Source: ${realCreditData ? 'Real Credit Bureau Data' : 'Demo/Simulated Data'}\n\nStatus: Application Submitted Successfully\n\nContact: info@finonest.com | +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018`;
                       
                       const blob = new Blob([content], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);

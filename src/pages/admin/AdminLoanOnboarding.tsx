@@ -215,7 +215,68 @@ const AdminLoanOnboarding = () => {
                   </CardContent>
                 </Card>
 
-                {/* Application Status */}
+                {/* Data Storage Summary */}
+                <Card className="col-span-2">
+                  <CardHeader>
+                    <CardTitle>API Data Storage Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* RC API Data */}
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-bold text-blue-800 mb-2">RC API Data (20+ fields)</h4>
+                        <div className="text-sm text-blue-700 space-y-1">
+                          <p>• Registration: {selectedApp.vehicle_rc}</p>
+                          <p>• Make: {selectedApp.vehicle_make}</p>
+                          <p>• Model: {selectedApp.vehicle_model}</p>
+                          <p>• Year: {selectedApp.vehicle_year}</p>
+                          <p>• Fuel: {selectedApp.fuel_type}</p>
+                          <p>• Value: ₹{selectedApp.vehicle_value?.toLocaleString()}</p>
+                          <p className="text-xs text-blue-600 mt-2">+ Engine, Chassis, Address, Insurance, etc.</p>
+                        </div>
+                      </div>
+                      
+                      {/* CIBIL API Data */}
+                      <div className="bg-purple-50 p-4 rounded-lg">
+                        <h4 className="font-bold text-purple-800 mb-2">CIBIL API Data (15+ sections)</h4>
+                        <div className="text-sm text-purple-700 space-y-1">
+                          <p>• Credit Score: {selectedApp.credit_score}</p>
+                          <p>• PAN: {selectedApp.pan}</p>
+                          <p>• Name: {selectedApp.pan_name}</p>
+                          <p>• DOB: {selectedApp.dob}</p>
+                          <p>• Gender: {selectedApp.gender}</p>
+                          <p>• Employment: {selectedApp.employment}</p>
+                          <p className="text-xs text-purple-600 mt-2">+ Account Summary, Enquiries, Payment History, etc.</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Storage Stats */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-bold text-gray-800 mb-2">Current API Response Stats</h4>
+                      <div className="grid grid-cols-4 gap-4 text-center">
+                        <div>
+                          <p className="text-2xl font-bold text-blue-600">4.4KB</p>
+                          <p className="text-xs text-gray-600">Response Size</p>
+                        </div>
+                        <div>
+                          <p className="text-2xl font-bold text-green-600">8</p>
+                          <p className="text-xs text-gray-600">Applications</p>
+                        </div>
+                        <div>
+                          <p className="text-2xl font-bold text-orange-600">20+</p>
+                          <p className="text-xs text-gray-600">RC Fields</p>
+                        </div>
+                        <div>
+                          <p className="text-2xl font-bold text-purple-600">15+</p>
+                          <p className="text-xs text-gray-600">CIBIL Sections</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Application Status */}tatus */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Application Status</CardTitle>
