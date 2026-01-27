@@ -30,7 +30,7 @@ import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
 import AdminEnrollments from "./admin/AdminEnrollments";
 import AdminCareers from "./admin/AdminCareers";
-import AdminSlides from "./admin/AdminSlides";
+import AdminLoanOnboarding from "./admin/AdminLoanOnboarding";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
     if (path.includes('/enrollments')) return 'enrollments';
     if (path.includes('/branches')) return 'branches';
     if (path.includes('/careers')) return 'careers';
-    if (path.includes('/slides')) return 'slides';
+    if (path.includes('/loan-onboarding')) return 'loan-onboarding';
     return 'dashboard';
   };
 
@@ -103,6 +103,8 @@ const AdminDashboard = () => {
         return <AdminCareers />;
       case 'branches':
         return <AdminBranches />;
+      case 'loan-onboarding':
+        return <AdminLoanOnboarding />;
       case 'slides':
         return <AdminSlides />;
       case 'settings':
@@ -168,6 +170,15 @@ const AdminDashboard = () => {
             >
               <FileText className="w-4 h-4" />
               Applications
+            </Link>
+            <Link 
+              to="/admin/loan-onboarding"
+              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
+                activeTab === 'loan-onboarding' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              Loan Onboarding
             </Link>
             <Link 
               to="/admin/contact-forms"
@@ -283,7 +294,7 @@ const AdminDashboard = () => {
                   {activeTab === 'enrollments' && 'Course Enrollments'}
                   {activeTab === 'careers' && 'Career Management'}
                   {activeTab === 'branches' && 'Branch Management'}
-                  {activeTab === 'slides' && 'Home Page Slides'}
+                  {activeTab === 'loan-onboarding' && 'Loan Onboarding Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -296,6 +307,7 @@ const AdminDashboard = () => {
                   {activeTab === 'enrollments' && 'View and manage course enrollments and payments'}
                   {activeTab === 'careers' && 'Manage job postings and applications'}
                   {activeTab === 'branches' && 'Manage branch locations and information'}
+                  {activeTab === 'loan-onboarding' && 'Manage loan onboarding applications and data'}
                   {activeTab === 'slides' && 'Manage home page carousel slides and images'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
