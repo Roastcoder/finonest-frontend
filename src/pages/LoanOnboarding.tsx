@@ -35,36 +35,36 @@ const EligibleProducts: React.FC<{ userData: UserData }> = ({ userData }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // First try to get products from localStorage (admin configured)
-        const savedProducts = localStorage.getItem('loanProducts');
-        if (savedProducts) {
-          const localProducts = JSON.parse(savedProducts);
-          const eligibleProducts = localProducts
-            .filter((product: any) => product.status === 'active')
-            .map((product: any) => ({
-              lender_name: product.lender_name,
-              product_name: product.product_name,
-              roi_min: product.roi_min,
-              roi_max: product.roi_max,
-              max_ltv_purchase: product.max_ltv_purchase
-            }));
-          setProducts(eligibleProducts);
+        // Try policy engine API first
+        const response = await fetch('https://api.finonest.com/api/policy-engine.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            creditScore: userData.creditScore,
+            fuelType: userData.fuelType,
+            employment: userData.employment,
+            income: userData.income,
+            loanType: 'purchase'
+          })
+        });
+        const data = await response.json();
+        if (data.success) {
+          setProducts(data.eligible_products);
         } else {
-          // Fallback to API call
-          const response = await fetch('https://api.finonest.com/api/policy-engine.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              creditScore: userData.creditScore,
-              fuelType: userData.fuelType,
-              employment: userData.employment,
-              income: userData.income,
-              loanType: 'purchase'
-            })
-          });
-          const data = await response.json();
-          if (data.success) {
-            setProducts(data.eligible_products);
+          // Fallback to localStorage
+          const savedProducts = localStorage.getItem('loanProducts');
+          if (savedProducts) {
+            const localProducts = JSON.parse(savedProducts);
+            const eligibleProducts = localProducts
+              .filter((product: any) => product.status === 'active')
+              .map((product: any) => ({
+                lender_name: product.lender_name,
+                product_name: product.product_name,
+                roi_min: product.roi_min,
+                roi_max: product.roi_max,
+                max_ltv_purchase: product.max_ltv_purchase
+              }));
+            setProducts(eligibleProducts);
           }
         }
       } catch (error) {
@@ -1100,9 +1100,9 @@ const LoanOnboarding: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="bg-gradient-hero flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 80px)', paddingTop: '80px' }}>
+      <div className="bg-gradient-hero flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 80px)', paddingTop: '100px' }}>
         {currentStep === 6 ? (
-          <div className="w-full max-w-7xl">
+          <div className="w-full max-w-7xl" style={{ paddingTop: '20px' }}>
             {renderStep()}
           </div>
         ) : (
