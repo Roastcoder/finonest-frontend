@@ -396,17 +396,17 @@ const AdminSettings = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="pan_client_user_id">PAN API Client User ID</Label>
+            <Label htmlFor="client_hash_id">Client Hash ID</Label>
             <div className="flex gap-2 mt-1">
               <Input
-                id="pan_client_user_id"
+                id="client_hash_id"
                 type="text"
-                value={getSettingValue('pan_client_user_id')}
-                onChange={(e) => handleSettingChange('pan_client_user_id', e.target.value)}
-                placeholder="Enter PAN API client user ID"
+                value={getSettingValue('client_hash_id')}
+                onChange={(e) => handleSettingChange('client_hash_id', e.target.value)}
+                placeholder="Enter Client Hash ID"
               />
               <Button 
-                onClick={() => updateSetting('pan_client_user_id', getSettingValue('pan_client_user_id'))}
+                onClick={() => updateSetting('client_hash_id', getSettingValue('client_hash_id'))}
                 disabled={saving}
                 size="sm"
               >
@@ -416,79 +416,17 @@ const AdminSettings = () => {
           </div>
           
           <div>
-            <Label htmlFor="pan_secret_key">PAN API Secret Key</Label>
-            <div className="flex gap-2 mt-1">
-              <div className="relative flex-1">
-                <Input
-                  id="pan_secret_key"
-                  type={showSecrets['pan_secret_key'] ? "text" : "password"}
-                  value={getSettingValue('pan_secret_key')}
-                  onChange={(e) => handleSettingChange('pan_secret_key', e.target.value)}
-                  placeholder="Enter PAN API secret key"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                  onClick={() => toggleSecret('pan_secret_key')}
-                >
-                  {showSecrets['pan_secret_key'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </Button>
-              </div>
-              <Button 
-                onClick={() => updateSetting('pan_secret_key', getSettingValue('pan_secret_key'))}
-                disabled={saving}
-                size="sm"
-              >
-                <Save className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-          
-          <div>
-            <Label htmlFor="pan_access_key">PAN API Access Key</Label>
-            <div className="flex gap-2 mt-1">
-              <div className="relative flex-1">
-                <Input
-                  id="pan_access_key"
-                  type={showSecrets['pan_access_key'] ? "text" : "password"}
-                  value={getSettingValue('pan_access_key')}
-                  onChange={(e) => handleSettingChange('pan_access_key', e.target.value)}
-                  placeholder="Enter PAN API access key"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                  onClick={() => toggleSecret('pan_access_key')}
-                >
-                  {showSecrets['pan_access_key'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </Button>
-              </div>
-              <Button 
-                onClick={() => updateSetting('pan_access_key', getSettingValue('pan_access_key'))}
-                disabled={saving}
-                size="sm"
-              >
-                <Save className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-          
-          <div>
-            <Label htmlFor="credit_client_user_id">Credit API Client User ID</Label>
+            <Label htmlFor="base_url">Base URL</Label>
             <div className="flex gap-2 mt-1">
               <Input
-                id="credit_client_user_id"
-                type="text"
-                value={getSettingValue('credit_client_user_id')}
-                onChange={(e) => handleSettingChange('credit_client_user_id', e.target.value)}
-                placeholder="Enter Credit API client user ID"
+                id="base_url"
+                type="url"
+                value={getSettingValue('base_url')}
+                onChange={(e) => handleSettingChange('base_url', e.target.value)}
+                placeholder="https://api.example.com"
               />
               <Button 
-                onClick={() => updateSetting('credit_client_user_id', getSettingValue('credit_client_user_id'))}
+                onClick={() => updateSetting('base_url', getSettingValue('base_url'))}
                 disabled={saving}
                 size="sm"
               >
@@ -498,28 +436,59 @@ const AdminSettings = () => {
           </div>
           
           <div>
-            <Label htmlFor="credit_secret_key">Credit API Secret Key</Label>
+            <Label htmlFor="secret_key">Secret Key</Label>
             <div className="flex gap-2 mt-1">
               <div className="relative flex-1">
                 <Input
-                  id="credit_secret_key"
-                  type={showSecrets['credit_secret_key'] ? "text" : "password"}
-                  value={getSettingValue('credit_secret_key')}
-                  onChange={(e) => handleSettingChange('credit_secret_key', e.target.value)}
-                  placeholder="Enter Credit API secret key"
+                  id="secret_key"
+                  type={showSecrets['secret_key'] ? "text" : "password"}
+                  value={getSettingValue('secret_key')}
+                  onChange={(e) => handleSettingChange('secret_key', e.target.value)}
+                  placeholder="Enter Secret Key"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
-                  onClick={() => toggleSecret('credit_secret_key')}
+                  onClick={() => toggleSecret('secret_key')}
                 >
-                  {showSecrets['credit_secret_key'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showSecrets['secret_key'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </Button>
               </div>
               <Button 
-                onClick={() => updateSetting('credit_secret_key', getSettingValue('credit_secret_key'))}
+                onClick={() => updateSetting('secret_key', getSettingValue('secret_key'))}
+                disabled={saving}
+                size="sm"
+              >
+                <Save className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div>
+            <Label htmlFor="access_key">Access Key</Label>
+            <div className="flex gap-2 mt-1">
+              <div className="relative flex-1">
+                <Input
+                  id="access_key"
+                  type={showSecrets['access_key'] ? "text" : "password"}
+                  value={getSettingValue('access_key')}
+                  onChange={(e) => handleSettingChange('access_key', e.target.value)}
+                  placeholder="Enter Access Key"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
+                  onClick={() => toggleSecret('access_key')}
+                >
+                  {showSecrets['access_key'] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+              </div>
+              <Button 
+                onClick={() => updateSetting('access_key', getSettingValue('access_key'))}
                 disabled={saving}
                 size="sm"
               >
