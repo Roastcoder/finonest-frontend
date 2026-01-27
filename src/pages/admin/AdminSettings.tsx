@@ -396,17 +396,17 @@ const AdminSettings = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="client_hash_id">Client Hash ID</Label>
+            <Label htmlFor="client_user_id">Client User ID</Label>
             <div className="flex gap-2 mt-1">
               <Input
-                id="client_hash_id"
+                id="client_user_id"
                 type="text"
-                value={getSettingValue('client_hash_id')}
-                onChange={(e) => handleSettingChange('client_hash_id', e.target.value)}
-                placeholder="Enter Client Hash ID"
+                value={getSettingValue('client_user_id')}
+                onChange={(e) => handleSettingChange('client_user_id', e.target.value)}
+                placeholder="Enter Client User ID"
               />
               <Button 
-                onClick={() => updateSetting('client_hash_id', getSettingValue('client_hash_id'))}
+                onClick={() => updateSetting('client_user_id', getSettingValue('client_user_id'))}
                 disabled={saving}
                 size="sm"
               >
