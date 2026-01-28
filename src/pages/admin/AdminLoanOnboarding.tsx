@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Eye, User, Car, CreditCard } from "lucide-react";
+import { Loader2, Eye, User, Car, CreditCard, Download, FileText, TrendingUp, Shield, Activity, Search, Calendar } from "lucide-react";
 
 interface LoanApplication {
   id: number;
@@ -22,6 +22,8 @@ interface LoanApplication {
   vehicle_make: string;
   vehicle_year: number;
   fuel_type: string;
+  vehicle_color: string;
+  owner_name: string;
   vehicle_value: number;
   income: number;
   employment: string;
@@ -29,12 +31,77 @@ interface LoanApplication {
   step_completed: number;
   created_at: string;
   updated_at: string;
+  pan_response?: string;
+  credit_response?: string;
+  vehicle_response?: string;
+}
+
+interface FormattedLoanData {
+  success: boolean;
+  application_id: number;
+  timestamp: string;
+  vehicle_info: {
+    title: string;
+    registration_number: string;
+    registration_date: string;
+    details: string;
+    color_fuel: string;
+    owner: string;
+    market_value: string;
+    data_source: string;
+  };
+  credit_analysis: {
+    score: number;
+    max_score: number;
+    rating: string;
+    last_updated: string;
+    verified: boolean;
+  };
+  financer_info: {
+    rc_financer: string;
+    source: string;
+    cibil_match: boolean;
+    match_message: string;
+  };
+  account_summary: {
+    secured_loans: { count: number; total: string };
+    unsecured_loans: { count: number; total: string };
+    auto_loans: { count: number; total: string };
+  };
+  auto_loan_details?: {
+    sanctioned_amount: string;
+    principal_outstanding: string;
+    overdue_amount: string;
+    account_open_date: string;
+    payment_history: string[];
+    payment_record: string;
+  };
+  credit_overview: {
+    outstanding_balance: string;
+    active_accounts: number;
+    monthly_emi: string;
+    highest_sanction: string;
+    overdue_accounts: number;
+    dpd_count: number;
+  };
+  enquiry_history: {
+    last_30_days: { total: number; auto_loans: number; others: number };
+    last_60_days: { total: number; auto_loans: number; others: number };
+    last_90_days: { total: number; auto_loans: number; others: number };
+  };
+  verification_status: {
+    pan_verified: boolean;
+    credit_verified: boolean;
+    vehicle_verified: boolean;
+  };
 }
 
 const AdminLoanOnboarding = () => {
   const [applications, setApplications] = useState<LoanApplication[]>([]);
   const [selectedApp, setSelectedApp] = useState<LoanApplication | null>(null);
+  const [formattedData, setFormattedData] = useState<FormattedLoanData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [detailsLoading, setDetailsLoading] = useState(false);
   const { toast } = useToast();
   const { token } = useAuth();
 
@@ -65,6 +132,71 @@ const AdminLoanOnboarding = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchFormattedData = async (applicationId: number) => {
+    setDetailsLoading(true);
+    try {
+      const response = await fetch(`https://api.finonest.com/api/loan-onboarding-result.php?id=${applicationId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setFormattedData(data);
+      } else {
+        throw new Error('Failed to fetch formatted data');
+      }
+    } catch (error) {
+      console.error('Failed to fetch formatted data:', error);
+      setFormattedData(null);
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
+  const handleViewDetails = (app: LoanApplication) => {
+    setSelectedApp(app);
+    fetchFormattedData(app.id);
+  };
+
+  const downloadReport = async (applicationId: number, format: 'txt' | 'pdf') => {
+    try {
+      if (format === 'pdf') {
+        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-pdf.php?id=${applicationId}`);
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Finonest_Report_${applicationId}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      } else {
+        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-result.php?id=${applicationId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          const content = `FINONEST INDIA PVT LTD\nAdmin Loan Report\n\nApplication ID: ${data.application_id}\nGenerated: ${new Date().toLocaleString()}\n\n=== VEHICLE INFORMATION ===\n${data.vehicle_info.title}\nRegistration Number: ${data.vehicle_info.registration_number}\nRegistration Date: ${data.vehicle_info.registration_date}\nVehicle Details: ${data.vehicle_info.details}\n${data.vehicle_info.color_fuel}\nOwner: ${data.vehicle_info.owner}\nMarket Value: ${data.vehicle_info.market_value}\n\n=== CREDIT SCORE ANALYSIS ===\nCredit Score: ${data.credit_analysis.score}/${data.credit_analysis.max_score}\nRating: ${data.credit_analysis.rating}\nLast Updated: ${data.credit_analysis.last_updated}\n\n=== FINANCER INFORMATION ===\nRC Document Financer: ${data.financer_info.rc_financer}\nCIBIL Credit Match: ${data.financer_info.cibil_match ? 'Yes' : 'No'}\n\n=== ACCOUNT SUMMARY ===\nSecured Loans: ${data.account_summary.secured_loans.count} (${data.account_summary.secured_loans.total})\nUnsecured Loans: ${data.account_summary.unsecured_loans.count} (${data.account_summary.unsecured_loans.total})\nAuto Loans: ${data.account_summary.auto_loans.count} (${data.account_summary.auto_loans.total})\n\n=== CREDIT OVERVIEW ===\nOutstanding Balance: ${data.credit_overview.outstanding_balance}\nActive Accounts: ${data.credit_overview.active_accounts}\nMonthly EMI: ${data.credit_overview.monthly_emi}\nHighest Sanction: ${data.credit_overview.highest_sanction}\n\nThank you for using Finonest Admin Panel!`;
+          
+          const blob = new Blob([content], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Finonest_Admin_Report_${applicationId}.txt`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `Failed to download ${format.toUpperCase()} report`,
+        variant: "destructive",
+      });
     }
   };
 
@@ -103,7 +235,7 @@ const AdminLoanOnboarding = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {applications.map((app) => (
-                <Card key={app.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setSelectedApp(app)}>
+                <Card key={app.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleViewDetails(app)}>
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">{app.pan_name || app.mobile}</CardTitle>
@@ -138,160 +270,306 @@ const AdminLoanOnboarding = () => {
       </Card>
 
       {/* Application Details Modal */}
-      <Dialog open={!!selectedApp} onOpenChange={() => setSelectedApp(null)}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <Dialog open={!!selectedApp} onOpenChange={() => { setSelectedApp(null); setFormattedData(null); }}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{selectedApp?.pan_name || selectedApp?.mobile} - Onboarding Details</DialogTitle>
+            <DialogTitle className="flex items-center justify-between">
+              <span>{selectedApp?.pan_name || selectedApp?.mobile} - Loan Report</span>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => selectedApp && downloadReport(selectedApp.id, 'txt')}
+                >
+                  <FileText className="w-4 h-4 mr-1" />
+                  TXT
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => selectedApp && downloadReport(selectedApp.id, 'pdf')}
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  PDF
+                </Button>
+              </div>
+            </DialogTitle>
             <DialogDescription>
-              Complete loan onboarding application details and progress.
+              Complete loan onboarding report in formatted display.
             </DialogDescription>
           </DialogHeader>
-          {selectedApp && (
+          
+          {detailsLoading ? (
+            <div className="text-center py-8">
+              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+              <p>Loading formatted report...</p>
+            </div>
+          ) : formattedData ? (
             <div className="space-y-6">
-              <div className="flex items-center gap-2">
-                <Badge className={getStatusColor(selectedApp.status)}>
-                  {selectedApp.status.toUpperCase()}
-                </Badge>
-                <Badge variant="outline">
-                  {getStepProgress(selectedApp.step_completed)}
-                </Badge>
-              </div>
+              {/* Vehicle Information */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Car className="w-5 h-5" />
+                    Your Vehicle
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Vehicle{formattedData.vehicle_info.title.match(/\d{4}/)?.[0]}DIESEL</p>
+                      <p className="text-sm font-medium text-gray-600 mt-2">Registration Number</p>
+                      <p className="font-bold text-lg">{formattedData.vehicle_info.registration_number}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Registration Date</p>
+                      <p className="font-semibold">{formattedData.vehicle_info.registration_date}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Vehicle Details</p>
+                      <p className="font-bold text-lg">{formattedData.vehicle_info.details}</p>
+                      <p className="text-sm text-gray-600">{formattedData.vehicle_info.color_fuel}</p>
+                      <p className="text-sm text-blue-600">Owner: {formattedData.vehicle_info.owner}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Market Value: {formattedData.vehicle_info.market_value}</p>
+                      <p className="text-xs text-gray-500">{formattedData.vehicle_info.data_source}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Personal Information */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      Personal Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p><strong>Name:</strong> {selectedApp.pan_name || 'N/A'}</p>
-                    <p><strong>Mobile:</strong> {selectedApp.mobile}</p>
-                    <p><strong>Email:</strong> {selectedApp.email || 'N/A'}</p>
-                    <p><strong>PAN:</strong> {selectedApp.pan}</p>
-                    <p><strong>DOB:</strong> {selectedApp.dob || 'N/A'}</p>
-                    <p><strong>Gender:</strong> {selectedApp.gender || 'N/A'}</p>
-                    <p><strong>Employment:</strong> {selectedApp.employment || 'N/A'}</p>
-                    <p><strong>Income:</strong> ₹{selectedApp.income?.toLocaleString() || 'N/A'}</p>
-                  </CardContent>
-                </Card>
+              {/* Credit Score Analysis */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    Credit Score Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="text-center space-y-2">
+                    <div className="text-4xl font-bold text-purple-600">{formattedData.credit_analysis.score}</div>
+                    <div className="text-gray-600">/{formattedData.credit_analysis.max_score}</div>
+                    <div className="text-lg font-semibold text-purple-700">{formattedData.credit_analysis.rating}</div>
+                    <div className="text-sm text-gray-600">Last updated: {formattedData.credit_analysis.last_updated}</div>
+                    <div className="text-sm text-green-600">✓ Real Bureau Data</div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                {/* Credit Information */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4" />
-                      Credit Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p><strong>Credit Score:</strong> {selectedApp.credit_score || 'N/A'}</p>
-                    <div className="mt-4">
-                      <p className="text-sm text-muted-foreground">
-                        Credit score range: {selectedApp.credit_score ? 
-                          selectedApp.credit_score >= 750 ? 'Excellent' :
-                          selectedApp.credit_score >= 700 ? 'Good' :
-                          selectedApp.credit_score >= 650 ? 'Fair' : 'Poor'
-                        : 'N/A'}
+              {/* Vehicle Financer Information */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    Vehicle Financer Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">RC Document Financer</p>
+                      <p className="text-sm font-medium text-gray-600">Financer Name</p>
+                      <p className="font-bold text-lg">{formattedData.financer_info.rc_financer}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Source</p>
+                      <p className="text-sm">{formattedData.financer_info.source}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">CIBIL Credit Match</p>
+                      <p className={`font-semibold ${formattedData.financer_info.cibil_match ? 'text-green-600' : 'text-gray-600'}`}>
+                        {formattedData.financer_info.cibil_match ? 'Matching financer found in CIBIL data' : 'No matching financer found in CIBIL data'}
                       </p>
+                      <p className="text-sm text-gray-600">{formattedData.financer_info.match_message}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Account Summary */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <CreditCard className="w-5 h-5" />
+                    Account Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-600">Secured Loans</p>
+                      <p className="text-2xl font-bold">{formattedData.account_summary.secured_loans.count}</p>
+                      <p className="text-sm text-gray-600">Total: {formattedData.account_summary.secured_loans.total}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-600">Unsecured Loans</p>
+                      <p className="text-2xl font-bold">{formattedData.account_summary.unsecured_loans.count}</p>
+                      <p className="text-sm text-gray-600">Total: {formattedData.account_summary.unsecured_loans.total}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-gray-600">Auto Loans</p>
+                      <p className="text-2xl font-bold">{formattedData.account_summary.auto_loans.count}</p>
+                      <p className="text-sm text-gray-600">Total: {formattedData.account_summary.auto_loans.total}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Auto Loan Details */}
+              {formattedData.auto_loan_details && (
+                <Card className="shadow-lg border-0">
+                  <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                    <CardTitle>Auto Loan Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Sanctioned Amount</p>
+                        <p className="font-bold text-xl">{formattedData.auto_loan_details.sanctioned_amount}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Principal Outstanding</p>
+                        <p className="font-bold text-xl">{formattedData.auto_loan_details.principal_outstanding}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Overdue Amount</p>
+                        <p className="font-bold text-xl">{formattedData.auto_loan_details.overdue_amount}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Account Open Date</p>
+                        <p className="font-bold text-lg">{formattedData.auto_loan_details.account_open_date}</p>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-sm font-medium text-gray-600 mb-2">Payment History (Last 6 months)</p>
+                      <div className="flex gap-2">
+                        {formattedData.auto_loan_details.payment_history.map((_, index) => (
+                          <div key={index} className="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold">
+                            ✓
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-sm text-green-600 mt-2">{formattedData.auto_loan_details.payment_record}</p>
                     </div>
                   </CardContent>
                 </Card>
+              )}
 
-                {/* Vehicle Information */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Car className="w-4 h-4" />
-                      Vehicle Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p><strong>RC Number:</strong> {selectedApp.vehicle_rc || 'N/A'}</p>
-                    <p><strong>Make:</strong> {selectedApp.vehicle_make || 'N/A'}</p>
-                    <p><strong>Model:</strong> {selectedApp.vehicle_model || 'N/A'}</p>
-                    <p><strong>Year:</strong> {selectedApp.vehicle_year || 'N/A'}</p>
-                    <p><strong>Fuel Type:</strong> {selectedApp.fuel_type || 'N/A'}</p>
-                    <p><strong>Market Value:</strong> ₹{selectedApp.vehicle_value?.toLocaleString() || 'N/A'}</p>
-                  </CardContent>
-                </Card>
+              {/* Credit Overview */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-teal-500 to-teal-600 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="w-5 h-5" />
+                    Credit Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Outstanding Balance</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.outstanding_balance}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Active Accounts</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.active_accounts}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Monthly EMI</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.monthly_emi}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Highest Sanction</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.highest_sanction}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Overdue Accounts</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.overdue_accounts}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">DPD Count</p>
+                      <p className="font-bold text-xl">{formattedData.credit_overview.dpd_count}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                {/* Data Storage Summary */}
-                <Card className="col-span-2">
-                  <CardHeader>
-                    <CardTitle>API Data Storage Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* RC API Data */}
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-bold text-blue-800 mb-2">RC API Data (20+ fields)</h4>
-                        <div className="text-sm text-blue-700 space-y-1">
-                          <p>• Registration: {selectedApp.vehicle_rc}</p>
-                          <p>• Make: {selectedApp.vehicle_make}</p>
-                          <p>• Model: {selectedApp.vehicle_model}</p>
-                          <p>• Year: {selectedApp.vehicle_year}</p>
-                          <p>• Fuel: {selectedApp.fuel_type}</p>
-                          <p>• Value: ₹{selectedApp.vehicle_value?.toLocaleString()}</p>
-                          <p className="text-xs text-blue-600 mt-2">+ Engine, Chassis, Address, Insurance, etc.</p>
+              {/* Credit Enquiry History */}
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Search className="w-5 h-5" />
+                    Credit Enquiry History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg">Last 30 Days</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Total Enquiries</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_30_days.total}</span>
                         </div>
-                      </div>
-                      
-                      {/* CIBIL API Data */}
-                      <div className="bg-purple-50 p-4 rounded-lg">
-                        <h4 className="font-bold text-purple-800 mb-2">CIBIL API Data (15+ sections)</h4>
-                        <div className="text-sm text-purple-700 space-y-1">
-                          <p>• Credit Score: {selectedApp.credit_score}</p>
-                          <p>• PAN: {selectedApp.pan}</p>
-                          <p>• Name: {selectedApp.pan_name}</p>
-                          <p>• DOB: {selectedApp.dob}</p>
-                          <p>• Gender: {selectedApp.gender}</p>
-                          <p>• Employment: {selectedApp.employment}</p>
-                          <p className="text-xs text-purple-600 mt-2">+ Account Summary, Enquiries, Payment History, etc.</p>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Auto Loans</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_30_days.auto_loans}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Others</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_30_days.others}</span>
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Storage Stats */}
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-bold text-gray-800 mb-2">Current API Response Stats</h4>
-                      <div className="grid grid-cols-4 gap-4 text-center">
-                        <div>
-                          <p className="text-2xl font-bold text-blue-600">4.4KB</p>
-                          <p className="text-xs text-gray-600">Response Size</p>
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg">Last 60 Days</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Total Enquiries</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_60_days.total}</span>
                         </div>
-                        <div>
-                          <p className="text-2xl font-bold text-green-600">8</p>
-                          <p className="text-xs text-gray-600">Applications</p>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Auto Loans</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_60_days.auto_loans}</span>
                         </div>
-                        <div>
-                          <p className="text-2xl font-bold text-orange-600">20+</p>
-                          <p className="text-xs text-gray-600">RC Fields</p>
-                        </div>
-                        <div>
-                          <p className="text-2xl font-bold text-purple-600">15+</p>
-                          <p className="text-xs text-gray-600">CIBIL Sections</p>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Others</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_60_days.others}</span>
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Application Status */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Application Status</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p><strong>Application ID:</strong> {selectedApp.application_id}</p>
-                    <p><strong>Status:</strong> {selectedApp.status}</p>
-                    <p><strong>Step Completed:</strong> {getStepProgress(selectedApp.step_completed)}</p>
-                    <p><strong>Created:</strong> {new Date(selectedApp.created_at).toLocaleString()}</p>
-                    <p><strong>Updated:</strong> {new Date(selectedApp.updated_at).toLocaleString()}</p>
-                  </CardContent>
-                </Card>
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg">Last 90 Days</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Total Enquiries</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_90_days.total}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Auto Loans</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_90_days.auto_loans}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm">Others</span>
+                          <span className="font-bold">{formattedData.enquiry_history.last_90_days.others}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : selectedApp && (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Unable to load formatted data. Showing basic information:</p>
+              <div className="mt-4 text-left max-w-md mx-auto space-y-2">
+                <p><strong>Name:</strong> {selectedApp.pan_name}</p>
+                <p><strong>Mobile:</strong> {selectedApp.mobile}</p>
+                <p><strong>PAN:</strong> {selectedApp.pan}</p>
+                <p><strong>Credit Score:</strong> {selectedApp.credit_score}</p>
+                <p><strong>Vehicle:</strong> {selectedApp.vehicle_make} {selectedApp.vehicle_model}</p>
+                <p><strong>RC:</strong> {selectedApp.vehicle_rc}</p>
               </div>
             </div>
           )}
