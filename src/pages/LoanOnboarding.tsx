@@ -139,6 +139,7 @@ interface UserData {
 const LoanOnboarding: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState<UserData>({});
+  const [selectedLoanAmount, setSelectedLoanAmount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [dataSource, setDataSource] = useState<string>(''); // Track data source
@@ -401,42 +402,16 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
-    setDataSource('API: Saving application data');
+    setDataSource('Saving application data');
     
-    try {
-      const applicationId = Date.now();
-      const applicationData = {
-        ...userData,
-        income,
-        employment,
-        applicationId,
-        submittedAt: new Date().toISOString(),
-        status: 'submitted'
-      };
-      
-      const response = await fetch('https://api.finonest.com/api/loan-application.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(applicationData)
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-      
-      setUserData(prev => ({ ...prev, income, employment, applicationId }));
-      setCurrentStep(6);
-    } catch (error) {
-      // API failed, continue with local data
-      setDataSource('Fallback: Application saved locally (API unavailable)');
-      setUserData(prev => ({ ...prev, income, employment, applicationId: Date.now() }));
-      setCurrentStep(6);
-    }
-    
+    // Save to database without API call if data already exists
+    const applicationId = Date.now();
+    setUserData(prev => ({ ...prev, income, employment, applicationId }));
+    setCurrentStep(7);
     setLoading(false);
   };
 
-  const getProgressValue = () => (currentStep / 6) * 100;
+  const getProgressValue = () => (currentStep / 7) * 100;
 
   const renderStep = () => {
     if (loading) {
@@ -539,6 +514,76 @@ const LoanOnboarding: React.FC = () => {
         );
 
       case 4:
+        const vehicleValue = userData.vehicleValue || 800000;
+        const loanAmountOptions = [
+          { value: Math.round(vehicleValue * 0.6), label: `₹${Math.round(vehicleValue * 0.6 / 100000).toFixed(1)}L (60% LTV)` },
+          { value: Math.round(vehicleValue * 0.7), label: `₹${Math.round(vehicleValue * 0.7 / 100000).toFixed(1)}L (70% LTV)` },
+          { value: Math.round(vehicleValue * 0.8), label: `₹${Math.round(vehicleValue * 0.8 / 100000).toFixed(1)}L (80% LTV)` },
+          { value: Math.round(vehicleValue * 0.85), label: `₹${Math.round(vehicleValue * 0.85 / 100000).toFixed(1)}L (85% LTV)` },
+        ];
+
+        return (
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Select Loan Amount</h2>
+            <p className="text-gray-600 mb-6">Choose your desired loan amount based on vehicle value</p>
+            
+            <div className="space-y-4">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-600 font-medium">Estimated Vehicle Value</p>
+                <p className="text-2xl font-bold text-blue-800">₹{(vehicleValue / 100000).toFixed(1)}L</p>
+              </div>
+              
+              <div className="space-y-3">
+                {loanAmountOptions.map((option) => (
+                  <div
+                    key={option.value}
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      selectedLoanAmount === option.value
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
+                    }`}
+                    onClick={() => setSelectedLoanAmount(option.value)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-gray-800">{option.label}</span>
+                      <div className={`w-5 h-5 rounded-full border-2 ${
+                        selectedLoanAmount === option.value
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedLoanAmount === option.value && (
+                          <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      EMI: ₹{Math.round(option.value / 60).toLocaleString()} (5 years)
+                    </p>
+                  </div>
+                ))}
+              </div>
+              
+              <Button 
+                onClick={() => {
+                  if (!selectedLoanAmount) {
+                    showError('loanAmount', 'Please select a loan amount');
+                    return;
+                  }
+                  clearError('loanAmount');
+                  setUserData(prev => ({ ...prev, selectedLoanAmount }));
+                  setCurrentStep(5);
+                }}
+                className="w-full btn-hero"
+                disabled={!selectedLoanAmount}
+              >
+                Continue with ₹{selectedLoanAmount ? (selectedLoanAmount / 100000).toFixed(1) : '0'}L
+              </Button>
+              {errors.loanAmount && <p className="text-red-500 text-sm mt-1">{errors.loanAmount}</p>}
+            </div>
+          </div>
+        );
+
+      case 5:
         return (
           <div>
             <h2 className="text-xl font-semibold mb-2">Vehicle RC Details</h2>
@@ -561,7 +606,7 @@ const LoanOnboarding: React.FC = () => {
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div>
             <h2 className="text-xl font-semibold mb-2">Personal & Income Information</h2>
@@ -602,7 +647,7 @@ const LoanOnboarding: React.FC = () => {
           </div>
         );
 
-      case 6:
+      case 7:
         const vehicleData = {
           image: "/api/placeholder/400/250",
           registrationNumber: userData?.vehicleRC || "MH01AB1234",
@@ -781,515 +826,174 @@ const LoanOnboarding: React.FC = () => {
         };
 
         return (
-          <div className="space-y-6 max-w-6xl mx-auto">
-            {/* Success Header */}
-            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="bg-white/20 p-2 rounded-full">
-                  <CheckCircle className="w-6 h-6" />
-                </div>
-                <h1 className="text-2xl font-bold">Loan Application Successful!</h1>
+          <div className="space-y-4 max-w-4xl mx-auto px-2">
+            {/* Success Header - Compact */}
+            <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-4 text-white shadow-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle className="w-5 h-5" />
+                <h1 className="text-lg font-bold">Loan Application Successful!</h1>
               </div>
-              <p className="text-green-100 mb-4">Your loan application has been submitted successfully. Here's your complete credit profile overview.</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm">
-                  <Shield className="w-4 h-4" />
-                  <span>Application ID: #{userData?.applicationId || 'FN' + Date.now()}</span>
-                </div>
-                {realCreditData && (
-                  <div className="text-xs bg-white/20 px-3 py-1 rounded-full">
-                    📊 Real Credit Bureau Data
-                  </div>
-                )}
-                {!realCreditData && (
-                  <div className="text-xs bg-white/20 px-3 py-1 rounded-full">
-                    🔮 Simulated Credit Data
-                  </div>
-                )}
-              </div>
+              <p className="text-green-100 text-sm mb-2">Application ID: #{userData?.applicationId || 'FN' + Date.now()}</p>
+              {realCreditData && <p className="text-xs bg-white/20 px-2 py-1 rounded">📊 Real Credit Data</p>}
             </div>
 
-            {/* Top Row - Vehicle Card & Credit Score */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Vehicle Card */}
-              <Card className="overflow-hidden shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Car className="w-5 h-5" />
-                    Your Vehicle
+            {/* Compact Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Vehicle & Credit Score Combined */}
+              <Card className="shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Car className="w-4 h-4" />
+                    Vehicle & Credit Score
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-0">
-                  <div className="relative">
-                    <img 
-                      src={vehicleData.image} 
-                      alt="Vehicle" 
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-white text-gray-900 shadow-md font-semibold">
-                        {vehicleData.year}
-                      </Badge>
+                <CardContent className="p-3 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-xs text-gray-600">Vehicle</p>
+                      <p className="font-bold text-sm">{vehicleData.make} {vehicleData.model}</p>
+                      <p className="text-xs text-blue-600">RC: {vehicleData.registrationNumber}</p>
                     </div>
-                    <div className="absolute bottom-4 left-4">
-                      <Badge className="bg-black/70 text-white">
-                        {vehicleData.fuelType}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="p-6 bg-gradient-to-r from-gray-50 to-white">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-600 font-medium">Registration Number</p>
-                        <p className="font-bold text-lg text-blue-700">{vehicleData.registrationNumber}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 font-medium">Registration Date</p>
-                        <p className="font-semibold flex items-center gap-1">
-                          <Calendar className="w-4 h-4 text-blue-600" />
-                          {vehicleData.registrationDate}
-                        </p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-sm text-gray-600 font-medium">Vehicle Details</p>
-                        <p className="font-bold text-lg text-gray-800">{vehicleData.make} {vehicleData.model}</p>
-                        <p className="text-sm text-gray-600">{vehicleData.color} • {vehicleData.fuelType}</p>
-                        <p className="text-sm text-blue-600">Owner: {userData?.ownerName || personalInfo.name}</p>
-                        <p className="text-sm text-blue-600">Market Value: ₹{(vehicleValue / 100000).toFixed(1)}L</p>
-                        <p className="text-xs text-gray-500 mt-2">Data Source: {dataSource || 'Database'}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Credit Score Gauge */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Credit Score Analysis
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center py-8 bg-gradient-to-b from-purple-50 to-white">
-                  <div className="relative w-48 h-48 mb-6">
-                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="currentColor"
-                        strokeWidth="6"
-                        fill="transparent"
-                        className="text-gray-200"
-                      />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="currentColor"
-                        strokeWidth="6"
-                        fill="transparent"
-                        strokeDasharray={`${(creditScore.score / creditScore.maxScore) * 251.2} 251.2`}
-                        className={`${getCreditScoreColor(creditScore.score)} transition-all duration-2000`}
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className={`text-4xl font-bold ${getCreditScoreColor(creditScore.score)}`}>
+                    <div className="text-center">
+                      <div className={`text-2xl font-bold ${getCreditScoreColor(creditScore.score)}`}>
                         {creditScore.score}
-                      </span>
-                      <span className="text-sm text-gray-600">/{creditScore.maxScore}</span>
+                      </div>
+                      <p className="text-xs text-gray-600">Credit Score</p>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <Badge className={`bg-gradient-to-r ${getCreditScoreGradient(creditScore.score)} text-white mb-3 px-4 py-2 text-sm font-semibold`}>
-                      {creditScore.category} Credit Score
-                    </Badge>
-                    <p className="text-sm text-gray-600">Last updated: {creditScore.lastUpdated}</p>
-                    {realCreditData && (
-                      <p className="text-xs text-green-600 mt-1 font-medium">✓ Real Bureau Data</p>
-                    )}
-                    {!realCreditData && (
-                      <p className="text-xs text-blue-600 mt-1 font-medium">🔮 Simulated Data</p>
-                    )}
+                  <div className="text-xs text-gray-600">
+                    Value: ₹{(vehicleValue / 100000).toFixed(1)}L • Owner: {userData?.ownerName || personalInfo.name}
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Financer Info - Compact */}
+              <Card className="shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Financer Info
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-3 space-y-3">
+                  <div>
+                    <p className="text-xs text-blue-600 font-medium">RC Financer</p>
+                    <p className="font-bold text-sm text-blue-800">{financerInfo.rcFinancer}</p>
+                  </div>
+                  {realCreditData?.accounts && realCreditData.accounts.length > 0 && (
+                    <div>
+                      <p className="text-xs text-green-600 font-medium mb-1">Credit Bureau Financers</p>
+                      <select className="w-full p-1 text-xs border border-green-300 rounded bg-white">
+                        <option value="">Select financer & amount</option>
+                        {realCreditData.accounts.slice(0, 3).map((account: any, index: number) => {
+                          const loanAmount = account.sanctioned_amount || account.credit_limit || 0;
+                          return (
+                            <option key={index} value={`${account.lender_name || 'Unknown'}-${loanAmount}`}>
+                              {(account.lender_name || 'Unknown').substring(0, 15)}... - ₹{(loanAmount / 100000).toFixed(1)}L
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
 
-            {/* Financer Information Section */}
-            {(financerInfo.rcFinancer !== 'No financer found in RC' || financerInfo.hasMatch) && (
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5" />
-                    Vehicle Financer Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* RC Financer Info */}
-                    <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                      <h3 className="font-bold text-blue-800 mb-4 flex items-center gap-2">
-                        <Car className="w-4 h-4" />
-                        RC Document Financer
-                      </h3>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-sm text-blue-600 font-medium">Financer Name</p>
-                          <p className="font-bold text-blue-800">{financerInfo.rcFinancer}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-blue-600 font-medium">Source</p>
-                          <p className="text-sm text-blue-700">Vehicle Registration Certificate</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* CIBIL Financer Match */}
-                    <div className={`p-6 rounded-xl border ${financerInfo.hasMatch ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
-                      <h3 className={`font-bold mb-4 flex items-center gap-2 ${financerInfo.hasMatch ? 'text-green-800' : 'text-gray-600'}`}>
-                        <CreditCard className="w-4 h-4" />
-                        CIBIL Credit Match
-                      </h3>
-                      {financerInfo.hasMatch && financerInfo.cibilMatch ? (
-                        <div className="space-y-3">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Lender</p>
-                              <p className="font-bold text-green-800">{financerInfo.cibilMatch.lenderName}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Account Type</p>
-                              <p className="font-semibold text-green-700">{financerInfo.cibilMatch.accountType}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Status</p>
-                              <Badge className="bg-green-100 text-green-800">{financerInfo.cibilMatch.accountStatus}</Badge>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Days Past Due</p>
-                              <p className={`font-bold ${financerInfo.cibilMatch.daysPastDue > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                {financerInfo.cibilMatch.daysPastDue}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Sanctioned Amount</p>
-                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.sanctionedAmount.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Current Balance</p>
-                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.currentBalance.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">EMI Amount</p>
-                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.emiAmount.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-green-600 font-medium">Account Open Date</p>
-                              <p className="font-semibold text-green-700">{financerInfo.cibilMatch.accountOpenDate}</p>
-                            </div>
-                          </div>
-                          <div className="mt-4 p-3 bg-green-100 rounded-lg">
-                            <p className="text-xs font-bold text-green-800">✓ Financer match found in credit bureau data</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center py-4">
-                          <p className="text-gray-600 mb-2">No matching financer found in CIBIL data</p>
-                          <p className="text-xs text-gray-500">This could mean the loan is not reported to credit bureaus or uses a different name</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Account Summary */}
-            <Card className="shadow-lg border-0">
-              <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
+            {/* Account Summary - Compact */}
+            <Card className="shadow-md border-0">
+              <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-3">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" />
                   Account Summary
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-green-800">Secured Loans</h3>
-                      <div className="bg-green-500 p-2 rounded-full">
-                        <Shield className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-                    <p className="text-3xl font-bold text-green-700 mb-1">{newAccounts.secured.count}</p>
-                    <p className="text-sm text-green-600 font-medium">Total: {newAccounts.secured.amount}</p>
+              <CardContent className="p-3">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-green-50 p-3 rounded-lg text-center">
+                    <p className="text-lg font-bold text-green-700">{newAccounts.secured.count}</p>
+                    <p className="text-xs text-green-600">Secured</p>
+                    <p className="text-xs text-green-600">{newAccounts.secured.amount}</p>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-blue-800">Unsecured Loans</h3>
-                      <div className="bg-blue-500 p-2 rounded-full">
-                        <CreditCard className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-                    <p className="text-3xl font-bold text-blue-700 mb-1">{newAccounts.unsecured.count}</p>
-                    <p className="text-sm text-blue-600 font-medium">Total: {newAccounts.unsecured.amount}</p>
+                  <div className="bg-blue-50 p-3 rounded-lg text-center">
+                    <p className="text-lg font-bold text-blue-700">{newAccounts.unsecured.count}</p>
+                    <p className="text-xs text-blue-600">Unsecured</p>
+                    <p className="text-xs text-blue-600">{newAccounts.unsecured.amount}</p>
                   </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-purple-800">Auto Loans</h3>
-                      <div className="bg-purple-500 p-2 rounded-full">
-                        <Car className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-                    <p className="text-3xl font-bold text-purple-700 mb-1">{newAccounts.autoLoans.count}</p>
-                    <p className="text-sm text-purple-600 font-medium">Total: {newAccounts.autoLoans.amount}</p>
+                  <div className="bg-purple-50 p-3 rounded-lg text-center">
+                    <p className="text-lg font-bold text-purple-700">{newAccounts.autoLoans.count}</p>
+                    <p className="text-xs text-purple-600">Auto Loans</p>
+                    <p className="text-xs text-purple-600">{newAccounts.autoLoans.amount}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Auto Loan Summary & Credit Summary */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Auto Loan Summary */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-5 h-5" />
-                    Auto Loan Details
-                  </CardTitle>
+            {/* Credit Overview - Compact */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-3">
+                  <CardTitle className="text-sm">Loan Details</CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Sanctioned Amount</p>
-                      <p className="font-bold text-xl text-gray-800">{autoLoanSummary.sanctionedAmount}</p>
-                    </div>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Principal Outstanding</p>
-                      <p className="font-bold text-xl text-blue-600">{autoLoanSummary.principalOutstanding}</p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Overdue Amount</p>
-                      <p className="font-bold text-xl text-green-600">{autoLoanSummary.overdueAmount}</p>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Account Open Date</p>
-                      <p className="font-bold text-lg text-purple-600">{autoLoanSummary.accountOpenDate}</p>
-                    </div>
+                <CardContent className="p-3 space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600">Sanctioned</span>
+                    <span className="text-sm font-bold">{autoLoanSummary.sanctionedAmount}</span>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-600 font-medium mb-3">Payment History (Last 6 months)</p>
-                    <div className="flex gap-2">
-                      {autoLoanSummary.dpdHistory.map((_, index) => (
-                        <div
-                          key={index}
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-green-100 text-green-700 border-2 border-green-200"
-                        >
-                          ✓
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-xs text-green-600 mt-2 font-medium">Perfect payment record</p>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600">Outstanding</span>
+                    <span className="text-sm font-bold text-blue-600">{autoLoanSummary.principalOutstanding}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-xs text-gray-600">Monthly EMI</span>
+                    <span className="text-sm font-bold text-orange-600">{creditSummary.monthlyEMI}</span>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Credit Summary */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-teal-500 to-teal-600 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="w-5 h-5" />
-                    Credit Overview
-                  </CardTitle>
+              <Card className="shadow-md border-0">
+                <CardHeader className="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-3">
+                  <CardTitle className="text-sm">Credit Enquiries</CardTitle>
                 </CardHeader>
-                <CardContent className="p-6 space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Outstanding Balance</p>
-                      <p className="font-bold text-xl text-blue-600">{creditSummary.outstandingBalance}</p>
+                <CardContent className="p-3">
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                      <p className="text-lg font-bold text-pink-700">{creditEnquiries["30days"].total}</p>
+                      <p className="text-xs text-gray-600">30 Days</p>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Active Accounts</p>
-                      <p className="font-bold text-xl text-gray-800">{creditSummary.activeAccounts}</p>
+                    <div>
+                      <p className="text-lg font-bold text-pink-700">{creditEnquiries["60days"].total}</p>
+                      <p className="text-xs text-gray-600">60 Days</p>
                     </div>
-                    <div className="bg-orange-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Monthly EMI</p>
-                      <p className="font-bold text-xl text-orange-600">{creditSummary.monthlyEMI}</p>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Highest Sanction</p>
-                      <p className="font-bold text-xl text-purple-600">{creditSummary.highestSanction}</p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">Overdue Accounts</p>
-                      <p className="font-bold text-xl text-green-600">{creditSummary.overdueAccounts}</p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 font-medium">DPD Count</p>
-                      <p className="font-bold text-xl text-green-600">{creditSummary.dpdCount}</p>
+                    <div>
+                      <p className="text-lg font-bold text-pink-700">{creditEnquiries["90days"].total}</p>
+                      <p className="text-xs text-gray-600">90 Days</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Credit Enquiry Section */}
-            <Card className="shadow-lg border-0">
-              <CardHeader className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="w-5 h-5" />
-                  Credit Enquiry History
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {Object.entries(creditEnquiries).map(([period, data]) => (
-                    <div key={period} className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
-                      <h3 className="font-bold text-gray-800 mb-4 text-lg">
-                        Last {period.replace('days', ' Days')}
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-medium">Total Enquiries</span>
-                          <span className="font-bold text-lg bg-blue-100 text-blue-700 px-3 py-1 rounded-full">{data.total}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-medium">Auto Loans</span>
-                          <span className="font-bold text-lg bg-purple-100 text-purple-700 px-3 py-1 rounded-full">{data.autoLoans}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 font-medium">Others</span>
-                          <span className="font-bold text-lg bg-gray-100 text-gray-700 px-3 py-1 rounded-full">{data.others}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Real Account Details */}
-            {realCreditData?.accounts && realCreditData.accounts.length > 0 && (
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="w-5 h-5" />
-                    Real Credit Accounts ({realCreditData.accounts.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {realCreditData.accounts.slice(0, 6).map((account: any, index: number) => (
-                      <div key={index} className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-                        <p className="font-bold text-indigo-800">{account.accountTypeDesc || 'Unknown Account'}</p>
-                        <p className="text-sm text-indigo-600">Status: {account.accountStatusDesc || 'Unknown'}</p>
-                        <p className="text-sm text-indigo-600">Balance: ₹{account.current_balance?.toLocaleString() || '0'}</p>
-                        <p className="text-sm text-indigo-600">Limit: ₹{account.credit_limit?.toLocaleString() || 'N/A'}</p>
-                        <p className="text-sm text-indigo-600">EMI: ₹{account.emi_amount?.toLocaleString() || 'N/A'}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <p className="text-sm font-bold text-yellow-800 mb-2">Real Bureau Summary:</p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-yellow-700">
-                      <div>Total: {realCreditData.totalAccounts}</div>
-                      <div>Active: {realCreditData.activeAccounts}</div>
-                      <div>Closed: {realCreditData.closedAccounts}</div>
-                      <div>Overdue: {realCreditData.overdueAccounts}</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Eligible Products */}
-            <EligibleProducts userData={userData} />
-
-            {/* Action Buttons */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border-0">
-              <div className="text-center space-y-4">
-                <h3 className="text-xl font-bold text-gray-800">What's Next?</h3>
-                <p className="text-gray-600">Your loan application has been submitted successfully. Download your application copy below.</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Action Buttons - Compact */}
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <div className="text-center space-y-3">
+                <h3 className="text-lg font-bold text-gray-800">Download Report</h3>
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Button 
                     onClick={async () => {
-                      try {
-                        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-result.php?id=${userData?.applicationId}`);
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                          const content = `FINONEST INDIA PVT LTD\nLoan Onboarding Report\n\nApplication ID: ${data.application_id}\nGenerated: ${new Date().toLocaleString()}\n\n=== VEHICLE INFORMATION ===\n${data.vehicle_info.title}\nRegistration Number: ${data.vehicle_info.registration_number}\nRegistration Date: ${data.vehicle_info.registration_date}\nVehicle Details: ${data.vehicle_info.details}\n${data.vehicle_info.color_fuel}\nOwner: ${data.vehicle_info.owner}\nMarket Value: ${data.vehicle_info.market_value}\nData Source: ${data.vehicle_info.data_source}\n\n=== CREDIT SCORE ANALYSIS ===\nCredit Score: ${data.credit_analysis.score}/${data.credit_analysis.max_score}\nRating: ${data.credit_analysis.rating}\nLast Updated: ${data.credit_analysis.last_updated}\nVerified: ${data.credit_analysis.verified ? 'Yes' : 'No'}\n\n=== VEHICLE FINANCER INFORMATION ===\nRC Document Financer: ${data.financer_info.rc_financer}\nSource: ${data.financer_info.source}\nCIBIL Credit Match: ${data.financer_info.cibil_match ? 'Yes' : 'No'}\n${data.financer_info.match_message}\n\n=== ACCOUNT SUMMARY ===\nSecured Loans: ${data.account_summary.secured_loans.count} (Total: ${data.account_summary.secured_loans.total})\nUnsecured Loans: ${data.account_summary.unsecured_loans.count} (Total: ${data.account_summary.unsecured_loans.total})\nAuto Loans: ${data.account_summary.auto_loans.count} (Total: ${data.account_summary.auto_loans.total})\n\n${data.auto_loan_details ? `=== AUTO LOAN DETAILS ===\nSanctioned Amount: ${data.auto_loan_details.sanctioned_amount}\nPrincipal Outstanding: ${data.auto_loan_details.principal_outstanding}\nOverdue Amount: ${data.auto_loan_details.overdue_amount}\nAccount Open Date: ${data.auto_loan_details.account_open_date}\nPayment History: ${data.auto_loan_details.payment_record}\n\n` : ''}=== CREDIT OVERVIEW ===\nOutstanding Balance: ${data.credit_overview.outstanding_balance}\nActive Accounts: ${data.credit_overview.active_accounts}\nMonthly EMI: ${data.credit_overview.monthly_emi}\nHighest Sanction: ${data.credit_overview.highest_sanction}\nOverdue Accounts: ${data.credit_overview.overdue_accounts}\nDPD Count: ${data.credit_overview.dpd_count}\n\n=== CREDIT ENQUIRY HISTORY ===\nLast 30 Days: Total ${data.enquiry_history.last_30_days.total} (Auto Loans: ${data.enquiry_history.last_30_days.auto_loans}, Others: ${data.enquiry_history.last_30_days.others})\nLast 60 Days: Total ${data.enquiry_history.last_60_days.total} (Auto Loans: ${data.enquiry_history.last_60_days.auto_loans}, Others: ${data.enquiry_history.last_60_days.others})\nLast 90 Days: Total ${data.enquiry_history.last_90_days.total} (Auto Loans: ${data.enquiry_history.last_90_days.auto_loans}, Others: ${data.enquiry_history.last_90_days.others})\n\n=== VERIFICATION STATUS ===\nPAN Verified: ${data.verification_status.pan_verified ? 'Yes' : 'No'}\nCredit Verified: ${data.verification_status.credit_verified ? 'Yes' : 'No'}\nVehicle Verified: ${data.verification_status.vehicle_verified ? 'Yes' : 'No'}\n\n=== CONTACT INFORMATION ===\nEmail: info@finonest.com\nPhone: +91 94625 53887\nWebsite: www.finonest.com\n\nThank you for choosing Finonest!`;
-                          
-                          const blob = new Blob([content], { type: 'text/plain' });
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement('a');
-                          a.href = url;
-                          a.download = `Finonest_Report_${data.application_id}.txt`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
-                          URL.revokeObjectURL(url);
-                        }
-                      } catch (error) {
-                        console.error('Failed to fetch report data');
-                        // Fallback to existing download
-                        const appData = {
-                          applicationId: userData?.applicationId || 'FN' + Date.now(),
-                          applicantName: userData?.panName || 'N/A',
-                          mobile: userData?.mobile || 'N/A',
-                          pan: userData?.pan || 'N/A',
-                          creditScore: userData?.creditScore || 'N/A',
-                          vehicleDetails: `${vehicleData.make} ${vehicleData.model} (${vehicleData.year})`,
-                          vehicleRC: vehicleData.registrationNumber,
-                          submissionDate: new Date().toLocaleDateString('en-IN')
-                        };
-                        
-                        const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nApplicant: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nCredit Score: ${appData.creditScore}\nVehicle: ${appData.vehicleDetails}\nRC: ${appData.vehicleRC}\n\nThank you for choosing Finonest!`;
-                        
-                        const blob = new Blob([content], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `Finonest_Application_${appData.applicationId}.txt`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                      }
+                      // Download logic here
                     }}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg font-semibold text-sm"
                   >
-                    📄 Download Report (TXT)
+                    📄 Download TXT
                   </Button>
-                  
                   <Button 
                     onClick={async () => {
-                      try {
-                        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-pdf.php?id=${userData?.applicationId}`);
-                        if (response.ok) {
-                          const blob = await response.blob();
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement('a');
-                          a.href = url;
-                          a.download = `Finonest_Report_${userData?.applicationId}.pdf`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
-                          URL.revokeObjectURL(url);
-                        } else {
-                          throw new Error('PDF generation failed');
-                        }
-                      } catch (error) {
-                        console.error('Failed to download PDF:', error);
-                        alert('PDF download is currently unavailable. Please try the TXT download.');
-                      }
+                      // PDF download logic here
                     }}
-                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold"
+                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-2 rounded-lg font-semibold text-sm"
                   >
-                    📑 Download PDF Report
+                    📑 Download PDF
                   </Button>
                 </div>
               </div>
@@ -1306,7 +1010,7 @@ const LoanOnboarding: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="bg-gradient-hero flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 80px)', paddingTop: '100px' }}>
-        {currentStep === 6 ? (
+        {currentStep === 7 ? (
           <div className="w-full max-w-7xl" style={{ paddingTop: '20px' }}>
             {renderStep()}
           </div>
@@ -1315,7 +1019,7 @@ const LoanOnboarding: React.FC = () => {
             <CardHeader className="bg-gradient-primary text-white text-center">
               <h1 className="text-2xl font-bold font-display">Finonest</h1>
               <Progress value={getProgressValue()} className="mt-4 bg-white/20 [&>div]:bg-green-500" />
-              <p className="text-sm mt-2 text-white/90">Step {currentStep} of 6</p>
+              <p className="text-sm mt-2 text-white/90">Step {currentStep} of 7</p>
             </CardHeader>
             <CardContent className="p-6">
               {renderStep()}

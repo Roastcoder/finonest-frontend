@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Eye, User, Car, CreditCard, Download, FileText, TrendingUp, Shield, Activity, Search, Calendar } from "lucide-react";
+import { Loader2, Eye, User, Car, CreditCard, Download, FileText, TrendingUp, Shield, Activity, Search, Calendar, Filter, RefreshCw, Phone, Mail, CreditCard as CreditCardIcon } from "lucide-react";
 
 interface LoanApplication {
   id: number;
@@ -98,16 +100,61 @@ interface FormattedLoanData {
 
 const AdminLoanOnboarding = () => {
   const [applications, setApplications] = useState<LoanApplication[]>([]);
+  const [filteredApplications, setFilteredApplications] = useState<LoanApplication[]>([]);
   const [selectedApp, setSelectedApp] = useState<LoanApplication | null>(null);
   const [formattedData, setFormattedData] = useState<FormattedLoanData | null>(null);
   const [loading, setLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
   const { toast } = useToast();
   const { token } = useAuth();
 
   useEffect(() => {
     fetchApplications();
   }, []);
+
+  useEffect(() => {
+    filterAndSortApplications();
+  }, [applications, searchTerm, statusFilter, sortBy]);
+
+  const filterAndSortApplications = () => {
+    let filtered = [...applications];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(app => 
+        app.pan_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.mobile?.includes(searchTerm) ||
+        app.pan?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(app => app.status === statusFilter);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'oldest':
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case 'name':
+          return (a.pan_name || '').localeCompare(b.pan_name || '');
+        case 'credit_score':
+          return (b.credit_score || 0) - (a.credit_score || 0);
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredApplications(filtered);
+  };
 
   const fetchApplications = async () => {
     try {
@@ -121,6 +168,10 @@ const AdminLoanOnboarding = () => {
       if (response.ok) {
         const data = await response.json();
         setApplications(data.applications || []);
+        toast({
+          title: "Success",
+          description: `Loaded ${data.applications?.length || 0} applications`,
+        });
       } else {
         throw new Error('Failed to fetch applications');
       }
@@ -216,51 +267,180 @@ const AdminLoanOnboarding = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header with Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm">Total Applications</p>
+                <p className="text-2xl font-bold">{applications.length}</p>
+              </div>
+              <User className="w-8 h-8 text-blue-200" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-100 text-sm">Approved</p>
+                <p className="text-2xl font-bold">{applications.filter(app => app.status === 'approved').length}</p>
+              </div>
+              <Shield className="w-8 h-8 text-green-200" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-yellow-100 text-sm">Pending</p>
+                <p className="text-2xl font-bold">{applications.filter(app => app.status === 'pending').length}</p>
+              </div>
+              <Calendar className="w-8 h-8 text-yellow-200" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm">Avg Credit Score</p>
+                <p className="text-2xl font-bold">
+                  {Math.round(applications.filter(app => app.credit_score).reduce((sum, app) => sum + (app.credit_score || 0), 0) / applications.filter(app => app.credit_score).length) || 0}
+                </p>
+              </div>
+              <TrendingUp className="w-8 h-8 text-purple-200" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search and Filters */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="w-5 h-5" />
-            Loan Onboarding Applications ({applications.length})
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <User className="w-5 h-5" />
+              Loan Applications ({filteredApplications.length})
+            </span>
+            <Button onClick={fetchApplications} variant="outline" size="sm">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto" />
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Search by name, mobile, PAN, or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
-          ) : applications.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No onboarding applications found</p>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full md:w-48">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="in-progress">In Progress</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest First</SelectItem>
+                <SelectItem value="oldest">Oldest First</SelectItem>
+                <SelectItem value="name">Name A-Z</SelectItem>
+                <SelectItem value="credit_score">Credit Score</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12">
+              <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-blue-500" />
+              <p className="text-gray-600">Loading applications...</p>
+            </div>
+          ) : filteredApplications.length === 0 ? (
+            <div className="text-center py-12">
+              <User className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p className="text-gray-600 text-lg mb-2">No applications found</p>
+              <p className="text-gray-400">Try adjusting your search or filters</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {applications.map((app) => (
-                <Card key={app.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleViewDetails(app)}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredApplications.map((app) => (
+                <Card key={app.id} className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02] border-l-4 border-l-blue-500" onClick={() => handleViewDetails(app)}>
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{app.pan_name || app.mobile}</CardTitle>
-                      <Eye className="w-4 h-4 text-muted-foreground" />
+                      <CardTitle className="text-lg font-semibold text-gray-800">
+                        {app.pan_name || app.mobile}
+                      </CardTitle>
+                      <Eye className="w-5 h-5 text-blue-500 hover:text-blue-700" />
                     </div>
-                    <div className="flex gap-2">
-                      <Badge className={getStatusColor(app.status)}>
+                    <div className="flex gap-2 flex-wrap">
+                      <Badge className={`${getStatusColor(app.status)} text-white font-medium`}>
                         {app.status.toUpperCase()}
                       </Badge>
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="border-blue-200 text-blue-700">
                         {getStepProgress(app.step_completed)}
                       </Badge>
+                      {app.credit_score && (
+                        <Badge variant="outline" className="border-purple-200 text-purple-700">
+                          Score: {app.credit_score}
+                        </Badge>
+                      )}
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p className="text-sm"><strong>Mobile:</strong> {app.mobile}</p>
-                    <p className="text-sm"><strong>Email:</strong> {app.email || 'N/A'}</p>
-                    <p className="text-sm"><strong>PAN:</strong> {app.pan}</p>
-                    {app.credit_score && (
-                      <p className="text-sm"><strong>Credit Score:</strong> {app.credit_score}</p>
-                    )}
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">{app.mobile}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail className="w-4 h-4 text-gray-500" />
+                      <span className={app.email ? 'text-gray-700' : 'text-gray-400 italic'}>
+                        {app.email || 'No email'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <CreditCardIcon className="w-4 h-4 text-gray-500" />
+                      <span className="font-mono">{app.pan}</span>
+                    </div>
                     {app.vehicle_model && (
-                      <p className="text-sm"><strong>Vehicle:</strong> {app.vehicle_make} {app.vehicle_model}</p>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Car className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-700">{app.vehicle_make} {app.vehicle_model} ({app.vehicle_year})</span>
+                      </div>
                     )}
-                    <p className="text-sm"><strong>Date:</strong> {new Date(app.created_at).toLocaleDateString()}</p>
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <span className="text-xs text-gray-500">
+                        {new Date(app.created_at).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
+                      {app.vehicle_value && (
+                        <span className="text-xs font-semibold text-green-600">
+                          ₹{app.vehicle_value.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
