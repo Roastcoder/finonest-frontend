@@ -1213,39 +1213,83 @@ const LoanOnboarding: React.FC = () => {
               <div className="text-center space-y-4">
                 <h3 className="text-xl font-bold text-gray-800">What's Next?</h3>
                 <p className="text-gray-600">Your loan application has been submitted successfully. Download your application copy below.</p>
-                <div className="flex justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
-                    onClick={() => {
-                      const appData = {
-                        applicationId: userData?.applicationId || 'FN' + Date.now(),
-                        applicantName: userData?.panName || 'N/A',
-                        mobile: userData?.mobile || 'N/A',
-                        pan: userData?.pan || 'N/A',
-                        creditScore: userData?.creditScore || 'N/A',
-                        vehicleDetails: `${vehicleData.make} ${vehicleData.model} (${vehicleData.year})`,
-                        vehicleRC: vehicleData.registrationNumber,
-                        loanAmount: `₹${(loanAmount / 100000).toFixed(1)}L`,
-                        vehicleValue: `₹${(vehicleValue / 100000).toFixed(1)}L`,
-                        income: userData?.income ? `₹${userData.income.toLocaleString()}` : 'N/A',
-                        employment: personalInfo.employment,
-                        submissionDate: new Date().toLocaleDateString('en-IN')
-                      };
-                      
-                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\nData Source: ${dataSource || (realCreditData ? 'Real Credit Bureau Data' : 'Demo/Simulated Data')}\n\n=== APPLICANT DETAILS ===\nName: ${appData.applicantName}\nMobile: ${personalInfo.mobile}\nEmail: ${personalInfo.email}\nPAN: ${appData.pan}\nGender: ${personalInfo.gender}\nDOB: ${personalInfo.dob}\nAddress: ${personalInfo.address}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${personalInfo.employment}\n\n=== VEHICLE DETAILS ===\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nOwner: ${userData?.ownerName || personalInfo.name}\nFuel Type: ${vehicleData.fuelType}\nColor: ${vehicleData.color}\nRegistration Date: ${vehicleData.registrationDate}\nMarket Value: ${appData.vehicleValue}\n\n=== FINANCER INFORMATION ===\nRC Financer: ${financerInfo.rcFinancer}\nCIBIL Match: ${financerInfo.hasMatch ? 'Yes' : 'No'}\n${financerInfo.hasMatch && financerInfo.cibilMatch ? `Lender Name: ${financerInfo.cibilMatch.lenderName}\nAccount Type: ${financerInfo.cibilMatch.accountType}\nAccount Status: ${financerInfo.cibilMatch.accountStatus}\nSanctioned Amount: ₹${financerInfo.cibilMatch.sanctionedAmount.toLocaleString()}\nCurrent Balance: ₹${financerInfo.cibilMatch.currentBalance.toLocaleString()}\nEMI Amount: ₹${financerInfo.cibilMatch.emiAmount.toLocaleString()}\nDays Past Due: ${financerInfo.cibilMatch.daysPastDue}` : 'No matching financer found in CIBIL data'}\n\n=== CREDIT SUMMARY ===\nTotal Accounts: ${realCreditData?.totalAccounts || 1}\nActive Accounts: ${realCreditData?.activeAccounts || 1}\nClosed Accounts: ${realCreditData?.closedAccounts || 0}\nOverdue Accounts: ${realCreditData?.overdueAccounts || 0}\nTotal Outstanding: ${creditSummary.outstandingBalance}\nTotal Sanctioned: ${creditSummary.highestSanction}\nMonthly EMI: ${creditSummary.monthlyEMI}\n\n=== LOAN DETAILS ===\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\nSanctioned Amount: ${autoLoanSummary.sanctionedAmount}\nPrincipal Outstanding: ${autoLoanSummary.principalOutstanding}\nOverdue Amount: ${autoLoanSummary.overdueAmount}\n\n=== ENQUIRY SUMMARY ===\nLast 30 Days: ${creditEnquiries['30days'].total} (Auto: ${creditEnquiries['30days'].autoLoans}, Others: ${creditEnquiries['30days'].others})\nLast 60 Days: ${creditEnquiries['60days'].total} (Auto: ${creditEnquiries['60days'].autoLoans}, Others: ${creditEnquiries['60days'].others})\nLast 90 Days: ${creditEnquiries['90days'].total} (Auto: ${creditEnquiries['90days'].autoLoans}, Others: ${creditEnquiries['90days'].others})\n\n=== ACCOUNT DETAILS ===\n${realCreditData?.accounts?.slice(0, 5).map((acc: any, i: number) => `Account ${i + 1}:\n  Type: ${acc.accountTypeDesc || 'Unknown'}\n  Status: ${acc.accountStatusDesc || 'Unknown'}\n  Balance: ₹${acc.current_balance?.toLocaleString() || '0'}\n  Limit: ₹${acc.credit_limit?.toLocaleString() || 'N/A'}\n  EMI: ₹${acc.emi_amount?.toLocaleString() || 'N/A'}`).join('\n\n') || 'No detailed account information available'}\n\n=== APPLICATION STATUS ===\nStatus: Application Submitted Successfully\nNext Steps: Loan processing will begin within 24 hours\nExpected Approval: 2-3 business days\n\n=== CONTACT INFORMATION ===\nEmail: info@finonest.com\nPhone: +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018\nWebsite: www.finonest.com\n\nThank you for choosing Finonest for your vehicle loan needs!`;
-                      
-                      const blob = new Blob([content], { type: 'text/plain' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = `Finonest_Application_${appData.applicationId}.txt`;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                      URL.revokeObjectURL(url);
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-result.php?id=${userData?.applicationId}`);
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                          const content = `FINONEST INDIA PVT LTD\nLoan Onboarding Report\n\nApplication ID: ${data.application_id}\nGenerated: ${new Date().toLocaleString()}\n\n=== VEHICLE INFORMATION ===\n${data.vehicle_info.title}\nRegistration Number: ${data.vehicle_info.registration_number}\nRegistration Date: ${data.vehicle_info.registration_date}\nVehicle Details: ${data.vehicle_info.details}\n${data.vehicle_info.color_fuel}\nOwner: ${data.vehicle_info.owner}\nMarket Value: ${data.vehicle_info.market_value}\nData Source: ${data.vehicle_info.data_source}\n\n=== CREDIT SCORE ANALYSIS ===\nCredit Score: ${data.credit_analysis.score}/${data.credit_analysis.max_score}\nRating: ${data.credit_analysis.rating}\nLast Updated: ${data.credit_analysis.last_updated}\nVerified: ${data.credit_analysis.verified ? 'Yes' : 'No'}\n\n=== VEHICLE FINANCER INFORMATION ===\nRC Document Financer: ${data.financer_info.rc_financer}\nSource: ${data.financer_info.source}\nCIBIL Credit Match: ${data.financer_info.cibil_match ? 'Yes' : 'No'}\n${data.financer_info.match_message}\n\n=== ACCOUNT SUMMARY ===\nSecured Loans: ${data.account_summary.secured_loans.count} (Total: ${data.account_summary.secured_loans.total})\nUnsecured Loans: ${data.account_summary.unsecured_loans.count} (Total: ${data.account_summary.unsecured_loans.total})\nAuto Loans: ${data.account_summary.auto_loans.count} (Total: ${data.account_summary.auto_loans.total})\n\n${data.auto_loan_details ? `=== AUTO LOAN DETAILS ===\nSanctioned Amount: ${data.auto_loan_details.sanctioned_amount}\nPrincipal Outstanding: ${data.auto_loan_details.principal_outstanding}\nOverdue Amount: ${data.auto_loan_details.overdue_amount}\nAccount Open Date: ${data.auto_loan_details.account_open_date}\nPayment History: ${data.auto_loan_details.payment_record}\n\n` : ''}=== CREDIT OVERVIEW ===\nOutstanding Balance: ${data.credit_overview.outstanding_balance}\nActive Accounts: ${data.credit_overview.active_accounts}\nMonthly EMI: ${data.credit_overview.monthly_emi}\nHighest Sanction: ${data.credit_overview.highest_sanction}\nOverdue Accounts: ${data.credit_overview.overdue_accounts}\nDPD Count: ${data.credit_overview.dpd_count}\n\n=== CREDIT ENQUIRY HISTORY ===\nLast 30 Days: Total ${data.enquiry_history.last_30_days.total} (Auto Loans: ${data.enquiry_history.last_30_days.auto_loans}, Others: ${data.enquiry_history.last_30_days.others})\nLast 60 Days: Total ${data.enquiry_history.last_60_days.total} (Auto Loans: ${data.enquiry_history.last_60_days.auto_loans}, Others: ${data.enquiry_history.last_60_days.others})\nLast 90 Days: Total ${data.enquiry_history.last_90_days.total} (Auto Loans: ${data.enquiry_history.last_90_days.auto_loans}, Others: ${data.enquiry_history.last_90_days.others})\n\n=== VERIFICATION STATUS ===\nPAN Verified: ${data.verification_status.pan_verified ? 'Yes' : 'No'}\nCredit Verified: ${data.verification_status.credit_verified ? 'Yes' : 'No'}\nVehicle Verified: ${data.verification_status.vehicle_verified ? 'Yes' : 'No'}\n\n=== CONTACT INFORMATION ===\nEmail: info@finonest.com\nPhone: +91 94625 53887\nWebsite: www.finonest.com\n\nThank you for choosing Finonest!`;
+                          
+                          const blob = new Blob([content], { type: 'text/plain' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `Finonest_Report_${data.application_id}.txt`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                        }
+                      } catch (error) {
+                        console.error('Failed to fetch report data');
+                        // Fallback to existing download
+                        const appData = {
+                          applicationId: userData?.applicationId || 'FN' + Date.now(),
+                          applicantName: userData?.panName || 'N/A',
+                          mobile: userData?.mobile || 'N/A',
+                          pan: userData?.pan || 'N/A',
+                          creditScore: userData?.creditScore || 'N/A',
+                          vehicleDetails: `${vehicleData.make} ${vehicleData.model} (${vehicleData.year})`,
+                          vehicleRC: vehicleData.registrationNumber,
+                          submissionDate: new Date().toLocaleDateString('en-IN')
+                        };
+                        
+                        const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nApplicant: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nCredit Score: ${appData.creditScore}\nVehicle: ${appData.vehicleDetails}\nRC: ${appData.vehicleRC}\n\nThank you for choosing Finonest!`;
+                        
+                        const blob = new Blob([content], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Finonest_Application_${appData.applicationId}.txt`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                      }
+                    }}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold"
+                  >
+                    📄 Download Report (TXT)
+                  </Button>
+                  
+                  <Button 
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(`https://api.finonest.com/api/loan-onboarding-pdf.php?id=${userData?.applicationId}`);
+                        if (response.ok) {
+                          const blob = await response.blob();
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `Finonest_Report_${userData?.applicationId}.pdf`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                        } else {
+                          throw new Error('PDF generation failed');
+                        }
+                      } catch (error) {
+                        console.error('Failed to download PDF:', error);
+                        alert('PDF download is currently unavailable. Please try the TXT download.');
+                      }
                     }}
                     className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-3 rounded-xl font-semibold"
                   >
-                    Download Application Copy
+                    📑 Download PDF Report
                   </Button>
                 </div>
               </div>
