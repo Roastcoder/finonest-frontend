@@ -786,14 +786,14 @@ const LoanOnboarding: React.FC = () => {
           hasMatch: !!cibilFinancer
         };
 
-        const vehicleValue = userData?.vehicleValue || 800000;
-        const loanAmount = vehicleValue * 0.8; // 80% LTV
-        const outstandingAmount = vehicleValue * 0.65; // 65% outstanding
+        const vehicleVal = userData?.vehicleValue || 800000;
+        const loanAmount = vehicleVal * 0.8; // 80% LTV
+        const outstandingAmount = vehicleVal * 0.65; // 65% outstanding
 
         const newAccounts = {
           secured: { 
             count: 1, 
-            amount: `₹${(vehicleValue / 100000).toFixed(1)}L` 
+            amount: `₹${(vehicleVal / 100000).toFixed(1)}L` 
           },
           unsecured: { count: 0, amount: "₹0" },
           autoLoans: { 
