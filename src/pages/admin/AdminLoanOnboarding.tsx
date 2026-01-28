@@ -11,6 +11,7 @@ interface LoanApplication {
   id: number;
   application_id: string;
   mobile: string;
+  email: string;
   pan: string;
   pan_name: string;
   dob: string;
@@ -119,6 +120,7 @@ const AdminLoanOnboarding = () => {
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <p className="text-sm"><strong>Mobile:</strong> {app.mobile}</p>
+                    <p className="text-sm"><strong>Email:</strong> {app.email || 'N/A'}</p>
                     <p className="text-sm"><strong>PAN:</strong> {app.pan}</p>
                     {app.credit_score && (
                       <p className="text-sm"><strong>Credit Score:</strong> {app.credit_score}</p>
@@ -167,6 +169,7 @@ const AdminLoanOnboarding = () => {
                   <CardContent className="space-y-2">
                     <p><strong>Name:</strong> {selectedApp.pan_name || 'N/A'}</p>
                     <p><strong>Mobile:</strong> {selectedApp.mobile}</p>
+                    <p><strong>Email:</strong> {selectedApp.email || 'N/A'}</p>
                     <p><strong>PAN:</strong> {selectedApp.pan}</p>
                     <p><strong>DOB:</strong> {selectedApp.dob || 'N/A'}</p>
                     <p><strong>Gender:</strong> {selectedApp.gender || 'N/A'}</p>

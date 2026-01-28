@@ -113,6 +113,7 @@ const EligibleProducts: React.FC<{ userData: UserData }> = ({ userData }) => {
 
 interface UserData {
   mobile?: string;
+  email?: string;
   pan?: string;
   panName?: string;
   dob?: string;
@@ -198,10 +199,17 @@ const LoanOnboarding: React.FC = () => {
     e.preventDefault();
     const form = e.target as any;
     const pan = form.pan.value.trim().toUpperCase();
+    const email = form.email.value.trim();
     clearError('pan');
+    clearError('email');
 
     if (!validatePAN(pan)) {
       showError('pan', 'Please enter a valid PAN number');
+      return;
+    }
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('email', 'Please enter a valid email address');
       return;
     }
 
@@ -218,6 +226,7 @@ const LoanOnboarding: React.FC = () => {
         setUserData(prev => ({ 
           ...prev, 
           pan, 
+          email,
           panName: existingPAN.panName || 'John Doe',
           dob: existingPAN.dob || '1990-01-01',
           gender: existingPAN.gender || 'M',
@@ -242,6 +251,7 @@ const LoanOnboarding: React.FC = () => {
         setDataSource('Database: Using cached credit score data');
         const newUserData = {
           pan, 
+          email,
           panName: existingCredit.panName || 'John Doe',
           dob: existingCredit.dob || '1990-01-01',
           gender: existingCredit.gender || 'M',
@@ -275,7 +285,7 @@ const LoanOnboarding: React.FC = () => {
       const data = await response.json();
       
       if (data.success && data.data.status === '1') {
-        // Get credit report with PAN data
+        // Get credit report with PAN data and user-provided email
         const creditResponse = await fetch('https://api.finonest.com/api/credit-report.php', {
           method: 'POST',
           headers: {
@@ -283,13 +293,13 @@ const LoanOnboarding: React.FC = () => {
           },
           body: JSON.stringify({
             phone: userData.mobile,
-            email: `${data.data.full_name.toLowerCase().replace(' ', '')}@example.com`,
+            email: email || `${data.data.full_name.toLowerCase().replace(' ', '')}@example.com`,
             pan: pan,
             firstName: data.data.first_name,
             lastName: data.data.last_name,
             gender: data.data.gender === 'M' ? 'male' : 'female',
             dateOfBirth: data.data.dob,
-            pincode: '600001'
+            pincode: '110001'
           })
         });
         
@@ -298,6 +308,7 @@ const LoanOnboarding: React.FC = () => {
         
         const newUserData = {
           pan, 
+          email,
           panName: data.data.full_name,
           dob: data.data.dob,
           gender: data.data.gender,
@@ -595,7 +606,7 @@ const LoanOnboarding: React.FC = () => {
         return (
           <div>
             <h2 className="text-xl font-semibold mb-2">PAN Card Details</h2>
-            <p className="text-gray-600 mb-6">Enter your PAN card information</p>
+            <p className="text-gray-600 mb-6">Enter your PAN card information and email</p>
             
             <form onSubmit={handlePANSubmit}>
               <div className="mb-4">
@@ -609,6 +620,17 @@ const LoanOnboarding: React.FC = () => {
                   className="mt-1 uppercase"
                 />
                 {errors.pan && <p className="text-red-500 text-sm mt-1">{errors.pan}</p>}
+              </div>
+              <div className="mb-4">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  className="mt-1"
+                />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
               <Button type="submit" className="w-full btn-hero">Verify PAN</Button>
             </form>
@@ -726,19 +748,43 @@ const LoanOnboarding: React.FC = () => {
         // Extract real credit data from creditReport if available
         const creditReport = userData?.creditReport;
         const realCreditData = creditReport ? {
-          totalAccounts: creditReport.ACCOUNT_SUMMARY?.total_accounts || 1,
-          activeAccounts: creditReport.ACCOUNT_SUMMARY?.active_accounts || 1,
-          closedAccounts: creditReport.ACCOUNT_SUMMARY?.closed_accounts || 0,
-          overdueAccounts: creditReport.ACCOUNT_SUMMARY?.overdue_accounts || 0,
-          totalOutstanding: creditReport.ACCOUNT_SUMMARY?.total_outstanding || ((userData?.vehicleValue ?? 800000) * 0.65),
-          totalSanctioned: creditReport.ACCOUNT_SUMMARY?.total_sanctioned || ((userData?.vehicleValue ?? 800000) * 0.8),
-          monthlyEMI: creditReport.ACCOUNT_SUMMARY?.monthly_emi || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60),
-          enquiries30: creditReport.ENQUIRY_SUMMARY?.last_30_days || 1,
-          enquiries60: creditReport.ENQUIRY_SUMMARY?.last_60_days || 2,
-          enquiries90: creditReport.ENQUIRY_SUMMARY?.last_90_days || 3,
-          autoLoanEnquiries30: creditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || 1,
-          autoLoanEnquiries60: creditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || 1,
-          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || 2,
+          totalAccounts: creditReport.ACCOUNT_SUMMARY?.total_accounts || creditReport.ACCOUNTS?.length || 1,
+          activeAccounts: creditReport.ACCOUNT_SUMMARY?.active_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '11' || acc.account_status === '21')?.length || 1,
+          closedAccounts: creditReport.ACCOUNT_SUMMARY?.closed_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '13' || acc.account_status === '23')?.length || 0,
+          overdueAccounts: creditReport.ACCOUNT_SUMMARY?.overdue_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.days_past_due > 0)?.length || 0,
+          totalOutstanding: creditReport.ACCOUNT_SUMMARY?.total_outstanding || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.current_balance || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.65),
+          totalSanctioned: creditReport.ACCOUNT_SUMMARY?.total_sanctioned || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.sanctioned_amount || acc.credit_limit || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.8),
+          monthlyEMI: creditReport.ACCOUNT_SUMMARY?.monthly_emi || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.emi_amount || 0), 0) || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60),
+          enquiries30: creditReport.ENQUIRY_SUMMARY?.last_30_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            return enqDate >= thirtyDaysAgo;
+          })?.length || 1,
+          enquiries60: creditReport.ENQUIRY_SUMMARY?.last_60_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+            return enqDate >= sixtyDaysAgo;
+          })?.length || 2,
+          enquiries90: creditReport.ENQUIRY_SUMMARY?.last_90_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+            return enqDate >= ninetyDaysAgo;
+          })?.length || 3,
+          autoLoanEnquiries30: creditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            return enqDate >= thirtyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
+          })?.length || 1,
+          autoLoanEnquiries60: creditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+            return enqDate >= sixtyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
+          })?.length || 1,
+          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+            const enqDate = new Date(enq.enquiry_date);
+            const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+            return enqDate >= ninetyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
+          })?.length || 2,
           // Process account details with FBA codes
           accounts: creditReport.ACCOUNTS?.map((account: any) => ({
             ...account,
@@ -748,12 +794,47 @@ const LoanOnboarding: React.FC = () => {
           })) || []
         } : null;
         
-        // Process personal information with FBA codes
+        // Process personal information with FBA codes and real data
         const personalInfo = {
-          name: userData?.panName || 'N/A',
-          gender: userData?.gender ? getGenderDescription(userData.gender) : 'N/A',
+          name: userData?.panName || userData?.ownerName || creditReport?.PERSONAL_INFO?.full_name || 'N/A',
+          gender: userData?.gender ? getGenderDescription(userData.gender) : creditReport?.PERSONAL_INFO?.gender ? getGenderDescription(creditReport.PERSONAL_INFO.gender) : 'N/A',
           employment: userData?.employment ? getEmploymentStatusDescription(userData.employment) : 'N/A',
-          dob: userData?.dob || 'N/A'
+          dob: userData?.dob || creditReport?.PERSONAL_INFO?.date_of_birth || 'N/A',
+          email: userData?.email || creditReport?.PERSONAL_INFO?.email || 'N/A',
+          mobile: userData?.mobile || creditReport?.PERSONAL_INFO?.phone || 'N/A',
+          address: creditReport?.PERSONAL_INFO?.address || creditReport?.ADDRESS?.[0]?.address_line || 'N/A'
+        };
+
+        // Extract financer information from RC response
+        const rcFinancer = userData?.vehicleResponse?.data?.financer || userData?.vehicleResponse?.data?.hypothecation_details || null;
+        
+        // Find matching financer in CIBIL data
+        const cibilFinancer = realCreditData?.accounts?.find((account: any) => {
+          const accountHolder = account.account_holder_name?.toLowerCase() || '';
+          const lenderName = account.lender_name?.toLowerCase() || '';
+          const rcFinancerName = rcFinancer?.toLowerCase() || '';
+          
+          return accountHolder.includes(rcFinancerName) || 
+                 lenderName.includes(rcFinancerName) ||
+                 rcFinancerName.includes(accountHolder) ||
+                 rcFinancerName.includes(lenderName);
+        }) || null;
+
+        // Financer information object
+        const financerInfo = {
+          rcFinancer: rcFinancer || 'No financer found in RC',
+          cibilMatch: cibilFinancer ? {
+            lenderName: cibilFinancer.lender_name || 'Unknown Lender',
+            accountType: cibilFinancer.accountTypeDesc || 'Unknown Account Type',
+            accountStatus: cibilFinancer.accountStatusDesc || 'Unknown Status',
+            sanctionedAmount: cibilFinancer.sanctioned_amount || cibilFinancer.credit_limit || 0,
+            currentBalance: cibilFinancer.current_balance || 0,
+            emiAmount: cibilFinancer.emi_amount || 0,
+            accountOpenDate: cibilFinancer.account_open_date || 'Unknown',
+            lastPaymentDate: cibilFinancer.last_payment_date || 'Unknown',
+            daysPastDue: cibilFinancer.days_past_due || 0
+          } : null,
+          hasMatch: !!cibilFinancer
         };
 
         const vehicleValue = userData?.vehicleValue || 800000;
@@ -897,6 +978,7 @@ const LoanOnboarding: React.FC = () => {
                         <p className="text-sm text-gray-600">{vehicleData.color} • {vehicleData.fuelType}</p>
                         <p className="text-sm text-blue-600">Owner: {userData?.ownerName || personalInfo.name}</p>
                         <p className="text-sm text-blue-600">Market Value: ₹{(vehicleValue / 100000).toFixed(1)}L</p>
+                        <p className="text-xs text-gray-500 mt-2">Data Source: {dataSource || 'Database'}</p>
                       </div>
                     </div>
                   </div>
@@ -947,12 +1029,107 @@ const LoanOnboarding: React.FC = () => {
                       {creditScore.category} Credit Score
                     </Badge>
                     <p className="text-sm text-gray-600">Last updated: {creditScore.lastUpdated}</p>
+                    {realCreditData && (
+                      <p className="text-xs text-green-600 mt-1 font-medium">✓ Real Bureau Data</p>
+                    )}
+                    {!realCreditData && (
+                      <p className="text-xs text-blue-600 mt-1 font-medium">🔮 Simulated Data</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* New Accounts Summary */}
+            {/* Financer Information Section */}
+            {(financerInfo.rcFinancer !== 'No financer found in RC' || financerInfo.hasMatch) && (
+              <Card className="shadow-lg border-0">
+                <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    Vehicle Financer Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* RC Financer Info */}
+                    <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                      <h3 className="font-bold text-blue-800 mb-4 flex items-center gap-2">
+                        <Car className="w-4 h-4" />
+                        RC Document Financer
+                      </h3>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-sm text-blue-600 font-medium">Financer Name</p>
+                          <p className="font-bold text-blue-800">{financerInfo.rcFinancer}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-blue-600 font-medium">Source</p>
+                          <p className="text-sm text-blue-700">Vehicle Registration Certificate</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* CIBIL Financer Match */}
+                    <div className={`p-6 rounded-xl border ${financerInfo.hasMatch ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+                      <h3 className={`font-bold mb-4 flex items-center gap-2 ${financerInfo.hasMatch ? 'text-green-800' : 'text-gray-600'}`}>
+                        <CreditCard className="w-4 h-4" />
+                        CIBIL Credit Match
+                      </h3>
+                      {financerInfo.hasMatch && financerInfo.cibilMatch ? (
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Lender</p>
+                              <p className="font-bold text-green-800">{financerInfo.cibilMatch.lenderName}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Account Type</p>
+                              <p className="font-semibold text-green-700">{financerInfo.cibilMatch.accountType}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Status</p>
+                              <Badge className="bg-green-100 text-green-800">{financerInfo.cibilMatch.accountStatus}</Badge>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Days Past Due</p>
+                              <p className={`font-bold ${financerInfo.cibilMatch.daysPastDue > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                {financerInfo.cibilMatch.daysPastDue}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Sanctioned Amount</p>
+                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.sanctionedAmount.toLocaleString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Current Balance</p>
+                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.currentBalance.toLocaleString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">EMI Amount</p>
+                              <p className="font-bold text-green-800">₹{financerInfo.cibilMatch.emiAmount.toLocaleString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-green-600 font-medium">Account Open Date</p>
+                              <p className="font-semibold text-green-700">{financerInfo.cibilMatch.accountOpenDate}</p>
+                            </div>
+                          </div>
+                          <div className="mt-4 p-3 bg-green-100 rounded-lg">
+                            <p className="text-xs font-bold text-green-800">✓ Financer match found in credit bureau data</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-4">
+                          <p className="text-gray-600 mb-2">No matching financer found in CIBIL data</p>
+                          <p className="text-xs text-gray-500">This could mean the loan is not reported to credit bureaus or uses a different name</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Account Summary */}
             <Card className="shadow-lg border-0">
               <CardHeader className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
                 <CardTitle className="flex items-center gap-2">
@@ -1176,7 +1353,7 @@ const LoanOnboarding: React.FC = () => {
                         submissionDate: new Date().toLocaleDateString('en-IN')
                       };
                       
-                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\n\nAPPLICANT DETAILS:\nName: ${appData.applicantName}\nMobile: ${appData.mobile}\nPAN: ${appData.pan}\nGender: ${personalInfo.gender}\nDOB: ${personalInfo.dob}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${personalInfo.employment}\n\nVEHICLE DETAILS:\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nOwner: ${userData?.ownerName || personalInfo.name}\nFuel Type: ${vehicleData.fuelType}\nColor: ${vehicleData.color}\nRegistration Date: ${vehicleData.registrationDate}\nMarket Value: ${appData.vehicleValue}\n\nCREDIT SUMMARY:\nTotal Accounts: ${realCreditData?.totalAccounts || 1}\nActive Accounts: ${realCreditData?.activeAccounts || 1}\nClosed Accounts: ${realCreditData?.closedAccounts || 0}\nOverdue Accounts: ${realCreditData?.overdueAccounts || 0}\nTotal Outstanding: ${creditSummary.outstandingBalance}\nMonthly EMI: ${creditSummary.monthlyEMI}\n\nLOAN DETAILS:\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\nSanctioned Amount: ${autoLoanSummary.sanctionedAmount}\nPrincipal Outstanding: ${autoLoanSummary.principalOutstanding}\n\nENQUIRY SUMMARY:\nLast 30 Days: ${creditEnquiries['30days'].total} (Auto: ${creditEnquiries['30days'].autoLoans})\nLast 60 Days: ${creditEnquiries['60days'].total} (Auto: ${creditEnquiries['60days'].autoLoans})\nLast 90 Days: ${creditEnquiries['90days'].total} (Auto: ${creditEnquiries['90days'].autoLoans})\n\nData Source: ${realCreditData ? 'Real Credit Bureau Data' : 'Demo/Simulated Data'}\n\nStatus: Application Submitted Successfully\n\nContact: info@finonest.com | +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018`;
+                      const content = `FINONEST INDIA PVT LTD\nLoan Application Summary\n\nApplication ID: ${appData.applicationId}\nDate: ${appData.submissionDate}\nData Source: ${dataSource || (realCreditData ? 'Real Credit Bureau Data' : 'Demo/Simulated Data')}\n\n=== APPLICANT DETAILS ===\nName: ${appData.applicantName}\nMobile: ${personalInfo.mobile}\nEmail: ${personalInfo.email}\nPAN: ${appData.pan}\nGender: ${personalInfo.gender}\nDOB: ${personalInfo.dob}\nAddress: ${personalInfo.address}\nCredit Score: ${appData.creditScore}\nMonthly Income: ${appData.income}\nEmployment: ${personalInfo.employment}\n\n=== VEHICLE DETAILS ===\nVehicle: ${appData.vehicleDetails}\nRC Number: ${appData.vehicleRC}\nOwner: ${userData?.ownerName || personalInfo.name}\nFuel Type: ${vehicleData.fuelType}\nColor: ${vehicleData.color}\nRegistration Date: ${vehicleData.registrationDate}\nMarket Value: ${appData.vehicleValue}\n\n=== FINANCER INFORMATION ===\nRC Financer: ${financerInfo.rcFinancer}\nCIBIL Match: ${financerInfo.hasMatch ? 'Yes' : 'No'}\n${financerInfo.hasMatch && financerInfo.cibilMatch ? `Lender Name: ${financerInfo.cibilMatch.lenderName}\nAccount Type: ${financerInfo.cibilMatch.accountType}\nAccount Status: ${financerInfo.cibilMatch.accountStatus}\nSanctioned Amount: ₹${financerInfo.cibilMatch.sanctionedAmount.toLocaleString()}\nCurrent Balance: ₹${financerInfo.cibilMatch.currentBalance.toLocaleString()}\nEMI Amount: ₹${financerInfo.cibilMatch.emiAmount.toLocaleString()}\nDays Past Due: ${financerInfo.cibilMatch.daysPastDue}` : 'No matching financer found in CIBIL data'}\n\n=== CREDIT SUMMARY ===\nTotal Accounts: ${realCreditData?.totalAccounts || 1}\nActive Accounts: ${realCreditData?.activeAccounts || 1}\nClosed Accounts: ${realCreditData?.closedAccounts || 0}\nOverdue Accounts: ${realCreditData?.overdueAccounts || 0}\nTotal Outstanding: ${creditSummary.outstandingBalance}\nTotal Sanctioned: ${creditSummary.highestSanction}\nMonthly EMI: ${creditSummary.monthlyEMI}\n\n=== LOAN DETAILS ===\nRequested Loan Amount: ${appData.loanAmount}\nLTV Ratio: 80%\nSanctioned Amount: ${autoLoanSummary.sanctionedAmount}\nPrincipal Outstanding: ${autoLoanSummary.principalOutstanding}\nOverdue Amount: ${autoLoanSummary.overdueAmount}\n\n=== ENQUIRY SUMMARY ===\nLast 30 Days: ${creditEnquiries['30days'].total} (Auto: ${creditEnquiries['30days'].autoLoans}, Others: ${creditEnquiries['30days'].others})\nLast 60 Days: ${creditEnquiries['60days'].total} (Auto: ${creditEnquiries['60days'].autoLoans}, Others: ${creditEnquiries['60days'].others})\nLast 90 Days: ${creditEnquiries['90days'].total} (Auto: ${creditEnquiries['90days'].autoLoans}, Others: ${creditEnquiries['90days'].others})\n\n=== ACCOUNT DETAILS ===\n${realCreditData?.accounts?.slice(0, 5).map((acc: any, i: number) => `Account ${i + 1}:\n  Type: ${acc.accountTypeDesc || 'Unknown'}\n  Status: ${acc.accountStatusDesc || 'Unknown'}\n  Balance: ₹${acc.current_balance?.toLocaleString() || '0'}\n  Limit: ₹${acc.credit_limit?.toLocaleString() || 'N/A'}\n  EMI: ₹${acc.emi_amount?.toLocaleString() || 'N/A'}`).join('\n\n') || 'No detailed account information available'}\n\n=== APPLICATION STATUS ===\nStatus: Application Submitted Successfully\nNext Steps: Loan processing will begin within 24 hours\nExpected Approval: 2-3 business days\n\n=== CONTACT INFORMATION ===\nEmail: info@finonest.com\nPhone: +91 94625 53887\nAddress: 3rd Floor, BL Tower 1, Tonk Rd, Jaipur, Rajasthan 302018\nWebsite: www.finonest.com\n\nThank you for choosing Finonest for your vehicle loan needs!`;`
                       
                       const blob = new Blob([content], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
