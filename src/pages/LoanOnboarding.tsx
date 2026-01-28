@@ -166,28 +166,7 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
-    
-    // Check if mobile already exists in any database
-    const existingApplications = JSON.parse(localStorage.getItem('loanApplications') || '[]');
-    const existingCompleted = JSON.parse(localStorage.getItem('completedApplications') || '[]');
-    const existingCredit = JSON.parse(localStorage.getItem('creditScoreData') || '[]');
-    
-    const existingMobile = [...existingApplications, ...existingCompleted, ...existingCredit]
-      .find((app: any) => app.mobile === mobile);
-    
-    if (existingMobile) {
-      setDataSource('Database: Mobile number found in existing records');
-      // Auto-populate known data
-      setUserData(prev => ({ 
-        ...prev, 
-        mobile,
-        pan: existingMobile.pan || '',
-        panName: existingMobile.panName || '',
-        creditScore: existingMobile.creditScore || 0
-      }));
-    } else {
-      setDataSource('New mobile number - proceeding with fresh application');
-    }
+    setDataSource('Processing mobile number');
     
     await new Promise(resolve => setTimeout(resolve, 1500));
     setUserData(prev => ({ ...prev, mobile }));
@@ -214,83 +193,21 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
+    setDataSource('API: Fetching PAN verification and credit score data');
     
     try {
-      // Check if PAN already exists in localStorage (database simulation)
-      const existingApplications = JSON.parse(localStorage.getItem('loanApplications') || '[]');
-      const existingPAN = existingApplications.find((app: any) => app.pan === pan);
-      
-      if (existingPAN) {
-        // Use existing data instead of API call
-        setDataSource('Database: Using cached PAN and credit data');
-        setUserData(prev => ({ 
-          ...prev, 
-          pan, 
-          email,
-          panName: existingPAN.panName || 'John Doe',
-          dob: existingPAN.dob || '1990-01-01',
-          gender: existingPAN.gender || 'M',
-          creditScore: existingPAN.creditScore || Math.floor(Math.random() * 200) + 650,
-          creditReport: existingPAN.creditReport || null,
-          panResponse: existingPAN.panResponse || { success: true, data: { full_name: existingPAN.panName || 'John Doe' } },
-          creditResponse: existingPAN.creditResponse || { success: true }
-        }));
-        setCurrentStep(3);
-        setLoading(false);
-        return;
-      }
-      
-      // Check if credit score already exists for this mobile number
-      const existingCreditData = JSON.parse(localStorage.getItem('creditScoreData') || '[]');
-      const existingCredit = existingCreditData.find((credit: any) => 
-        credit.mobile === userData.mobile || credit.pan === pan
-      );
-      
-      if (existingCredit) {
-        // Use existing credit data instead of API call
-        setDataSource('Database: Using cached credit score data');
-        const newUserData = {
-          pan, 
-          email,
-          panName: existingCredit.panName || 'John Doe',
-          dob: existingCredit.dob || '1990-01-01',
-          gender: existingCredit.gender || 'M',
-          creditScore: existingCredit.creditScore || Math.floor(Math.random() * 200) + 650,
-          creditReport: existingCredit.creditReport || null,
-          panResponse: existingCredit.panResponse || { success: true, data: { full_name: existingCredit.panName || 'John Doe' } },
-          creditResponse: existingCredit.creditResponse || { success: true }
-        };
-        
-        setUserData(prev => ({ ...prev, ...newUserData }));
-        
-        // Save to applications for future reference
-        const updatedApplications = [...existingApplications, { ...newUserData, mobile: userData.mobile }];
-        localStorage.setItem('loanApplications', JSON.stringify(updatedApplications));
-        
-        setCurrentStep(3);
-        setLoading(false);
-        return;
-      }
-      
-      // Only call API for new PAN numbers
-      setDataSource('API: Fetching fresh PAN verification and credit score data');
       const response = await fetch('https://api.finonest.com/api/pan-verify.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pan })
       });
       
       const data = await response.json();
       
       if (data.success && data.data.status === '1') {
-        // Get credit report with PAN data and user-provided email
         const creditResponse = await fetch('https://api.finonest.com/api/credit-report.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             phone: userData.mobile,
             email: email || `${data.data.full_name.toLowerCase().replace(' ', '')}@example.com`,
@@ -306,7 +223,8 @@ const LoanOnboarding: React.FC = () => {
         const creditData = await creditResponse.json();
         const creditScore = creditData.success ? creditData.data.SCORE?.FCIREXScore || Math.floor(Math.random() * 200) + 650 : Math.floor(Math.random() * 200) + 650;
         
-        const newUserData = {
+        setUserData(prev => ({ 
+          ...prev, 
           pan, 
           email,
           panName: data.data.full_name,
@@ -316,30 +234,7 @@ const LoanOnboarding: React.FC = () => {
           creditReport: creditData.success ? creditData.data : null,
           panResponse: data,
           creditResponse: creditData
-        };
-        
-        setUserData(prev => ({ ...prev, ...newUserData }));
-        
-        // Save to localStorage for future use
-        const updatedApplications = [...existingApplications, { ...newUserData, mobile: userData.mobile }];
-        localStorage.setItem('loanApplications', JSON.stringify(updatedApplications));
-        
-        // Also save credit score data separately for quick lookup
-        const existingCreditData = JSON.parse(localStorage.getItem('creditScoreData') || '[]');
-        const creditScoreEntry = {
-          mobile: userData.mobile,
-          pan,
-          panName: data.data.full_name,
-          dob: data.data.dob,
-          gender: data.data.gender,
-          creditScore,
-          creditReport: creditData.success ? creditData.data : null,
-          panResponse: data,
-          creditResponse: creditData,
-          lastUpdated: new Date().toISOString()
-        };
-        const updatedCreditData = [...existingCreditData, creditScoreEntry];
-        localStorage.setItem('creditScoreData', JSON.stringify(updatedCreditData));
+        }));
         
         setCurrentStep(3);
       } else {
@@ -350,9 +245,7 @@ const LoanOnboarding: React.FC = () => {
     }
     
     setLoading(false);
-  };
-
-  const handleVehicleSubmit = async (e: React.FormEvent) => {
+  };  const handleVehicleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as any;
     const vehicleRC = form.vehicleRC.value.trim();
@@ -364,81 +257,28 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
+    setDataSource('API: Fetching vehicle RC verification and valuation data');
     
     try {
-      // Check if RC already exists in localStorage (database simulation)
-      const existingVehicles = JSON.parse(localStorage.getItem('vehicleData') || '[]');
-      const existingRC = existingVehicles.find((vehicle: any) => vehicle.vehicleRC === vehicleRC);
-      
-      if (existingRC) {
-        // Use existing vehicle data instead of API call
-        setDataSource('Database: Using cached vehicle RC data');
-        setUserData(prev => ({ 
-          ...prev, 
-          vehicleRC,
-          vehicleModel: existingRC.vehicleModel || 'Swift VDI',
-          vehicleYear: existingRC.vehicleYear || 2020,
-          vehicleMake: existingRC.vehicleMake || 'Maruti Suzuki',
-          ownerName: existingRC.ownerName || userData.panName || 'John Doe',
-          fuelType: existingRC.fuelType || 'Petrol',
-          vehicleColor: existingRC.vehicleColor || 'White',
-          vehicleValue: existingRC.vehicleValue || 800000,
-          vehicleResponse: existingRC.vehicleResponse || { success: true, data: { registration_date: '15 Mar 2020' } }
-        }));
-        setCurrentStep(5);
-        setLoading(false);
-        return;
-      }
-      
-      // Only call API for new RC numbers
-      setDataSource('API: Fetching fresh vehicle RC verification and valuation data');
       const response = await fetch('https://api.finonest.com/api/rc-surepass.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_number: vehicleRC })
       });
       
       const data = await response.json();
       
       if (data.success && data.data) {
-        // Extract city from RC address
-        const extractCity = (address: string) => {
-          const cityPatterns = [
-            /mumbai/i, /delhi/i, /bangalore/i, /chennai/i, /kolkata/i, /hyderabad/i, /pune/i,
-            /ahmedabad/i, /surat/i, /jaipur/i, /lucknow/i, /kanpur/i, /nagpur/i, /indore/i,
-            /bhopal/i, /patna/i, /vadodara/i, /ghaziabad/i, /nashik/i, /meerut/i, /rajkot/i,
-            /varanasi/i, /aurangabad/i, /dhanbad/i, /amritsar/i, /allahabad/i, /howrah/i,
-            /coimbatore/i, /vijayawada/i, /jodhpur/i, /madurai/i, /chandigarh/i, /guwahati/i,
-            /mysore/i, /gurgaon/i, /gurugram/i, /noida/i, /kochi/i, /mangalore/i, /belgaum/i
-          ];
-          for (const pattern of cityPatterns) {
-            if (pattern.test(address)) {
-              return address.match(pattern)?.[0]?.toLowerCase().replace(/^\w/, c => c.toUpperCase()) || 'Mumbai';
-            }
-          }
-          return 'Mumbai';
-        };
+        const city = data.data.present_address?.match(/mumbai|delhi|bangalore|chennai|kolkata|hyderabad|pune/i)?.[0] || 'Mumbai';
         
-        const city = extractCity(data.data.present_address || data.data.permanent_address || '');
-        
-        // Get car valuation using Gemini AI
         const valuationResponse = await fetch('https://api.finonest.com/api/car-valuation.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             vehicleModel: data.data.maker_model,
             vehicleMake: data.data.maker_description,
             vehicleYear: parseInt(data.data.manufacturing_date_formatted?.split('-')[0]) || new Date().getFullYear(),
             fuelType: data.data.fuel_type,
-            bodyType: data.data.body_type,
-            cubicCapacity: data.data.cubic_capacity,
-            seatCapacity: data.data.seat_capacity,
-            vehicleCategory: data.data.vehicle_category_description,
-            registrationDate: data.data.registration_date,
             city: city,
             condition: 'Good'
           })
@@ -447,7 +287,8 @@ const LoanOnboarding: React.FC = () => {
         const valuationData = await valuationResponse.json();
         const vehicleValue = valuationData.success ? valuationData.market_value : 800000;
         
-        const newVehicleData = {
+        setUserData(prev => ({ 
+          ...prev, 
           vehicleRC,
           vehicleModel: data.data.maker_model,
           vehicleYear: parseInt(data.data.manufacturing_date_formatted?.split('-')[0]) || new Date().getFullYear(),
@@ -457,13 +298,7 @@ const LoanOnboarding: React.FC = () => {
           vehicleColor: data.data.color,
           vehicleValue,
           vehicleResponse: data
-        };
-        
-        setUserData(prev => ({ ...prev, ...newVehicleData }));
-        
-        // Save to localStorage for future use
-        const updatedVehicles = [...existingVehicles, newVehicleData];
-        localStorage.setItem('vehicleData', JSON.stringify(updatedVehicles));
+        }));
         
         setCurrentStep(5);
       } else {
@@ -493,31 +328,10 @@ const LoanOnboarding: React.FC = () => {
     }
 
     setLoading(true);
+    setDataSource('API: Saving application data');
     
-    // Check if application already exists to avoid duplicate API calls
-    const existingApplications = JSON.parse(localStorage.getItem('completedApplications') || '[]');
-    const existingApp = existingApplications.find((app: any) => 
-      app.pan === userData.pan && app.vehicleRC === userData.vehicleRC
-    );
-    
-    if (existingApp) {
-      // Use existing application data
-      setDataSource('Database: Using existing application data');
-      setUserData(prev => ({ 
-        ...prev, 
-        income, 
-        employment, 
-        applicationId: existingApp.applicationId 
-      }));
-      setCurrentStep(6);
-      setLoading(false);
-      return;
-    }
-    
-    // Save all data to database (localStorage simulation)
-    setDataSource('Database: Saving new application data');
     try {
-      const applicationId = Date.now(); // Generate unique ID
+      const applicationId = Date.now();
       const applicationData = {
         ...userData,
         income,
@@ -527,30 +341,16 @@ const LoanOnboarding: React.FC = () => {
         status: 'submitted'
       };
       
-      // Save to completed applications
-      const updatedApplications = [...existingApplications, applicationData];
-      localStorage.setItem('completedApplications', JSON.stringify(updatedApplications));
-      
-      // Also try to save to API (optional, non-blocking)
-      setDataSource('Database + API: Saving to both local and remote storage');
-      try {
-        await fetch('https://api.finonest.com/api/loan-application.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(applicationData)
-        });
-      } catch (apiError) {
-        console.log('API save failed, but local save successful');
-        setDataSource('Database: Saved locally (API unavailable)');
-      }
+      await fetch('https://api.finonest.com/api/loan-application.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(applicationData)
+      });
       
       setUserData(prev => ({ ...prev, income, employment, applicationId }));
       setCurrentStep(6);
     } catch (error) {
       console.error('Failed to save application');
-      // Still proceed to next step with local data
       setUserData(prev => ({ ...prev, income, employment, applicationId: Date.now() }));
       setCurrentStep(6);
     }
