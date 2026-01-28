@@ -3,12 +3,16 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
-import { Heart, CheckCircle, Lightbulb, Shield, Star } from "lucide-react";
+import { Heart, CheckCircle, Lightbulb, Shield, Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import aboutTeam from "@/assets/about-team.jpg";
 
 const About = () => {
+  const [selectedPromoter, setSelectedPromoter] = useState<typeof promoters[0] | null>(null);
+
   const values = [
     {
       icon: Shield,
@@ -52,7 +56,7 @@ const About = () => {
   const promoters = [
     {
       name: "Surya Mohan Roy",
-      role: "Managing Director and Founder",
+      role: "Managing Director & Founder",
       description: "Surya Mohan Roy is the Managing Director & Founder, the visionary leader behind the company's purpose, culture, and long-term strategy. With strong entrepreneurial insight and a commitment to innovation, he established the organization with the goal of delivering excellence, trust, and value in every service. As the Founder, he built the company on core principles of integrity, quality, and customer-centricity. His ability to identify opportunities, adapt to market trends, and lead with clarity has shaped the company's identity and positioned it for sustainable growth. In his role as Managing Director, he oversees strategic planning, business development, and operational execution across all departments.",
       image: "/Director/Surya.jpeg",
     },
@@ -65,7 +69,7 @@ const About = () => {
     {
       name: "CA Prateek Somani",
       role: "Chief Financial Officer & Founder",
-      description: "As the Chief Financial Officer, Prateek Somani leads the company's financial strategy with precision and vision. He oversees budgeting, financial planning, compliance, and risk management, ensuring the organization operates with transparency and long-term stability. He plays a key role in guiding strategic decisions, optimizing resources, and strengthening the company's financial foundation. His analytical approach and commitment to excellence drive sustainable growth and support the organization's mission at every level.",
+      description: "As the Chief Financial Officer,CA Prateek Somani leads the company's financial strategy with precision and vision. He oversees budgeting, financial planning, compliance, and risk management, ensuring the organization operates with transparency and long-term stability. He plays a key role in guiding strategic decisions, optimizing resources, and strengthening the company's financial foundation. His analytical approach and commitment to excellence drive sustainable growth and support the organization's mission at every level.",
       image: "/Director/CA prateek somani.jpeg",
     },
     {
@@ -76,8 +80,8 @@ const About = () => {
     },
     {
       name: "Atishay Jain",
-      role: "Co-Founder and Director",
-      description: "As the Co-Founder & Director, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
+      role: "Chief Business Officer and Co founder",
+      description: "As the Chief Business Officer and Co founder, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
       image: "/Director/Atishey.jpeg",
     },
   ];
@@ -294,26 +298,30 @@ const About = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {promoters.map((promoter, index) => (
                 <div 
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border hover:shadow-lg transition-shadow"
+                  onClick={() => setSelectedPromoter(promoter)}
+                  className="bg-card rounded-xl border border-border hover:shadow-lg hover:border-primary/50 transition-all cursor-pointer group overflow-hidden"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="aspect-[4/5] overflow-hidden">
                     <img 
                       src={promoter.image} 
                       alt={promoter.name}
-                      className={`w-16 h-16 rounded-full object-cover flex-shrink-0 ${
-                        promoter.name === 'Prateek Rathore' ? 'scale-115' : ''
-                      }`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-foreground">{promoter.name}</h3>
-                      <div className="text-primary text-sm font-medium mb-3">{promoter.role}</div>
-                      <p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
-                        {promoter.description}
-                      </p>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                      {promoter.name}
+                    </h3>
+                    <p className="text-primary text-sm font-medium mb-2">{promoter.role}</p>
+                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3">
+                      {promoter.description}
+                    </p>
+                    <div className="mt-3 text-primary text-xs font-medium group-hover:underline">
+                      Click to read more →
                     </div>
                   </div>
                 </div>
@@ -321,6 +329,42 @@ const About = () => {
             </div>
           </div>
         </section>
+
+        {/* Promoter Details Modal */}
+        <Dialog open={!!selectedPromoter} onOpenChange={() => setSelectedPromoter(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            {selectedPromoter && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold text-foreground">
+                    {selectedPromoter.name}
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row gap-6">
+                    <div className="flex-shrink-0">
+                      <div className="aspect-[4/5] w-48 mx-auto sm:mx-0 overflow-hidden rounded-lg">
+                        <img 
+                          src={selectedPromoter.image} 
+                          alt={selectedPromoter.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-primary text-lg font-semibold mb-4">
+                        {selectedPromoter.role}
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {selectedPromoter.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* CTA Section */}
         <section className="py-16 bg-primary text-primary-foreground">
