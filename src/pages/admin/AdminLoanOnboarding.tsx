@@ -512,6 +512,12 @@ const AdminLoanOnboarding = () => {
                   Credit Score: {selectedApp.credit_score}
                 </span>
               )}
+              {selectedApp?.vehicle_make && selectedApp?.vehicle_model && (
+                <span className="flex items-center gap-1">
+                  <Car className="w-4 h-4" />
+                  {selectedApp.vehicle_make} {selectedApp.vehicle_model} ({selectedApp.vehicle_year})
+                </span>
+              )}
             </div>
           </DialogHeader>
           
@@ -571,87 +577,144 @@ const AdminLoanOnboarding = () => {
                     </div>
                   </div>
                 </div>
-              {/* Vehicle Information */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Car className="w-5 h-5" />
-                    Your Vehicle
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Vehicle{formattedData.vehicle_info.title.match(/\d{4}/)?.[0]}DIESEL</p>
-                      <p className="text-sm font-medium text-gray-600 mt-2">Registration Number</p>
-                      <p className="font-bold text-lg">{formattedData.vehicle_info.registration_number}</p>
+                {/* Vehicle Information - Enhanced */}
+                <Card className="shadow-xl border-0 overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <CardTitle className="flex items-center gap-3 relative z-10">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <Car className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">Vehicle Information</h3>
+                        <p className="text-blue-100 text-sm font-normal">{formattedData.vehicle_info.details}</p>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6 bg-gradient-to-br from-blue-50 to-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+                          <p className="text-sm font-medium text-blue-600 mb-1">Registration Number</p>
+                          <p className="font-bold text-xl text-gray-800">{formattedData.vehicle_info.registration_number}</p>
+                        </div>
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+                          <p className="text-sm font-medium text-blue-600 mb-1">Registration Date</p>
+                          <p className="font-semibold text-gray-700 flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-blue-500" />
+                            {formattedData.vehicle_info.registration_date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+                          <p className="text-sm font-medium text-blue-600 mb-1">Vehicle Details</p>
+                          <p className="font-bold text-lg text-gray-800">{formattedData.vehicle_info.details}</p>
+                          <p className="text-sm text-gray-600 mt-1">{formattedData.vehicle_info.color_fuel}</p>
+                          <p className="text-sm text-blue-600 mt-1">Owner: {formattedData.vehicle_info.owner}</p>
+                        </div>
+                        <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 rounded-lg text-white">
+                          <p className="text-green-100 text-sm font-medium">Market Value</p>
+                          <p className="text-2xl font-bold">{formattedData.vehicle_info.market_value}</p>
+                          <p className="text-green-100 text-xs mt-1">{formattedData.vehicle_info.data_source}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Registration Date</p>
-                      <p className="font-semibold">{formattedData.vehicle_info.registration_date}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Vehicle Details</p>
-                      <p className="font-bold text-lg">{formattedData.vehicle_info.details}</p>
-                      <p className="text-sm text-gray-600">{formattedData.vehicle_info.color_fuel}</p>
-                      <p className="text-sm text-blue-600">Owner: {formattedData.vehicle_info.owner}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Market Value: {formattedData.vehicle_info.market_value}</p>
-                      <p className="text-xs text-gray-500">{formattedData.vehicle_info.data_source}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
-              {/* Credit Score Analysis */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Credit Score Analysis
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="text-center space-y-2">
-                    <div className="text-4xl font-bold text-purple-600">{formattedData.credit_analysis.score}</div>
-                    <div className="text-gray-600">/{formattedData.credit_analysis.max_score}</div>
-                    <div className="text-lg font-semibold text-purple-700">{formattedData.credit_analysis.rating}</div>
-                    <div className="text-sm text-gray-600">Last updated: {formattedData.credit_analysis.last_updated}</div>
-                    <div className="text-sm text-green-600">✓ Real Bureau Data</div>
-                  </div>
-                </CardContent>
-              </Card>
+                {/* Credit Score Analysis - Enhanced */}
+                <Card className="shadow-xl border-0 overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-purple-600 to-purple-700 text-white relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <CardTitle className="flex items-center gap-3 relative z-10">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">Credit Score Analysis</h3>
+                        <p className="text-purple-100 text-sm font-normal">{formattedData.credit_analysis.rating} Credit Rating</p>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-8 bg-gradient-to-br from-purple-50 to-white">
+                    <div className="flex items-center justify-center">
+                      <div className="relative">
+                        <div className="w-48 h-48 relative">
+                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle
+                              cx="50"
+                              cy="50"
+                              r="40"
+                              stroke="currentColor"
+                              strokeWidth="6"
+                              fill="transparent"
+                              className="text-gray-200"
+                            />
+                            <circle
+                              cx="50"
+                              cy="50"
+                              r="40"
+                              stroke="currentColor"
+                              strokeWidth="6"
+                              fill="transparent"
+                              strokeDasharray={`${(formattedData.credit_analysis.score / formattedData.credit_analysis.max_score) * 251.2} 251.2`}
+                              className="text-purple-600 transition-all duration-1000"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className="text-4xl font-bold text-purple-600">{formattedData.credit_analysis.score}</span>
+                            <span className="text-sm text-gray-600">/{formattedData.credit_analysis.max_score}</span>
+                          </div>
+                        </div>
+                        <div className="text-center mt-4">
+                          <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold">
+                            <Shield className="w-4 h-4" />
+                            {formattedData.credit_analysis.rating}
+                          </div>
+                          <p className="text-sm text-gray-600 mt-2">Last updated: {formattedData.credit_analysis.last_updated}</p>
+                          <div className="inline-flex items-center gap-1 text-green-600 text-sm mt-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            Real Bureau Data
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-              {/* Vehicle Financer Information */}
-              <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5" />
-                    Vehicle Financer Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">RC Document Financer</p>
-                      <p className="text-sm font-medium text-gray-600">Financer Name</p>
-                      <p className="font-bold text-lg">{formattedData.financer_info.rc_financer}</p>
+                {/* Vehicle Financer Information - Enhanced */}
+                <Card className="shadow-xl border-0 overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white relative">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <CardTitle className="flex items-center gap-3 relative z-10">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <Shield className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">Vehicle Financer Information</h3>
+                        <p className="text-emerald-100 text-sm font-normal">{formattedData.financer_info.rc_financer}</p>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6 bg-gradient-to-br from-emerald-50 to-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-white p-4 rounded-lg shadow-sm border border-emerald-100">
+                        <p className="text-sm font-medium text-emerald-600 mb-2">RC Document Financer</p>
+                        <p className="font-bold text-xl text-gray-800">{formattedData.financer_info.rc_financer}</p>
+                        <p className="text-sm text-gray-600 mt-1">{formattedData.financer_info.source}</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-lg shadow-sm border border-emerald-100">
+                        <p className="text-sm font-medium text-emerald-600 mb-2">CIBIL Credit Match</p>
+                        <p className={`font-semibold text-lg ${formattedData.financer_info.cibil_match ? 'text-green-600' : 'text-gray-600'}`}>
+                          {formattedData.financer_info.cibil_match ? '✓ Match Found' : '✗ No Match'}
+                        </p>
+                        <p className="text-sm text-gray-600 mt-1">{formattedData.financer_info.match_message}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Source</p>
-                      <p className="text-sm">{formattedData.financer_info.source}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">CIBIL Credit Match</p>
-                      <p className={`font-semibold ${formattedData.financer_info.cibil_match ? 'text-green-600' : 'text-gray-600'}`}>
-                        {formattedData.financer_info.cibil_match ? 'Matching financer found in CIBIL data' : 'No matching financer found in CIBIL data'}
-                      </p>
-                      <p className="text-sm text-gray-600">{formattedData.financer_info.match_message}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
               {/* Account Summary */}
               <Card className="shadow-lg border-0">
