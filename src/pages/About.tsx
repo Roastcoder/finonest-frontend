@@ -64,7 +64,7 @@ const About = () => {
     },
     {
       name: "CA Prateek Somani",
-      role: "Chief Financial Officer",
+      role: "Chief Financial Officer & Founder",
       description: "As the Chief Financial Officer, Prateek Somani leads the company's financial strategy with precision and vision. He oversees budgeting, financial planning, compliance, and risk management, ensuring the organization operates with transparency and long-term stability. He plays a key role in guiding strategic decisions, optimizing resources, and strengthening the company's financial foundation. His analytical approach and commitment to excellence drive sustainable growth and support the organization's mission at every level.",
       image: "/Director/CA prateek somani.jpeg",
     },
