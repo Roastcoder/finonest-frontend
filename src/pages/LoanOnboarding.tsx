@@ -437,7 +437,7 @@ const LoanOnboarding: React.FC = () => {
     setLoading(false);
   };
 
-  const getProgressValue = () => (currentStep / 7) * 100;
+  const getProgressValue = () => (currentStep / 6) * 100;
 
   const renderStep = () => {
     if (loading) {
@@ -540,76 +540,6 @@ const LoanOnboarding: React.FC = () => {
         );
 
       case 4:
-        const vehicleValue = userData.vehicleValue || 800000;
-        const loanAmountOptions = [
-          { value: Math.round(vehicleValue * 0.6), label: `₹${Math.round(vehicleValue * 0.6 / 100000).toFixed(1)}L (60% LTV)` },
-          { value: Math.round(vehicleValue * 0.7), label: `₹${Math.round(vehicleValue * 0.7 / 100000).toFixed(1)}L (70% LTV)` },
-          { value: Math.round(vehicleValue * 0.8), label: `₹${Math.round(vehicleValue * 0.8 / 100000).toFixed(1)}L (80% LTV)` },
-          { value: Math.round(vehicleValue * 0.85), label: `₹${Math.round(vehicleValue * 0.85 / 100000).toFixed(1)}L (85% LTV)` },
-        ];
-
-        return (
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Select Loan Amount</h2>
-            <p className="text-gray-600 mb-6">Choose your desired loan amount based on vehicle value</p>
-            
-            <div className="space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-600 font-medium">Estimated Vehicle Value</p>
-                <p className="text-2xl font-bold text-blue-800">₹{(vehicleValue / 100000).toFixed(1)}L</p>
-              </div>
-              
-              <div className="space-y-3">
-                {loanAmountOptions.map((option) => (
-                  <div
-                    key={option.value}
-                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                      selectedLoanAmount === option.value
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-300'
-                    }`}
-                    onClick={() => setSelectedLoanAmount(option.value)}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-gray-800">{option.label}</span>
-                      <div className={`w-5 h-5 rounded-full border-2 ${
-                        selectedLoanAmount === option.value
-                          ? 'border-blue-500 bg-blue-500'
-                          : 'border-gray-300'
-                      }`}>
-                        {selectedLoanAmount === option.value && (
-                          <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">
-                      EMI: ₹{Math.round(option.value / 60).toLocaleString()} (5 years)
-                    </p>
-                  </div>
-                ))}
-              </div>
-              
-              <Button 
-                onClick={() => {
-                  if (!selectedLoanAmount) {
-                    showError('loanAmount', 'Please select a loan amount');
-                    return;
-                  }
-                  clearError('loanAmount');
-                  setUserData(prev => ({ ...prev, selectedLoanAmount }));
-                  setCurrentStep(5);
-                }}
-                className="w-full btn-hero"
-                disabled={!selectedLoanAmount}
-              >
-                Continue with ₹{selectedLoanAmount ? (selectedLoanAmount / 100000).toFixed(1) : '0'}L
-              </Button>
-              {errors.loanAmount && <p className="text-red-500 text-sm mt-1">{errors.loanAmount}</p>}
-            </div>
-          </div>
-        );
-
-      case 5:
         return (
           <div>
             <h2 className="text-xl font-semibold mb-2">Vehicle RC Details</h2>
@@ -633,43 +563,94 @@ const LoanOnboarding: React.FC = () => {
         );
 
       case 5:
+        // Select correct auto loan amount after RC
+        const rcFinancerName = userData?.vehicleResponse?.data?.financer || userData?.vehicleResponse?.data?.hypothecation_details || 'Unknown Financer';
+        const step5CreditReport = userData?.creditReport;
+        const autoLoanOptions = [];
+        
+        // Get auto loan amounts from credit report
+        if (step5CreditReport?.ACCOUNTS) {
+          step5CreditReport.ACCOUNTS.forEach((account: any) => {
+            if (account.account_type === 'AL' || account.lender_name?.toLowerCase().includes('auto') || account.lender_name?.toLowerCase().includes('vehicle')) {
+              const loanAmount = account.sanctioned_amount || account.credit_limit || 0;
+              if (loanAmount > 0) {
+                autoLoanOptions.push({
+                  lender: account.lender_name || 'Unknown Lender',
+                  sanctioned: loanAmount
+                });
+              }
+            }
+          });
+        }
+        
+        // Add default options if no auto loans found
+        if (autoLoanOptions.length === 0) {
+          const vehicleVal = userData?.vehicleValue || 800000;
+          autoLoanOptions.push(
+            { lender: rcFinancerName, sanctioned: Math.round(vehicleVal * 0.8) },
+            { lender: 'HDFC Bank', sanctioned: Math.round(vehicleVal * 0.75) },
+            { lender: 'ICICI Bank', sanctioned: Math.round(vehicleVal * 0.7) }
+          );
+        }
+
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-2">Personal & Income Information</h2>
-            <p className="text-gray-600 mb-6">Tell us about your income</p>
+            <h2 className="text-xl font-semibold mb-2">Select Correct Auto Loan Amount</h2>
+            <p className="text-gray-600 mb-6">Choose the correct auto loan amount for your vehicle</p>
             
-            <form onSubmit={handlePersonalSubmit}>
-              <div className="mb-4">
-                <Label htmlFor="income">Monthly Income</Label>
-                <Input
-                  id="income"
-                  name="income"
-                  type="number"
-                  placeholder="50000"
-                  className="mt-1"
-                  required
-                  min="1"
-                />
-                {errors.income && <p className="text-red-500 text-sm mt-1">{errors.income}</p>}
+            <div className="space-y-4">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-600 font-medium">RC Financer Name</p>
+                <p className="text-lg font-bold text-blue-800">{rcFinancerName}</p>
               </div>
-              <div className="mb-4">
-                <Label htmlFor="employment">Employment Type</Label>
-                <select
-                  id="employment"
-                  name="employment"
-                  className="w-full p-2 border border-gray-300 rounded-md mt-1"
-                  required
-                >
-                  <option value="">Select employment type</option>
-                  <option value="S">Salaried</option>
-                  <option value="E">Self-employed</option>
-                  <option value="P">Self-employed Professional</option>
-                  <option value="N">Non-Salaried</option>
-                </select>
-                {errors.employment && <p className="text-red-500 text-sm mt-1">{errors.employment}</p>}
+              
+              <div className="space-y-3">
+                {autoLoanOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                      selectedLoanAmount === option.sanctioned
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300'
+                    }`}
+                    onClick={() => setSelectedLoanAmount(option.sanctioned)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-gray-800">{option.lender}</p>
+                        <p className="text-sm text-gray-600">Sanctioned: ₹{option.sanctioned.toLocaleString()}</p>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 ${
+                        selectedLoanAmount === option.sanctioned
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedLoanAmount === option.sanctioned && (
+                          <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <Button type="submit" className="w-full btn-hero">Continue</Button>
-            </form>
+              
+              <Button 
+                onClick={() => {
+                  if (!selectedLoanAmount) {
+                    showError('loanAmount', 'Please select an auto loan amount');
+                    return;
+                  }
+                  clearError('loanAmount');
+                  setUserData(prev => ({ ...prev, selectedLoanAmount }));
+                  setCurrentStep(6);
+                }}
+                className="w-full btn-hero"
+                disabled={!selectedLoanAmount}
+              >
+                Continue with ₹{selectedLoanAmount ? selectedLoanAmount.toLocaleString() : '0'}
+              </Button>
+              {errors.loanAmount && <p className="text-red-500 text-sm mt-1">{errors.loanAmount}</p>}
+            </div>
           </div>
         );
 
@@ -695,47 +676,47 @@ const LoanOnboarding: React.FC = () => {
         };
 
         // Extract real credit data from creditReport if available
-        const creditReport = userData?.creditReport;
-        const realCreditData = creditReport ? {
-          totalAccounts: creditReport.ACCOUNT_SUMMARY?.total_accounts || creditReport.ACCOUNTS?.length || 1,
-          activeAccounts: creditReport.ACCOUNT_SUMMARY?.active_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '11' || acc.account_status === '21')?.length || 1,
-          closedAccounts: creditReport.ACCOUNT_SUMMARY?.closed_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '13' || acc.account_status === '23')?.length || 0,
-          overdueAccounts: creditReport.ACCOUNT_SUMMARY?.overdue_accounts || creditReport.ACCOUNTS?.filter((acc: any) => acc.days_past_due > 0)?.length || 0,
-          totalOutstanding: creditReport.ACCOUNT_SUMMARY?.total_outstanding || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.current_balance || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.65),
-          totalSanctioned: creditReport.ACCOUNT_SUMMARY?.total_sanctioned || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.sanctioned_amount || acc.credit_limit || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.8),
-          monthlyEMI: creditReport.ACCOUNT_SUMMARY?.monthly_emi || creditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.emi_amount || 0), 0) || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60),
-          enquiries30: creditReport.ENQUIRY_SUMMARY?.last_30_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+        const step6CreditReport = userData?.creditReport;
+        const realCreditData = step6CreditReport ? {
+          totalAccounts: step6CreditReport.ACCOUNT_SUMMARY?.total_accounts || step6CreditReport.ACCOUNTS?.length || 1,
+          activeAccounts: step6CreditReport.ACCOUNT_SUMMARY?.active_accounts || step6CreditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '11' || acc.account_status === '21')?.length || 1,
+          closedAccounts: step6CreditReport.ACCOUNT_SUMMARY?.closed_accounts || step6CreditReport.ACCOUNTS?.filter((acc: any) => acc.account_status === '13' || acc.account_status === '23')?.length || 0,
+          overdueAccounts: step6CreditReport.ACCOUNT_SUMMARY?.overdue_accounts || step6CreditReport.ACCOUNTS?.filter((acc: any) => acc.days_past_due > 0)?.length || 0,
+          totalOutstanding: step6CreditReport.ACCOUNT_SUMMARY?.total_outstanding || step6CreditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.current_balance || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.65),
+          totalSanctioned: step6CreditReport.ACCOUNT_SUMMARY?.total_sanctioned || step6CreditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.sanctioned_amount || acc.credit_limit || 0), 0) || ((userData?.vehicleValue ?? 800000) * 0.8),
+          monthlyEMI: step6CreditReport.ACCOUNT_SUMMARY?.monthly_emi || step6CreditReport.ACCOUNTS?.reduce((sum: number, acc: any) => sum + (acc.emi_amount || 0), 0) || Math.round(((userData?.vehicleValue ?? 800000) * 0.8) / 60),
+          enquiries30: step6CreditReport.ENQUIRY_SUMMARY?.last_30_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
             return enqDate >= thirtyDaysAgo;
           })?.length || 1,
-          enquiries60: creditReport.ENQUIRY_SUMMARY?.last_60_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+          enquiries60: step6CreditReport.ENQUIRY_SUMMARY?.last_60_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
             return enqDate >= sixtyDaysAgo;
           })?.length || 2,
-          enquiries90: creditReport.ENQUIRY_SUMMARY?.last_90_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+          enquiries90: step6CreditReport.ENQUIRY_SUMMARY?.last_90_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
             return enqDate >= ninetyDaysAgo;
           })?.length || 3,
-          autoLoanEnquiries30: creditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+          autoLoanEnquiries30: step6CreditReport.ENQUIRY_SUMMARY?.auto_loan_30_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
             return enqDate >= thirtyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
           })?.length || 1,
-          autoLoanEnquiries60: creditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+          autoLoanEnquiries60: step6CreditReport.ENQUIRY_SUMMARY?.auto_loan_60_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
             return enqDate >= sixtyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
           })?.length || 1,
-          autoLoanEnquiries90: creditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || creditReport.ENQUIRIES?.filter((enq: any) => {
+          autoLoanEnquiries90: step6CreditReport.ENQUIRY_SUMMARY?.auto_loan_90_days || step6CreditReport.ENQUIRIES?.filter((enq: any) => {
             const enqDate = new Date(enq.enquiry_date);
             const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
             return enqDate >= ninetyDaysAgo && (enq.enquiry_purpose?.toLowerCase().includes('auto') || enq.enquiry_purpose?.toLowerCase().includes('vehicle'));
           })?.length || 2,
           // Process account details with FBA codes
-          accounts: creditReport.ACCOUNTS?.map((account: any) => ({
+          accounts: step6CreditReport.ACCOUNTS?.map((account: any) => ({
             ...account,
             accountTypeDesc: getAccountTypeDescription(account.account_type),
             accountStatusDesc: getAccountStatusDescription(account.account_status),
@@ -745,13 +726,13 @@ const LoanOnboarding: React.FC = () => {
         
         // Process personal information with FBA codes and real data
         const personalInfo = {
-          name: userData?.panName || userData?.ownerName || creditReport?.PERSONAL_INFO?.full_name || 'N/A',
-          gender: userData?.gender ? getGenderDescription(userData.gender) : creditReport?.PERSONAL_INFO?.gender ? getGenderDescription(creditReport.PERSONAL_INFO.gender) : 'N/A',
+          name: userData?.panName || userData?.ownerName || step6CreditReport?.PERSONAL_INFO?.full_name || 'N/A',
+          gender: userData?.gender ? getGenderDescription(userData.gender) : step6CreditReport?.PERSONAL_INFO?.gender ? getGenderDescription(step6CreditReport.PERSONAL_INFO.gender) : 'N/A',
           employment: userData?.employment ? getEmploymentStatusDescription(userData.employment) : 'N/A',
-          dob: userData?.dob || creditReport?.PERSONAL_INFO?.date_of_birth || 'N/A',
-          email: userData?.email || creditReport?.PERSONAL_INFO?.email || 'N/A',
-          mobile: userData?.mobile || creditReport?.PERSONAL_INFO?.phone || 'N/A',
-          address: creditReport?.PERSONAL_INFO?.address || creditReport?.ADDRESS?.[0]?.address_line || 'N/A'
+          dob: userData?.dob || step6CreditReport?.PERSONAL_INFO?.date_of_birth || 'N/A',
+          email: userData?.email || step6CreditReport?.PERSONAL_INFO?.email || 'N/A',
+          mobile: userData?.mobile || step6CreditReport?.PERSONAL_INFO?.phone || 'N/A',
+          address: step6CreditReport?.PERSONAL_INFO?.address || step6CreditReport?.ADDRESS?.[0]?.address_line || 'N/A'
         };
 
         // Extract financer information from RC response
@@ -926,7 +907,7 @@ const LoanOnboarding: React.FC = () => {
                         <p className="font-bold text-lg text-gray-800">{vehicleData.make} {vehicleData.model}</p>
                         <p className="text-sm text-gray-600">{vehicleData.color} • {vehicleData.fuelType}</p>
                         <p className="text-sm text-blue-600">Owner: {userData?.ownerName || personalInfo.name}</p>
-                        <p className="text-sm text-blue-600">Market Value: ₹{(vehicleValue / 100000).toFixed(1)}L</p>
+                        <p className="text-sm text-blue-600">Market Value: ₹{(vehicleVal / 100000).toFixed(1)}L</p>
                         <p className="text-xs text-gray-500 mt-2">Data Source: {dataSource || 'Database'}</p>
                       </div>
                     </div>
