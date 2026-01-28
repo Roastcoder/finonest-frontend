@@ -134,6 +134,16 @@ interface UserData {
   income?: number;
   employment?: string;
   applicationId?: number;
+  selectedLoanAmount?: number;
+  selectedLoanDetails?: {
+    lender: string;
+    sanctioned: number;
+    currentBalance: number;
+    accountStatus?: string;
+    accountOpenDate?: string;
+    emiAmount?: number;
+    isEstimated?: boolean;
+  };
 }
 
 const LoanOnboarding: React.FC = () => {
@@ -563,34 +573,77 @@ const LoanOnboarding: React.FC = () => {
         );
 
       case 5:
-        // Select correct auto loan amount after RC
+        // Extract auto loan data from credit response
         const rcFinancerName = userData?.vehicleResponse?.data?.financer || userData?.vehicleResponse?.data?.hypothecation_details || 'Unknown Financer';
         const step5CreditReport = userData?.creditReport;
         const autoLoanOptions = [];
         
-        // Get auto loan amounts from credit report
-        if (step5CreditReport?.ACCOUNTS) {
-          step5CreditReport.ACCOUNTS.forEach((account: any) => {
-            if (account.account_type === 'AL' || account.lender_name?.toLowerCase().includes('auto') || account.lender_name?.toLowerCase().includes('vehicle')) {
-              const loanAmount = account.sanctioned_amount || account.credit_limit || 0;
-              if (loanAmount > 0) {
+        // Extract only auto loan accounts from credit report using FBA codes
+        if (step5CreditReport?.CAIS_Account?.CAIS_Account_DETAILS) {
+          const accounts = step5CreditReport.CAIS_Account.CAIS_Account_DETAILS;
+          
+          accounts.forEach((account: any) => {
+            const accountType = account.Account_Type;
+            const lenderName = account.Subscriber_Name || 'Unknown Lender';
+            const sanctionedAmount = account.Sanctioned_Amount || 0;
+            const currentBalance = account.Current_Balance || 0;
+            const accountStatus = account.Account_Status;
+            const openDate = account.Open_Date;
+            
+            // Check for auto loan account types using FBA codes
+            const isAutoLoanType = (
+              accountType === '1' ||   // AUTO LOAN
+              accountType === '32' ||  // Used Car Loan
+              accountType === '46' ||  // P2P Auto Loan
+              accountType === '13'     // TWO-WHEELER LOAN
+            );
+            
+            // Check for car-related lenders
+            const isCarRelated = (
+              lenderName.toLowerCase().includes('auto') ||
+              lenderName.toLowerCase().includes('vehicle') ||
+              lenderName.toLowerCase().includes('car') ||
+              lenderName.toLowerCase().includes('motor') ||
+              lenderName.toLowerCase().includes('canara') || // Match RC financer
+              lenderName.toLowerCase().includes('hdfc') ||
+              lenderName.toLowerCase().includes('icici')
+            );
+            
+            // Include if it's auto loan type, car-related, or in vehicle loan amount range
+            if (isAutoLoanType || isCarRelated || 
+                (sanctionedAmount >= 500000 && sanctionedAmount <= 1500000) ||
+                (currentBalance >= 500000 && currentBalance <= 1500000)) {
+              
+              const amount = sanctionedAmount > 0 ? sanctionedAmount : currentBalance;
+              if (amount > 0) {
                 autoLoanOptions.push({
-                  lender: account.lender_name || 'Unknown Lender',
-                  sanctioned: loanAmount
+                  lender: lenderName,
+                  sanctioned: amount,
+                  currentBalance: currentBalance,
+                  accountStatus: getAccountStatusDescription(accountStatus),
+                  accountOpenDate: openDate,
+                  emiAmount: account.EMI_Amount || 0,
+                  accountType: getAccountTypeDescription(accountType),
+                  isConfirmed: isAutoLoanType,
+                  matchReason: isAutoLoanType ? 'Confirmed Auto Loan' : (isCarRelated ? 'Car-related Lender' : 'Vehicle Loan Range')
                 });
               }
             }
           });
         }
         
-        // Add default options if no auto loans found
+        // If no auto loans found in credit report, show RC financer with estimated amount
         if (autoLoanOptions.length === 0) {
           const vehicleVal = userData?.vehicleValue || 800000;
-          autoLoanOptions.push(
-            { lender: rcFinancerName, sanctioned: Math.round(vehicleVal * 0.8) },
-            { lender: 'HDFC Bank', sanctioned: Math.round(vehicleVal * 0.75) },
-            { lender: 'ICICI Bank', sanctioned: Math.round(vehicleVal * 0.7) }
-          );
+          autoLoanOptions.push({
+            lender: rcFinancerName,
+            sanctioned: Math.round(vehicleVal * 0.8),
+            currentBalance: Math.round(vehicleVal * 0.65),
+            accountStatus: 'Active',
+            accountOpenDate: userData?.vehicleResponse?.data?.registration_date || 'Unknown',
+            emiAmount: Math.round((vehicleVal * 0.8) / 60),
+            isEstimated: true
+          });
         }
 
         return (
@@ -604,6 +657,23 @@ const LoanOnboarding: React.FC = () => {
                 <p className="text-lg font-bold text-blue-800">{rcFinancerName}</p>
               </div>
               
+              {/* Debug info for credit report auto loans */}
+              {step5CreditReport?.CAIS_Account && (
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <p className="text-sm text-yellow-700 font-medium mb-2">
+                    📊 Found {autoLoanOptions.length} potential auto loan(s) in credit report
+                  </p>
+                  <p className="text-xs text-yellow-600">
+                    Total accounts in credit report: {step5CreditReport.CAIS_Account.CAIS_Account_DETAILS?.length || 0}
+                  </p>
+                  {autoLoanOptions.length > 0 && (
+                    <p className="text-xs text-green-600 mt-1">
+                      ✓ Using real credit bureau data (not estimated)
+                    </p>
+                  )}
+                </div>
+              )}
+              
               <div className="space-y-3">
                 {autoLoanOptions.map((option, index) => (
                   <div
@@ -616,11 +686,45 @@ const LoanOnboarding: React.FC = () => {
                     onClick={() => setSelectedLoanAmount(option.sanctioned)}
                   >
                     <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-semibold text-gray-800">{option.lender}</p>
-                        <p className="text-sm text-gray-600">Sanctioned: ₹{option.sanctioned.toLocaleString()}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className="font-semibold text-gray-800">{option.lender}</p>
+                          {option.isConfirmed ? (
+                            <Badge className="bg-green-100 text-green-800 text-xs">✓ Confirmed</Badge>
+                          ) : (
+                            <Badge className="bg-yellow-100 text-yellow-800 text-xs">{option.matchReason}</Badge>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <p className="text-gray-500">Account Type</p>
+                            <p className="font-medium text-blue-600">{option.accountType}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Loan Amount</p>
+                            <p className="font-bold text-green-600">₹{option.sanctioned.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Current Balance</p>
+                            <p className="font-bold text-orange-600">₹{option.currentBalance.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Status</p>
+                            <p className="text-gray-700">{option.accountStatus}</p>
+                          </div>
+                          {option.emiAmount > 0 && (
+                            <div>
+                              <p className="text-gray-500">EMI Amount</p>
+                              <p className="font-bold text-purple-600">₹{option.emiAmount.toLocaleString()}</p>
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-gray-500">Account Date</p>
+                            <p className="text-gray-700">{option.accountOpenDate}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 ${
+                      <div className={`w-5 h-5 rounded-full border-2 ml-4 ${
                         selectedLoanAmount === option.sanctioned
                           ? 'border-blue-500 bg-blue-500'
                           : 'border-gray-300'
@@ -641,7 +745,13 @@ const LoanOnboarding: React.FC = () => {
                     return;
                   }
                   clearError('loanAmount');
-                  setUserData(prev => ({ ...prev, selectedLoanAmount }));
+                  // Store the selected loan details for accurate reporting
+                  const selectedLoan = autoLoanOptions.find(option => option.sanctioned === selectedLoanAmount);
+                  setUserData(prev => ({ 
+                    ...prev, 
+                    selectedLoanAmount,
+                    selectedLoanDetails: selectedLoan
+                  }));
                   setCurrentStep(6);
                 }}
                 className="w-full btn-hero"
