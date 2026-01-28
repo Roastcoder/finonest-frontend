@@ -451,71 +451,115 @@ const AdminLoanOnboarding = () => {
 
       {/* Application Details Modal */}
       <Dialog open={!!selectedApp} onOpenChange={() => { setSelectedApp(null); setFormattedData(null); }}>
-        <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-[95vw] max-h-[95vh] w-full overflow-hidden flex flex-col">
           <DialogHeader className="flex-shrink-0 border-b pb-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold text-gray-800">
+                  <DialogTitle className="text-lg sm:text-xl font-bold text-gray-800">
                     {selectedApp?.pan_name || selectedApp?.mobile}
                   </DialogTitle>
-                  <p className="text-sm text-gray-500">Application ID: {selectedApp?.application_id || selectedApp?.id}</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Application ID: {selectedApp?.application_id || selectedApp?.id}</p>
+                  {selectedApp?.vehicle_make && selectedApp?.vehicle_model && (
+                    <p className="text-xs sm:text-sm text-blue-600 font-medium">
+                      {selectedApp.vehicle_make} {selectedApp.vehicle_model} ({selectedApp.vehicle_year}) • {selectedApp.fuel_type} • {selectedApp.vehicle_color}
+                    </p>
+                  )}
+                  {selectedApp?.vehicle_rc && (
+                    <p className="text-xs sm:text-sm text-green-600 font-mono">
+                      RC: {selectedApp.vehicle_rc} • Owner: {selectedApp.owner_name || selectedApp.pan_name}
+                    </p>
+                  )}
+                  {selectedApp?.email && (
+                    <p className="text-xs sm:text-sm text-gray-600">
+                      📧 {selectedApp.email} • 📞 {selectedApp.mobile} • PAN: {selectedApp.pan}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 {selectedApp && (
-                  <Badge className={`${getStatusColor(selectedApp.status)} text-white px-3 py-1`}>
+                  <Badge className={`${getStatusColor(selectedApp.status)} text-white px-2 sm:px-3 py-1 text-xs`}>
                     {selectedApp.status.toUpperCase()}
                   </Badge>
                 )}
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => selectedApp && downloadReport(selectedApp.id, 'txt')}
-                    className="hover:bg-blue-50"
+                    className="hover:bg-blue-50 text-xs px-2 sm:px-3"
                   >
-                    <FileText className="w-4 h-4 mr-1" />
-                    TXT
+                    <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                    <span className="hidden sm:inline">TXT</span>
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => selectedApp && downloadReport(selectedApp.id, 'pdf')}
-                    className="hover:bg-green-50"
+                    className="hover:bg-green-50 text-xs px-2 sm:px-3"
                   >
-                    <Download className="w-4 h-4 mr-1" />
-                    PDF
+                    <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                    <span className="hidden sm:inline">PDF</span>
                   </Button>
                 </div>
               </div>
             </div>
-            <div className="mt-3 flex items-center gap-4 text-sm text-gray-600">
+            <div className="mt-3 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
               <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                Applied: {selectedApp && new Date(selectedApp.created_at).toLocaleDateString('en-US', {
-                  month: 'long',
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Applied:</span>
+                {selectedApp && new Date(selectedApp.created_at).toLocaleDateString('en-US', {
+                  month: 'short',
                   day: 'numeric',
                   year: 'numeric'
                 })}
               </span>
               <span className="flex items-center gap-1">
-                <Activity className="w-4 h-4" />
-                Step: {selectedApp && getStepProgress(selectedApp.step_completed)}
+                <Activity className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Step:</span>
+                {selectedApp && getStepProgress(selectedApp.step_completed)}
               </span>
               {selectedApp?.credit_score && (
                 <span className="flex items-center gap-1">
-                  <TrendingUp className="w-4 h-4" />
-                  Credit Score: {selectedApp.credit_score}
+                  <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Score:</span>
+                  {selectedApp.credit_score}
                 </span>
               )}
-              {selectedApp?.vehicle_make && selectedApp?.vehicle_model && (
+              {selectedApp?.vehicle_value && (
                 <span className="flex items-center gap-1">
-                  <Car className="w-4 h-4" />
-                  {selectedApp.vehicle_make} {selectedApp.vehicle_model} ({selectedApp.vehicle_year})
+                  <Car className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Value:</span>
+                  ₹{selectedApp.vehicle_value.toLocaleString()}
+                </span>
+              )}
+              {selectedApp?.income && (
+                <span className="flex items-center gap-1">
+                  <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Income:</span>
+                  ₹{selectedApp.income.toLocaleString()}
+                </span>
+              )}
+              {selectedApp?.dob && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">DOB:</span>
+                  {new Date(selectedApp.dob).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+              )}
+              {selectedApp?.gender && (
+                <span className="flex items-center gap-1">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Gender:</span>
+                  {selectedApp.gender === 'M' ? 'Male' : selectedApp.gender === 'F' ? 'Female' : selectedApp.gender}
                 </span>
               )}
             </div>
