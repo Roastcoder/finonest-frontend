@@ -451,41 +451,126 @@ const AdminLoanOnboarding = () => {
 
       {/* Application Details Modal */}
       <Dialog open={!!selectedApp} onOpenChange={() => { setSelectedApp(null); setFormattedData(null); }}>
-        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span>{selectedApp?.pan_name || selectedApp?.mobile} - Loan Report</span>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => selectedApp && downloadReport(selectedApp.id, 'txt')}
-                >
-                  <FileText className="w-4 h-4 mr-1" />
-                  TXT
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => selectedApp && downloadReport(selectedApp.id, 'pdf')}
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  PDF
-                </Button>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col">
+          <DialogHeader className="flex-shrink-0 border-b pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <DialogTitle className="text-xl font-bold text-gray-800">
+                    {selectedApp?.pan_name || selectedApp?.mobile}
+                  </DialogTitle>
+                  <p className="text-sm text-gray-500">Application ID: {selectedApp?.application_id || selectedApp?.id}</p>
+                </div>
               </div>
-            </DialogTitle>
-            <DialogDescription>
-              Complete loan onboarding report in formatted display.
-            </DialogDescription>
+              <div className="flex items-center gap-2">
+                {selectedApp && (
+                  <Badge className={`${getStatusColor(selectedApp.status)} text-white px-3 py-1`}>
+                    {selectedApp.status.toUpperCase()}
+                  </Badge>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => selectedApp && downloadReport(selectedApp.id, 'txt')}
+                    className="hover:bg-blue-50"
+                  >
+                    <FileText className="w-4 h-4 mr-1" />
+                    TXT
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => selectedApp && downloadReport(selectedApp.id, 'pdf')}
+                    className="hover:bg-green-50"
+                  >
+                    <Download className="w-4 h-4 mr-1" />
+                    PDF
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center gap-4 text-sm text-gray-600">
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                Applied: {selectedApp && new Date(selectedApp.created_at).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </span>
+              <span className="flex items-center gap-1">
+                <Activity className="w-4 h-4" />
+                Step: {selectedApp && getStepProgress(selectedApp.step_completed)}
+              </span>
+              {selectedApp?.credit_score && (
+                <span className="flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4" />
+                  Credit Score: {selectedApp.credit_score}
+                </span>
+              )}
+            </div>
           </DialogHeader>
           
-          {detailsLoading ? (
-            <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-              <p>Loading formatted report...</p>
-            </div>
-          ) : formattedData ? (
-            <div className="space-y-6">
+          <div className="flex-1 overflow-y-auto py-4">
+            {detailsLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Loader2 className="w-8 h-8 animate-spin text-white" />
+                  </div>
+                  <p className="text-lg font-medium text-gray-700">Loading detailed report...</p>
+                  <p className="text-sm text-gray-500 mt-1">Analyzing credit and vehicle data</p>
+                </div>
+              </div>
+            ) : formattedData ? (
+              <div className="space-y-6 px-1">
+                {/* Quick Stats Row */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-100 text-sm font-medium">Credit Score</p>
+                        <p className="text-2xl font-bold">{formattedData.credit_analysis.score}</p>
+                        <p className="text-blue-100 text-xs">{formattedData.credit_analysis.rating}</p>
+                      </div>
+                      <TrendingUp className="w-8 h-8 text-blue-200" />
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-4 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-green-100 text-sm font-medium">Vehicle Value</p>
+                        <p className="text-2xl font-bold">{formattedData.vehicle_info.market_value}</p>
+                        <p className="text-green-100 text-xs">Market Price</p>
+                      </div>
+                      <Car className="w-8 h-8 text-green-200" />
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-purple-100 text-sm font-medium">Active Accounts</p>
+                        <p className="text-2xl font-bold">{formattedData.credit_overview.active_accounts}</p>
+                        <p className="text-purple-100 text-xs">Credit Accounts</p>
+                      </div>
+                      <CreditCard className="w-8 h-8 text-purple-200" />
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-4 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-orange-100 text-sm font-medium">Monthly EMI</p>
+                        <p className="text-2xl font-bold">{formattedData.credit_overview.monthly_emi}</p>
+                        <p className="text-orange-100 text-xs">Current EMI</p>
+                      </div>
+                      <Activity className="w-8 h-8 text-orange-200" />
+                    </div>
+                  </div>
+                </div>
               {/* Vehicle Information */}
               <Card className="shadow-lg border-0">
                 <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
@@ -740,19 +825,44 @@ const AdminLoanOnboarding = () => {
                 </CardContent>
               </Card>
             </div>
-          ) : selectedApp && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Unable to load formatted data. Showing basic information:</p>
-              <div className="mt-4 text-left max-w-md mx-auto space-y-2">
-                <p><strong>Name:</strong> {selectedApp.pan_name}</p>
-                <p><strong>Mobile:</strong> {selectedApp.mobile}</p>
-                <p><strong>PAN:</strong> {selectedApp.pan}</p>
-                <p><strong>Credit Score:</strong> {selectedApp.credit_score}</p>
-                <p><strong>Vehicle:</strong> {selectedApp.vehicle_make} {selectedApp.vehicle_model}</p>
-                <p><strong>RC:</strong> {selectedApp.vehicle_rc}</p>
+            ) : selectedApp && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <User className="w-8 h-8 text-gray-400" />
+                </div>
+                <p className="text-lg font-medium text-gray-700 mb-2">Unable to load detailed report</p>
+                <p className="text-gray-500 mb-6">Showing basic application information</p>
+                <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto">
+                  <div className="grid grid-cols-1 gap-4 text-left">
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">Name:</span>
+                      <span className="text-gray-800">{selectedApp.pan_name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">Mobile:</span>
+                      <span className="text-gray-800">{selectedApp.mobile}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">PAN:</span>
+                      <span className="text-gray-800 font-mono">{selectedApp.pan}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">Credit Score:</span>
+                      <span className="text-gray-800 font-bold">{selectedApp.credit_score}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">Vehicle:</span>
+                      <span className="text-gray-800">{selectedApp.vehicle_make} {selectedApp.vehicle_model}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium text-gray-600">RC:</span>
+                      <span className="text-gray-800 font-mono">{selectedApp.vehicle_rc}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
