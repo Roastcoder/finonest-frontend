@@ -60,7 +60,9 @@ const CreditCards = () => {
 
   const getImageSrc = (product: Product) => {
     if (product.card_image && product.card_image !== 'null') {
-      return product.card_image;
+      return product.card_image.startsWith('http') 
+        ? product.card_image 
+        : `https://cards.finonest.com/assets/cards/${product.card_image.split('/').pop()}`;
     }
     return "/assets/service-credit-cards.jpg";
   };

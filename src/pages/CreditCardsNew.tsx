@@ -143,7 +143,10 @@ const CreditCards = () => {
                 <CardContent className="space-y-3 sm:space-y-4">
                   <div className="w-full h-24 sm:h-32 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center relative overflow-hidden">
                     <img 
-                      src={product.card_image} 
+                      src={product.card_image.startsWith('http') 
+                        ? product.card_image 
+                        : `https://cards.finonest.com/assets/cards/${product.card_image.split('/').pop()}`
+                      } 
                       alt={product.name}
                       className="h-16 sm:h-20 object-contain z-10"
                       onError={(e) => {
