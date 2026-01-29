@@ -264,11 +264,15 @@ const CreditCardApply = () => {
                 {/* Card Image */}
                 <div className="w-full h-64 rounded-lg overflow-hidden bg-gray-50">
                   <img 
-                    src={product.variant_image || product.card_image} 
+                    src={(() => {
+                      const image = product.card_image;
+                      if (!image) return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
+                      return image.startsWith('http') ? image : `https://cards.finonest.com/assets/cards/${image.split('/').pop()}`;
+                    })()} 
                     alt={product.name}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      e.currentTarget.src = product.card_image || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23f3f4f6'/%3E%3Ctext x='150' y='100' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3ECredit Card%3C/text%3E%3C/svg%3E";
                     }}
                   />
                 </div>
