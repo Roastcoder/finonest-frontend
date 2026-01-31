@@ -114,7 +114,7 @@ const DSAPartner = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
-                  <Link to="#register">Become Partner</Link>
+                  <Link to="/dsa-registration">Become Partner</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
                   <Link to="#benefits">Learn More</Link>
