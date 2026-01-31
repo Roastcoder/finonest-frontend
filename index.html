@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Finonest | India's Fastest Growing Loan Provider</title>
+    <meta name="description" content="Finonest - India's fastest growing loan provider. Get home loans, car loans, personal loans & business loans with quick approval and best interest rates." />
+    <meta name="keywords" content="loan, home loan, car loan, personal loan, business loan, India, Finonest, financial services" />
+    <meta name="author" content="Finonest India Pvt. Ltd." />
+    <meta name="publisher" content="Finonest India Pvt. Ltd." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://finonest.com/" />
+    <link rel="icon" type="image/jpeg" href="/assets/finonest-icon.jpg" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#0a3055" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Finonest" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <link rel="icon" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="icon" sizes="512x512" href="/pwa-512x512.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <meta property="og:title" content="Finonest | India's Fastest Growing Loan Provider" />
+    <meta property="og:description" content="Get home loans, car loans, personal loans & business loans with quick approval and competitive interest rates." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://finonest.com/assets/logo.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Finonest" />
+    <meta name="twitter:image" content="https://finonest.com/assets/logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- Facebook Pixel Code -->
+    <script>
+      (function() {
+        try {
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '2298553847296489');
+          fbq('track', 'PageView');
+        } catch(e) {
+          console.log('Facebook Pixel blocked by ad blocker');
+        }
+      })();
+    </script>
+    <!-- End Facebook Pixel Code -->
+  </head>
+
+  <body>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=2298553847296489&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root"></div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
