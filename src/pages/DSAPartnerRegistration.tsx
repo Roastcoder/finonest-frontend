@@ -294,23 +294,21 @@ const DSAPartnerRegistration = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">PAN Number *</label>
+                      <label className="block text-sm font-medium mb-2">PAN Number</label>
                       <Input
                         value={formData.pan_number}
                         onChange={(e) => handleInputChange('pan_number', e.target.value.toUpperCase())}
                         placeholder="ABCDE1234F"
                         maxLength={10}
-                        required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Aadhar Number *</label>
+                      <label className="block text-sm font-medium mb-2">Aadhar Number</label>
                       <Input
                         value={formData.aadhar_number}
                         onChange={(e) => handleInputChange('aadhar_number', e.target.value)}
                         placeholder="1234 5678 9012"
                         maxLength={12}
-                        required
                       />
                     </div>
                   </div>
@@ -471,31 +469,28 @@ const DSAPartnerRegistration = () => {
                 <CardContent className="space-y-6">
                   <div className="grid md:grid-cols-3 gap-6">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Bank Name *</label>
+                      <label className="block text-sm font-medium mb-2">Bank Name</label>
                       <Input
                         value={formData.bank_name}
                         onChange={(e) => handleInputChange('bank_name', e.target.value)}
                         placeholder="Enter bank name"
-                        required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Account Number *</label>
+                      <label className="block text-sm font-medium mb-2">Account Number</label>
                       <Input
                         value={formData.account_number}
                         onChange={(e) => handleInputChange('account_number', e.target.value)}
                         placeholder="Enter account number"
-                        required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">IFSC Code *</label>
+                      <label className="block text-sm font-medium mb-2">IFSC Code</label>
                       <Input
                         value={formData.ifsc_code}
                         onChange={(e) => handleInputChange('ifsc_code', e.target.value.toUpperCase())}
                         placeholder="SBIN0001234"
                         maxLength={11}
-                        required
                       />
                     </div>
                   </div>
