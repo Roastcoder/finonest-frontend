@@ -1,9 +1,7 @@
 User-agent: *
 Allow: /
 
-<<<<<<< HEAD
 Sitemap: https://finonest.com/sitemap.xml
-=======
 # Sitemap location
 Sitemap: https://finonest.com/sitemap.xml
 
@@ -27,4 +25,3 @@ Allow: /privacy
 
 # Crawl delay (optional)
 Crawl-delay: 1
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
