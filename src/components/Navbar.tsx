@@ -72,6 +72,9 @@ const Navbar = () => {
     name: "Careers",
     href: "/careers"
   }, {
+    name: "DSA Partner",
+    href: "/dsa-partner"
+  }, {
     name: "About",
     href: "/about"
   }, {

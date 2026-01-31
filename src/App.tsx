@@ -44,6 +44,8 @@ import JobDetail from "./pages/JobDetail";
 import BranchDetail from "./pages/BranchDetail";
 import Sitemap from "./pages/Sitemap";
 import LoanOnboarding from "./pages/LoanOnboarding";
+import DSAPartner from "./pages/DSAPartner";
+import DSAPartnerRegistration from "./pages/DSAPartnerRegistration";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -88,7 +90,7 @@ const App = () => {
                 <Route path="/services/used-car-loan" element={<UsedCarLoan />} />
                 <Route path="/services/personal-loan" element={<PersonalLoan />} />
                 <Route path="/services/business-loan" element={<BusinessLoan />} />
-                <Route path="/services/credit-cards" element={<CreditCards />} />
+                <Route path="/services/credit-cards" element={<Navigate to="/credit-cards" replace />} />
                 <Route path="/credit-cards" element={<CreditCardsStandalone />} />
                 <Route path="/credit-card-apply" element={<CreditCardApply />} />
                 <Route path="/services/loan-against-property" element={<LoanAgainstProperty />} />
@@ -114,6 +116,7 @@ const App = () => {
                 <Route path="/admin/applications" element={<AdminDashboard />} />
                 <Route path="/admin/loan-onboarding" element={<AdminDashboard />} />
                 <Route path="/admin/loan-products" element={<AdminDashboard />} />
+                <Route path="/admin/dsa-applications" element={<AdminDashboard />} />
                 <Route path="/admin/leads" element={<AdminDashboard />} />
                 <Route path="/admin/contact-forms" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<AdminDashboard />} />
@@ -135,6 +138,9 @@ const App = () => {
                 <Route path="/partners" element={<BankingPartnersPage />} />
                 <Route path="/banker-form" element={<BankerForm />} />
                 <Route path="/loan-onboarding" element={<LoanOnboarding />} />
+                <Route path="/dsa-partner" element={<DSAPartner />} />
+                <Route path="/become-partner" element={<DSAPartner />} />
+                <Route path="/dsa-registration" element={<DSAPartnerRegistration />} />
                 <Route path="/:branchName" element={<BranchDetail />} />
                 <Route path="*" element={<NotFound />} />
                 </Routes>

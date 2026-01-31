@@ -57,6 +57,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/dsa-partner" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
+                  DSA Partner
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-xs lg:text-sm text-background/70 hover:text-accent transition-colors">
                   Contact
                 </Link>

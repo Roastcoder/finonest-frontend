@@ -14,6 +14,7 @@ import CallButton from "@/components/CallButton";
 import BottomNavigation from "@/components/BottomNavigation";
 import CreditScoreBanner from "@/components/CreditScoreBanner";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import DSAPartnerBanner from "@/components/DSAPartnerBanner";
 import { AnimateOnScroll } from "@/hooks/useScrollAnimation";
 
 const Index = () => {
@@ -53,6 +54,14 @@ const Index = () => {
           <WhyUs />
         </AnimateOnScroll>
       </div>
+      
+      {/* DSA Partner Banner */}
+      <div className="-mt-30">
+        <AnimateOnScroll animation="fade-up">
+          <DSAPartnerBanner />
+        </AnimateOnScroll>
+      </div>
+      
       <div className="-mt-30">
         <AnimateOnScroll animation="fade-up">
           <Testimonials />
