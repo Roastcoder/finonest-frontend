@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# ---------- Build Stage ----------
+
 FROM node:20-alpine AS build
 WORKDIR /app
 
@@ -44,4 +43,4 @@ EXPOSE 3000
 
 # Start the app
 CMD ["serve", "-s", "dist", "-l", "3000"]
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
+
