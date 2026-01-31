@@ -21,11 +21,8 @@ import { Link } from "react-router-dom";
 
 const PersonalLoan = () => {
   const features = [
-<<<<<<< HEAD
     { icon: Percent, title: "From 9.99% p.a.", description: "Attractive interest rates" },
-=======
     { icon: Percent, title: "From 10.49% p.a.", description: "Attractive interest rates" },
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     { icon: Zap, title: "Instant Disbursal", description: "Money in 24 hours" },
     { icon: FileCheck, title: "Minimal Docs", description: "Paperless process" },
     { icon: Clock, title: "5 Year Tenure", description: "Easy repayment" },
@@ -143,11 +140,8 @@ const PersonalLoan = () => {
                           <div className="text-xs text-muted-foreground">Max Tenure</div>
                         </div>
                         <div>
-<<<<<<< HEAD
                           <div className="text-2xl font-bold text-primary">9.99%</div>
-=======
                           <div className="text-2xl font-bold text-primary">10.49%</div>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                           <div className="text-xs text-muted-foreground">Starting Rate</div>
                         </div>
                       </div>

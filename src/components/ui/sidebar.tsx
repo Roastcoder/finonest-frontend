@@ -88,7 +88,6 @@ const SidebarProvider = React.forwardRef<
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [toggleSidebar]);
 
-<<<<<<< HEAD
   // Prevent body scroll when mobile sidebar is open
   React.useEffect(() => {
     if (isMobile && openMobile) {
@@ -102,8 +101,6 @@ const SidebarProvider = React.forwardRef<
     };
   }, [isMobile, openMobile]);
 
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.
   const state = open ? "expanded" : "collapsed";
@@ -167,9 +164,7 @@ const Sidebar = React.forwardRef<
   }
 
   if (isMobile) {
-<<<<<<< HEAD
     return null; // Hide sidebar completely on mobile
-=======
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
@@ -187,7 +182,6 @@ const Sidebar = React.forwardRef<
         </SheetContent>
       </Sheet>
     );
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   }
 
   return (
@@ -220,10 +214,7 @@ const Sidebar = React.forwardRef<
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
             : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
-<<<<<<< HEAD
           "overflow-y-auto",
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           className,
         )}
         {...props}

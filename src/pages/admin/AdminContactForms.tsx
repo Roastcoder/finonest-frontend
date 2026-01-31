@@ -31,11 +31,8 @@ const AdminContactForms = () => {
 
   const fetchContactForms = async () => {
     try {
-<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/admin/contact-forms', {
-=======
       const response = await fetch('http://api.finonest.com:4000/api/admin/contact-forms', {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -83,7 +80,6 @@ const AdminContactForms = () => {
                   </div>
                   <div>
                     <div className="space-y-2 text-sm">
-<<<<<<< HEAD
                       <p><strong>Loan Type:</strong> {form.loan_type || 'Not specified'}</p>
                       <p><strong>Amount:</strong> {form.amount ? `₹${form.amount}` : 'Not specified'}</p>
                       <div className="mt-3">
@@ -93,7 +89,6 @@ const AdminContactForms = () => {
                           {form.consent_data_processing ? <Badge variant="default" className="text-xs bg-green-500">Data ✓</Badge> : <Badge variant="outline" className="text-xs">Data ✗</Badge>}
                           {form.consent_communication ? <Badge variant="default" className="text-xs bg-green-500">Communication ✓</Badge> : <Badge variant="outline" className="text-xs">Communication ✗</Badge>}
                           {form.consent_marketing ? <Badge variant="default" className="text-xs bg-green-500">Marketing ✓</Badge> : <Badge variant="outline" className="text-xs">Marketing ✗</Badge>}
-=======
                       <p><strong>Loan Type:</strong> {form.loan_type}</p>
                       <p><strong>Amount:</strong> ₹{form.amount}</p>
                       <div className="mt-3">
@@ -103,7 +98,6 @@ const AdminContactForms = () => {
                           {form.consent_data_processing && <Badge variant="outline" className="text-xs">Data</Badge>}
                           {form.consent_communication && <Badge variant="outline" className="text-xs">Communication</Badge>}
                           {form.consent_marketing && <Badge variant="outline" className="text-xs">Marketing</Badge>}
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                         </div>
                       </div>
                     </div>

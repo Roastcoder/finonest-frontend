@@ -1,16 +1,12 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-=======
 import { useState } from "react";
 import { Helmet } from "react-helmet";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
-<<<<<<< HEAD
 import { Calendar, User, ArrowRight, Tag, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -66,7 +62,6 @@ const Blog = () => {
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-=======
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, User, ArrowRight, Search, Tag } from "lucide-react";
@@ -149,7 +144,6 @@ const Blog = () => {
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -157,24 +151,20 @@ const Blog = () => {
   return (
     <>
       <Helmet>
-<<<<<<< HEAD
         <title>Financial Blog | Finonest - Loan Tips & Credit Advice</title>
         <meta name="description" content="Expert financial advice, loan guides, and credit score tips. Stay updated with latest personal finance insights from Finonest." />
         <meta property="og:title" content="Finonest Blog - Financial Insights" />
         <meta property="og:description" content="Expert financial advice and loan guides" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://finonest.com/blog" />
-=======
         <title>Blog - Finonest | Financial Tips, Loan Guides & Credit Score Advice</title>
         <meta name="description" content="Read expert financial advice, loan guides, and credit score tips from Finonest. Stay updated with the latest in personal finance and lending." />
         <meta name="keywords" content="financial blog, loan tips, credit score advice, personal finance, Finonest blog" />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <link rel="canonical" href="https://finonest.com/blog" />
       </Helmet>
 
       <Navbar />
 
-<<<<<<< HEAD
       <main className="min-h-screen bg-background pt-24 pb-12">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-12">
@@ -272,7 +262,6 @@ const Blog = () => {
                       )}
                       <div className="absolute top-4 left-4">
                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-=======
       <main className="min-h-screen bg-background">
         {/* Hero */}
         <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-gradient-to-br from-primary/5 via-background to-accent/5">
@@ -344,12 +333,10 @@ const Blog = () => {
                       <div className="absolute top-4 left-4">
                         <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
                           <Tag className="w-3 h-3" />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                           {post.category}
                         </span>
                       </div>
                     </div>
-<<<<<<< HEAD
 
                     <div className="p-6">
                       <h2 className="text-xl font-semibold text-foreground mb-2 line-clamp-2">
@@ -381,7 +368,6 @@ const Blog = () => {
             </div>
           )}
         </div>
-=======
                     <div className="p-6">
                       <h2 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
                         {post.title}
@@ -435,7 +421,6 @@ const Blog = () => {
             </div>
           </div>
         </section>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       </main>
 
       <Footer />

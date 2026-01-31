@@ -101,7 +101,6 @@ const CreditCards = () => {
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6">
-<<<<<<< HEAD
                   Smart Cards with <span className="text-gradient">No Cost EMI</span>
                 </h1>
                 
@@ -109,7 +108,6 @@ const CreditCards = () => {
                   Find the perfect credit card that matches your lifestyle. Enjoy 
                   No Cost EMI, Airport Lounge Access, and exclusive rewards from 
                   India's top banks with instant approval.
-=======
                   Smart Cards for <span className="text-gradient">Smart Spenders</span>
                 </h1>
                 
@@ -117,7 +115,6 @@ const CreditCards = () => {
                   Find the perfect credit card that matches your lifestyle. Compare 
                   rewards, travel, and cashback cards from India's top banks and 
                   get instant approval.
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 </p>
 
                 <div className="flex flex-wrap gap-4 mb-8">
@@ -217,20 +214,14 @@ const CreditCards = () => {
                 </h2>
                 <div className="space-y-4">
                   {[
-<<<<<<< HEAD
                     "No Cost EMI on all purchases above ₹2,500",
                     "Complimentary Airport Lounge Access (8+ visits)",
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     "Compare cards from 15+ banks in one place",
                     "Expert guidance to choose the right card",
                     "Instant approval and doorstep delivery",
                     "Exclusive welcome offers and bonuses",
-<<<<<<< HEAD
-=======
                     "Lifetime free options available",
                     "Higher credit limits based on profile",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   ].map((benefit, index) => (
                     <div key={index} className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />

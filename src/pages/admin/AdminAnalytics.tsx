@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -24,9 +23,7 @@ import {
   Zap
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-=======
 import { useAuth } from "@/contexts/AuthContext";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
 interface Application {
   id: number;
@@ -39,7 +36,6 @@ interface ContactForm {
   created_at: string;
 }
 
-<<<<<<< HEAD
 interface User {
   id: number;
   created_at: string;
@@ -81,12 +77,10 @@ const AdminAnalytics = () => {
   const [loading, setLoading] = useState(true);
   const { token } = useAuth();
   const navigate = useNavigate();
-=======
 const AdminAnalytics = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [contactForms, setContactForms] = useState<ContactForm[]>([]);
   const { token } = useAuth();
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
   useEffect(() => {
     if (token) {
@@ -95,7 +89,6 @@ const AdminAnalytics = () => {
   }, [token]);
 
   const fetchData = async () => {
-<<<<<<< HEAD
     setLoading(true);
     try {
       // Fetch applications
@@ -563,7 +556,6 @@ const AdminAnalytics = () => {
           </CardContent>
         </Card>
       </div>
-=======
     try {
       const [appsRes, contactsRes] = await Promise.all([
         fetch('http://api.finonest.com:4000/api/admin/forms', {
@@ -636,7 +628,6 @@ const AdminAnalytics = () => {
           </div>
         </CardContent>
       </Card>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     </div>
   );
 };

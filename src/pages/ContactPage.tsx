@@ -24,11 +24,8 @@ import {
   ArrowRight
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-<<<<<<< HEAD
 import finonestIcon from "/assets/finonest-icon.jpg";
-=======
 import mascotAdvisor from "@/assets/mascot-advisor.png";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { Link } from "react-router-dom";
 
 const ContactPage = () => {
@@ -48,10 +45,7 @@ const ContactPage = () => {
     communication: false,
     marketing: false
   });
-<<<<<<< HEAD
   const [showConsentDetails, setShowConsentDetails] = useState(false);
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
   const handleAgreeToAll = (checked: boolean) => {
     setConsent({
@@ -60,10 +54,7 @@ const ContactPage = () => {
       communication: checked,
       marketing: consent.marketing
     });
-<<<<<<< HEAD
     setShowConsentDetails(checked);
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -82,10 +73,7 @@ const ContactPage = () => {
     });
     setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     setConsent({ terms: false, dataProcessing: false, communication: false, marketing: false });
-<<<<<<< HEAD
     setShowConsentDetails(false);
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     setShowMobileForm(false);
     setSelectedOption("");
   };
@@ -276,11 +264,8 @@ const ContactPage = () => {
               <div className="bg-card p-5 rounded-xl border border-border shadow-lg animate-fade-in">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-12 h-12">
-<<<<<<< HEAD
                     <img src={finonestIcon} alt="Finonest" className="w-full h-full object-contain rounded-lg" />
-=======
                     <img src={mascotAdvisor} alt="Finonest Advisor" className="w-full h-full object-contain" />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   </div>
                   <div>
                     <h2 className="text-lg font-display font-bold text-foreground">{selectedOption}</h2>
@@ -347,7 +332,6 @@ const ContactPage = () => {
                         </span>
                       </label>
                       
-<<<<<<< HEAD
                       {showConsentDetails && (
                         <>
                           <label className="flex items-start gap-3 cursor-pointer">
@@ -402,7 +386,6 @@ const ContactPage = () => {
                           </label>
                         </>
                       )}
-=======
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input
                           type="checkbox"
@@ -453,7 +436,6 @@ const ContactPage = () => {
                           I would like to receive promotional offers and updates from Finonest and partner institutions.
                         </span>
                       </label>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
 
                   <Button type="submit" className="w-full h-11" size="lg">
@@ -507,11 +489,8 @@ const ContactPage = () => {
                 <div className="bg-card p-8 rounded-2xl border border-border shadow-lg">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-16 h-16">
-<<<<<<< HEAD
                       <img src={finonestIcon} alt="Finonest" className="w-full h-full object-contain rounded-lg" />
-=======
                       <img src={mascotAdvisor} alt="Finonest Advisor" className="w-full h-full object-contain" />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
                     <div>
                       <h2 className="text-2xl font-display font-bold text-foreground">Send Us a Message</h2>
@@ -594,7 +573,6 @@ const ContactPage = () => {
                         </span>
                       </label>
                       
-<<<<<<< HEAD
                       {showConsentDetails && (
                         <>
                           <label className="flex items-start gap-3 cursor-pointer">
@@ -657,7 +635,6 @@ const ContactPage = () => {
                           </div>
                         </>
                       )}
-=======
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input
                           type="checkbox"
@@ -716,7 +693,6 @@ const ContactPage = () => {
                           Email: info@finonest.com
                         </p>
                       </div>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
 
                     <Button type="submit" className="w-full" size="lg">

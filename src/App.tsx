@@ -3,11 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-<<<<<<< HEAD
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-=======
 import { BrowserRouter, Routes, Route } from "react-router-dom";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import ScrollToTop from "./components/ScrollToTop";
 import LoadingScreen from "./components/LoadingScreen";
 import NotFound from "./pages/NotFound";
@@ -20,25 +17,19 @@ import UsedCarLoan from "./pages/services/UsedCarLoan";
 import PersonalLoan from "./pages/services/PersonalLoan";
 import BusinessLoan from "./pages/services/BusinessLoan";
 import CreditCards from "./pages/services/CreditCards";
-<<<<<<< HEAD
 import CreditCardsStandalone from "./pages/CreditCardsUpdated";
 import CreditCardApply from "./pages/CreditCardApply";
 import LoanAgainstProperty from "./pages/services/LoanAgainstProperty";
 import FinobizzLearning from "./pages/services/FinobizzLearning";
 import CourseDetails from "./pages/services/CourseDetails";
 import CourseEnrollment from "./pages/services/CourseEnrollment";
-=======
 import LoanAgainstProperty from "./pages/services/LoanAgainstProperty";
 import FinobizzLearning from "./pages/services/FinobizzLearning";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import CibilCheck from "./pages/CibilCheck";
 import ServiceApply from "./pages/ServiceApply";
 import FormSuccess from "./pages/FormSuccess";
 import Blog from "./pages/Blog";
-<<<<<<< HEAD
 import BlogDetail from "./pages/BlogDetail";
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
@@ -48,7 +39,6 @@ import IndexDynamic from "./pages/IndexDynamic";
 import Apply from "./pages/Apply";
 import ErrorBoundary from "./components/ErrorBoundary";
 import BankingPartnersPage from "./pages/BankingPartnersPage";
-<<<<<<< HEAD
 import OurBranches from "./pages/OurBranches";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
 import BankerForm from "./pages/BankerForm";
@@ -59,9 +49,7 @@ import Sitemap from "./pages/Sitemap";
 import LoanOnboarding from "./pages/LoanOnboarding";
 import DSAPartner from "./pages/DSAPartner";
 import DSAPartnerRegistration from "./pages/DSAPartnerRegistration";
-=======
 import EMICalculatorPage from "./pages/EMICalculatorPage";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -106,7 +94,6 @@ const App = () => {
                 <Route path="/services/used-car-loan" element={<UsedCarLoan />} />
                 <Route path="/services/personal-loan" element={<PersonalLoan />} />
                 <Route path="/services/business-loan" element={<BusinessLoan />} />
-<<<<<<< HEAD
                 <Route path="/services/credit-cards" element={<Navigate to="/credit-cards" replace />} />
                 <Route path="/credit-cards" element={<CreditCardsStandalone />} />
                 <Route path="/credit-card-apply" element={<CreditCardApply />} />
@@ -115,21 +102,16 @@ const App = () => {
                 <Route path="/services/finobizz-learning" element={<FinobizzLearning />} />
                 <Route path="/services/finobizz-learning/course/:id" element={<CourseDetails />} />
                 <Route path="/services/finobizz-learning/course/:id/enroll" element={<CourseEnrollment />} />
-=======
                 <Route path="/services/credit-cards" element={<CreditCards />} />
                 <Route path="/services/loan-against-property" element={<LoanAgainstProperty />} />
                 <Route path="/services/lap" element={<LoanAgainstProperty />} />
                 <Route path="/services/finobizz-learning" element={<FinobizzLearning />} />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <Route path="/services/:service/apply" element={<ServiceApply />} />
                 <Route path="/form-success" element={<FormSuccess />} />
                 <Route path="/credit-score" element={<CibilCheck />} />
                 <Route path="/cibil-check" element={<CibilCheck />} />
                 <Route path="/blog" element={<Blog />} />
-<<<<<<< HEAD
                 <Route path="/blog/:id" element={<BlogDetail />} />
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <Route path="/terms" element={<TermsAndConditions />} />
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -138,7 +120,6 @@ const App = () => {
                 <Route path="/login" element={<Auth />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<AdminDashboard />} />
-<<<<<<< HEAD
                 <Route path="/admin/analytics" element={<AdminDashboard />} />
                 <Route path="/admin/applications" element={<AdminDashboard />} />
                 <Route path="/admin/loan-onboarding" element={<AdminDashboard />} />
@@ -169,11 +150,9 @@ const App = () => {
                 <Route path="/become-partner" element={<DSAPartner />} />
                 <Route path="/dsa-registration" element={<DSAPartnerRegistration />} />
                 <Route path="/:branchName" element={<BranchDetail />} />
-=======
                 <Route path="/banking-partners" element={<BankingPartnersPage />} />
                 <Route path="/apply" element={<Apply />} />
                 <Route path="/emi-calculator" element={<EMICalculatorPage />} />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>

@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 import { Facebook, Twitter, Linkedin, Youtube, ArrowUp, MapPin, Star, Instagram } from "lucide-react";
-=======
 import { Facebook, Twitter, Linkedin, Youtube, ArrowUp, MapPin, Star } from "lucide-react";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import logoImg from "@/assets/logo.png";
 import ContactWidget from "@/components/ContactWidget";
 
@@ -24,7 +21,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-foreground text-background">
-<<<<<<< HEAD
       <div className="container px-4 md:px-6 pt-8 md:pt-16 pb-4 md:pb-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-12">
           {/* Quick Links */}
@@ -131,7 +127,6 @@ const Footer = () => {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.0!2d75.79572905600946!3d26.857562851737594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDUxJzI3LjIiTiA3NcKwNDcnNDQuNiJF!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
                 width="100%"
                 height="100"
-=======
       <div className="container px-6 pt-16 pb-8">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
@@ -149,7 +144,6 @@ const Footer = () => {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.0!2d75.79572905600946!3d26.857562851737594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDUxJzI3LjIiTiA3NcKwNDcnNDQuNiJF!5e0!3m2!1sen!2sin!4v1640000000000!5m2!1sen!2sin"
                 width="100%"
                 height="150"
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 style={{ border: 0, borderRadius: '8px', pointerEvents: 'none' }}
                 allowFullScreen
                 loading="lazy"
@@ -159,7 +153,6 @@ const Footer = () => {
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Contact Info */}
           <div>
             <h4 className="font-display text-sm lg:text-lg font-semibold mb-2 lg:mb-6">Contact Us</h4>
@@ -207,7 +200,6 @@ const Footer = () => {
                   <span className="sm:hidden">Review Us</span>
                 </a>
               </div>
-=======
           {/* Quick Links */}
           <div>
             <h4 className="font-display text-lg font-semibold mb-6">Quick Links</h4>
@@ -311,13 +303,11 @@ const Footer = () => {
                 <Star className="w-4 h-4" />
                 Leave a Review on Google
               </a>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-<<<<<<< HEAD
         <div className="mt-4 lg:mt-12 pt-3 lg:pt-8 border-t border-background/10 flex flex-col lg:flex-row justify-between items-center gap-2 lg:gap-4 text-center lg:text-left">
           <p className="text-xs lg:text-sm text-background/60">
             © {new Date().getFullYear()} Finonest. All rights reserved.
@@ -327,7 +317,6 @@ const Footer = () => {
               Privacy Policy
             </Link>
             <Link to="/terms-and-conditions" className="text-xs lg:text-sm text-background/60 hover:text-accent transition-colors">
-=======
         <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-background/60">
             © {new Date().getFullYear()} Finonest. All rights reserved.
@@ -337,21 +326,17 @@ const Footer = () => {
               Privacy Policy
             </Link>
             <Link to="/terms-and-conditions" className="text-sm text-background/60 hover:text-accent transition-colors">
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               Terms & Conditions
             </Link>
           </div>
           <button
             onClick={scrollToTop}
-<<<<<<< HEAD
             className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center hover:bg-accent/90 transition-colors"
           >
             <ArrowUp className="w-4 h-4 lg:w-5 lg:h-5" />
-=======
             className="w-10 h-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center hover:bg-accent/90 transition-colors"
           >
             <ArrowUp className="w-5 h-5" />
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </button>
         </div>
       </div>

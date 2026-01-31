@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -342,7 +341,6 @@ const AdminSettings = () => {
       </Card>
 
       {/* General Settings */}
-=======
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -357,14 +355,12 @@ const AdminSettings = () => {
 
   return (
     <div className="space-y-6">
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <Card>
         <CardHeader>
           <CardTitle>General Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-<<<<<<< HEAD
             <Label htmlFor="site_name">Site Name</Label>
             <div className="flex gap-2 mt-1">
               <Input
@@ -400,7 +396,6 @@ const AdminSettings = () => {
                 <Save className="w-4 h-4" />
               </Button>
             </div>
-=======
             <label className="text-sm font-medium">Site Name</label>
             <input 
               type="text" 
@@ -447,12 +442,10 @@ const AdminSettings = () => {
             >
               <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.autoApproval ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
             </button>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </div>
         </CardContent>
       </Card>
 
-<<<<<<< HEAD
       {/* API Credentials Settings */}
       <Card>
         <CardHeader>
@@ -626,8 +619,6 @@ const AdminSettings = () => {
       </Card>
 
       {/* System Information */}
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <Card>
         <CardHeader>
           <CardTitle>System Information</CardTitle>
@@ -650,15 +641,12 @@ const AdminSettings = () => {
               <p className="text-sm text-muted-foreground">Status</p>
               <Badge variant="default">Online</Badge>
             </div>
-<<<<<<< HEAD
             <div>
               <p className="text-sm text-muted-foreground">Last Updated</p>
               <p className="font-medium text-xs">
                 {settings.length > 0 ? new Date(settings[0].updated_at).toLocaleString() : 'N/A'}
               </p>
             </div>
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </div>
         </CardContent>
       </Card>

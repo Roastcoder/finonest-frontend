@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, MapPin, Building2, IndianRupee, Home, Briefcase, Car, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
 
 interface Slide {
   id: number;
@@ -17,7 +16,6 @@ interface Slide {
 }
 
 
-=======
 import heroHomeLoan from "@/assets/hero-home-loan.jpg";
 import heroCarLoan from "@/assets/hero-car-loan.jpg";
 import heroBusinessLoan from "@/assets/hero-business-loan.jpg";
@@ -49,7 +47,6 @@ const slides = [{
   image: heroBusinessLoan,
   highlight: "Business Growth"
 }];
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 const stats = [{
   icon: Users,
   value: "5.8 Lacs",
@@ -85,23 +82,19 @@ const services = [{
   href: "/services/personal-loan"
 }, {
   icon: Car,
-<<<<<<< HEAD
   title: "Used Car Loan",
   badge: "Lowest EMI Ride",
   description: "Drive away your dream car today.",
   href: "/services/used-car-loan"
-=======
   title: "New Car Loan",
   badge: "Lowest EMI Ride",
   description: "Drive away your dream car today.",
   href: "/services/car-loan"
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 }, {
   icon: CreditCard,
   title: "Credit Card",
   badge: "Rewards Unlimited",
   description: "Choose cards from all top banks",
-<<<<<<< HEAD
   href: "/credit-cards"
 }];
 const rotatingWords = ["Credit Card", "Home Loan", "Personal Loan", "Car Loan"];
@@ -161,7 +154,6 @@ const HeroSection = () => {
   
   useEffect(() => {
     if (!isAutoPlaying || slides.length <= 1) return;
-=======
   href: "/services/credit-cards"
 }];
 const rotatingWords = ["Credit Card", "Home Loan", "Personal Loan", "Car Loan"];
@@ -171,16 +163,12 @@ const HeroSection = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   useEffect(() => {
     if (!isAutoPlaying) return;
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     const interval = setInterval(() => {
       setCurrentSlide(prev => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-<<<<<<< HEAD
   }, [isAutoPlaying, slides.length]);
-=======
   }, [isAutoPlaying]);
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   useEffect(() => {
     const wordInterval = setInterval(() => {
       setCurrentWord(prev => (prev + 1) % rotatingWords.length);
@@ -192,7 +180,6 @@ const HeroSection = () => {
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
-<<<<<<< HEAD
   const getImageUrl = (imageUrl: string) => {
     if (!imageUrl) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
@@ -215,12 +202,10 @@ const HeroSection = () => {
       ) : (
         <>
           <div className="hidden lg:block">
-=======
   const slide = slides[currentSlide];
   return <section className="relative bg-gradient-to-b from-background via-background to-primary pt-20 md:pt-24 overflow-hidden">
       {/* Desktop Layout */}
       <div className="hidden lg:block">
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <div className="container mx-auto px-6 py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             {/* Left Side - Tagline, Stats, Services */}
@@ -289,7 +274,6 @@ const HeroSection = () => {
             {/* Right Side - Banner Carousel */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-<<<<<<< HEAD
                 {slides.map((s, index) => (
                   <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100 relative" : "opacity-0 absolute inset-0 pointer-events-none"}`}>
                     <div className="relative aspect-[5/3]">
@@ -307,7 +291,6 @@ const HeroSection = () => {
                       <div className="absolute inset-0 p-6 flex flex-col justify-center">
                         <h2 className="font-display text-2xl font-bold text-primary-foreground mb-1">
                           <span className="text-yellow-400">{getHighlight(s.title)}</span>
-=======
                 {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
                     <div className="relative aspect-[4/3]">
                       <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
@@ -316,7 +299,6 @@ const HeroSection = () => {
                         <h2 className="font-display text-2xl font-bold text-primary-foreground mb-1">
                           Your{" "}
                           <span className="text-yellow-400">{slide.highlight}</span>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                         </h2>
                         <p className="text-sm text-primary-foreground/90 mb-2">
                           {s.subtitle}
@@ -324,7 +306,6 @@ const HeroSection = () => {
                         <p className="text-xs text-primary-foreground/70 mb-4 max-w-[200px]">
                           {s.description}
                         </p>
-<<<<<<< HEAD
                         {(s.button_link && s.button_text) ? (
                           <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
                             <Link to={s.button_link} onClick={() => console.log('Desktop slide link clicked:', s.button_link)}>
@@ -344,7 +325,6 @@ const HeroSection = () => {
                     </div>
                   </div>
                 ))}
-=======
                         <Button variant="outline" size="sm" className="w-fit bg-foreground text-background hover:bg-foreground/90 border-0" asChild>
                           <Link to={s.ctaLink}>
                             {s.cta}
@@ -354,7 +334,6 @@ const HeroSection = () => {
                       </div>
                     </div>
                   </div>)}
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 
                 {/* Navigation Dots */}
                 <div className="absolute bottom-4 right-4 flex gap-1.5">
@@ -369,7 +348,6 @@ const HeroSection = () => {
       {/* Mobile Layout - Banner only */}
       <div className="lg:hidden">
         <div className="relative">
-<<<<<<< HEAD
           {slides.map((s, index) => (
             <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100 relative" : "opacity-0 absolute inset-0 pointer-events-none"}`}>
               <div className="relative aspect-[16/10]">
@@ -387,7 +365,6 @@ const HeroSection = () => {
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h2 className="font-display text-xl font-bold text-primary-foreground mb-1">
                     <span className="text-yellow-400">{getHighlight(s.title)}</span>
-=======
           {slides.map((s, index) => <div key={s.id} className={`transition-opacity duration-700 ${index === currentSlide ? "opacity-100" : "opacity-0 absolute inset-0"}`}>
               <div className="relative aspect-[16/10]">
                 <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
@@ -395,12 +372,10 @@ const HeroSection = () => {
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h2 className="font-display text-xl font-bold text-primary-foreground mb-1">
                     Your <span className="text-yellow-400">{slide.highlight}</span>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   </h2>
                   <p className="text-xs text-primary-foreground/80 mb-3">
                     {s.description}
                   </p>
-<<<<<<< HEAD
                   {(s.button_link && s.button_text) ? (
                     <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
                       <Link to={s.button_link}>
@@ -420,7 +395,6 @@ const HeroSection = () => {
               </div>
             </div>
           ))}
-=======
                   <Button variant="outline" size="sm" className="bg-foreground text-background hover:bg-foreground/90 border-0 text-xs" asChild>
                     <Link to={s.ctaLink}>
                       {s.cta}
@@ -430,7 +404,6 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>)}
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
           {/* Navigation Dots */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
@@ -483,13 +456,10 @@ const HeroSection = () => {
         {/* Mobile Stats Bar */}
         
       </div>
-<<<<<<< HEAD
         </>
       )}
     </section>
   );
-=======
     </section>;
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 };
 export default HeroSection;

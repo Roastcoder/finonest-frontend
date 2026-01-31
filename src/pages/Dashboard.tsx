@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-<<<<<<< HEAD
 import BottomNavigation from "@/components/BottomNavigation";
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { 
   LogOut, 
   Plus, 
@@ -19,12 +16,9 @@ import {
   CheckCircle,
   Clock,
   X,
-<<<<<<< HEAD
   Eye,
   Briefcase
-=======
   Eye
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -46,7 +40,6 @@ interface Application {
   updated_at?: string;
 }
 
-<<<<<<< HEAD
 interface JobApplication {
   id: number;
   job_id: number;
@@ -64,10 +57,8 @@ interface JobApplication {
 const Dashboard = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
-=======
 const Dashboard = () => {
   const [applications, setApplications] = useState<Application[]>([]);
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   const [loading, setLoading] = useState(true);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const navigate = useNavigate();
@@ -87,7 +78,6 @@ const Dashboard = () => {
       }
       
       fetchApplications();
-<<<<<<< HEAD
       fetchJobApplications();
     }
   }, [authLoading, token, user, navigate]);
@@ -109,20 +99,15 @@ const Dashboard = () => {
     }
   };
 
-=======
     }
   }, [authLoading, token, user, navigate]);
 
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   const fetchApplications = async () => {
     if (!token) return;
     
     try {
-<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/forms/mine', {
-=======
       const response = await fetch('http://api.finonest.com:4000/api/forms/mine', {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -255,7 +240,6 @@ const Dashboard = () => {
         <title>Dashboard - Finonest | Welcome Back</title>
       </Helmet>
 
-<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-16">
         <header className="md:hidden bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -273,10 +257,8 @@ const Dashboard = () => {
           </div>
         </header>
         <header className="hidden md:block bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
-=======
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <header className="bg-white/80 backdrop-blur-lg border-b border-blue-200 sticky top-0 z-40 shadow-sm">
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <Link to="/">
               <img src={logo} alt="Finonest" className="h-10 object-contain" />
@@ -344,11 +326,8 @@ const Dashboard = () => {
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
-<<<<<<< HEAD
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-=======
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <Link to="/apply" className="group p-6 rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-all">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
@@ -359,7 +338,6 @@ const Dashboard = () => {
                   </div>
                 </Link>
                 
-<<<<<<< HEAD
                 <Link to="/careers" className="group p-6 rounded-xl border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 transition-colors">
@@ -370,8 +348,6 @@ const Dashboard = () => {
                   </div>
                 </Link>
                 
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <Link to="/cibil-check" className="group p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-all">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
@@ -398,11 +374,8 @@ const Dashboard = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between">
-<<<<<<< HEAD
                   <h2 className="text-xl font-semibold text-gray-900">My Loan Applications</h2>
-=======
                   <h2 className="text-xl font-semibold text-gray-900">My Applications</h2>
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   <Badge variant="secondary" className="bg-blue-100 text-blue-700">
                     {applications.length} Total
                   </Badge>
@@ -479,7 +452,6 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-<<<<<<< HEAD
 
             {/* Job Applications */}
             {jobApplications.length > 0 && (
@@ -541,8 +513,6 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </div>
         </main>
 
@@ -696,10 +666,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-<<<<<<< HEAD
       <BottomNavigation />
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     </>
   );
 };

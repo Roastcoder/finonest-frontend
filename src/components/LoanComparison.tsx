@@ -5,11 +5,8 @@ const loanTypes = [
   {
     name: "Home Loan",
     description: "Own your dream home",
-<<<<<<< HEAD
     rate: "7.3%",
-=======
     rate: "8.5%",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     maxAmount: "₹5 Crore",
     tenure: "Up to 30 years",
     processing: "0.5%",
@@ -28,11 +25,8 @@ const loanTypes = [
   {
     name: "Personal Loan",
     description: "For all your needs",
-<<<<<<< HEAD
     rate: "9.99%",
-=======
     rate: "10.5%",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     maxAmount: "₹40 Lakh",
     tenure: "Up to 7 years",
     processing: "1%",
@@ -51,11 +45,8 @@ const loanTypes = [
   {
     name: "Business Loan",
     description: "Grow your business",
-<<<<<<< HEAD
     rate: "14%",
-=======
     rate: "11%",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     maxAmount: "₹2 Crore",
     tenure: "Up to 5 years",
     processing: "1.5%",
@@ -72,15 +63,12 @@ const loanTypes = [
     icon: "💼",
   },
   {
-<<<<<<< HEAD
     name: "Used Car Loan",
     description: "Drive your dream",
     rate: "11.5%",
-=======
     name: "Car Loan",
     description: "Drive your dream",
     rate: "9%",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     maxAmount: "₹1 Crore",
     tenure: "Up to 7 years",
     processing: "0.5%",

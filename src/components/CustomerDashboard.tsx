@@ -24,11 +24,8 @@ export const CustomerDashboard: React.FC = () => {
 
   const fetchApplications = async () => {
     try {
-<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/forms/mine', {
-=======
       const response = await fetch('http://api.finonest.com:4000/api/forms/mine', {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

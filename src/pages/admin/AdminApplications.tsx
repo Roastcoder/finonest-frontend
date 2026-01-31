@@ -3,11 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-<<<<<<< HEAD
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-=======
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, FileText, Eye } from "lucide-react";
@@ -74,11 +71,8 @@ const AdminApplications = () => {
 
   const fetchApplications = async () => {
     try {
-<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/admin/forms', {
-=======
       const response = await fetch('http://api.finonest.com:4000/api/admin/forms', {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -98,11 +92,8 @@ const AdminApplications = () => {
 
   const updateStatus = async (id: number, status: string) => {
     try {
-<<<<<<< HEAD
       const response = await fetch(`https://api.finonest.com/api/admin/forms/${id}`, {
-=======
       const response = await fetch(`http://api.finonest.com:4000/api/admin/forms/${id}`, {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -251,12 +242,9 @@ const AdminApplications = () => {
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedApp?.user_name || `Application #${selectedApp?.id}`} - Details</DialogTitle>
-<<<<<<< HEAD
             <DialogDescription>
               View and manage application details and status.
             </DialogDescription>
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </DialogHeader>
           {selectedApp && (
             <div className="space-y-6">

@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -11,7 +8,6 @@ import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, BookOpen, Video, Award, Users, Clock, CheckCircle, ArrowRight, Play } from "lucide-react";
 
-<<<<<<< HEAD
 interface Course {
   id: number;
   title: string;
@@ -72,7 +68,6 @@ const FinobizzLearning = () => {
       default: return 'bg-gray-100 text-gray-700';
     }
   };
-=======
 const courses = [
   {
     title: "Basics of Lending",
@@ -142,7 +137,6 @@ const features = [
 ];
 
 const FinobizzLearning = () => {
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   return (
     <>
       <Helmet>
@@ -155,7 +149,6 @@ const FinobizzLearning = () => {
       <Navbar />
 
       <main className="min-h-screen bg-background pb-16 lg:pb-0">
-<<<<<<< HEAD
         {/* Available Courses */}
         <section className="pt-24 pb-16">
           <div className="container">
@@ -254,7 +247,6 @@ const FinobizzLearning = () => {
         </section>
 
         {/* Why Learn with Us */}
-=======
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
@@ -357,13 +349,11 @@ const FinobizzLearning = () => {
         </section>
 
         {/* Benefits */}
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <section className="py-16 bg-primary text-primary-foreground">
           <div className="container">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">
-<<<<<<< HEAD
                   Why Choose Our Courses?
                 </h2>
                 <p className="text-primary-foreground/80 mb-8">
@@ -378,7 +368,6 @@ const FinobizzLearning = () => {
                     "Interactive content and real-world examples",
                     "Certificate of completion for each course",
                     "Affordable pricing with occasional discounts",
-=======
                   Why Learn with Finobizz?
                 </h2>
                 <p className="text-primary-foreground/80 mb-8">
@@ -392,7 +381,6 @@ const FinobizzLearning = () => {
                     "Practical knowledge you can apply immediately",
                     "Get certified and boost your financial literacy",
                     "Access anytime, anywhere on any device",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   ].map((point, index) => (
                     <div key={index} className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
@@ -402,19 +390,16 @@ const FinobizzLearning = () => {
                 </div>
               </div>
               <div className="bg-primary-foreground/10 backdrop-blur p-8 rounded-2xl text-center">
-<<<<<<< HEAD
                 <div className="text-5xl font-bold mb-2">{courses.length}+</div>
                 <div className="text-primary-foreground/80 mb-6">Courses Available</div>
                 <Button variant="secondary" size="lg" asChild>
                   <Link to="#courses">
                     Explore Courses
-=======
                 <div className="text-5xl font-bold mb-2">10,000+</div>
                 <div className="text-primary-foreground/80 mb-6">Learners already enrolled</div>
                 <Button variant="secondary" size="lg" asChild>
                   <Link to="/services/finobizz-learning/apply">
                     Join Now - It's Free
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                 </Button>
@@ -423,16 +408,12 @@ const FinobizzLearning = () => {
           </div>
         </section>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         {/* CTA */}
         <section className="py-16">
           <div className="container">
             <div className="bg-card rounded-2xl border border-border p-8 md:p-12 text-center">
               <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
-<<<<<<< HEAD
                 Ready to Start Learning?
               </h2>
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
@@ -441,7 +422,6 @@ const FinobizzLearning = () => {
               <Button variant="hero" size="lg" asChild>
                 <Link to="#courses">
                   View All Courses
-=======
                 Ready to Start Your Learning Journey?
               </h2>
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
@@ -450,7 +430,6 @@ const FinobizzLearning = () => {
               <Button variant="hero" size="lg" asChild>
                 <Link to="/services/finobizz-learning/apply">
                   Get Started Free
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>

@@ -22,17 +22,14 @@ const services = [
   },
   {
     icon: Car,
-<<<<<<< HEAD
     title: "Used Car Loan",
     badge: "Lowest EMI Ride",
     description: "Drive away your dream car today.",
     href: "/services/used-car-loan",
-=======
     title: "New Car Loan",
     badge: "Lowest EMI Ride",
     description: "Drive away your dream car today.",
     href: "/services/car-loan",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     badgeColor: "bg-purple-500 text-white",
   },
   {
@@ -40,11 +37,8 @@ const services = [
     title: "Credit Card",
     badge: "Rewards Unlimited",
     description: "Choose cards from all top banks",
-<<<<<<< HEAD
     href: "/credit-cards",
-=======
     href: "/services/credit-cards",
->>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     badgeColor: "bg-orange-500 text-white",
   },
   {
