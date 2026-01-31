@@ -171,7 +171,8 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
       payment_details: {
         upi_id: formData.upiId,
         card_number: formData.cardNumber ? formData.cardNumber.slice(-4) : null, // Only last 4 digits
-        expiry_date: formData.expiryDate
+        expiry_date: formData.expiryDate,
+        qr_payment: formData.paymentMethod === 'payu-qr'
       },
       student_info: {
         phone: formData.phone,
