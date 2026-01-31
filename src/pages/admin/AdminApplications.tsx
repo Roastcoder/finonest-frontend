@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, FileText, Eye } from "lucide-react";
@@ -72,7 +71,6 @@ const AdminApplications = () => {
   const fetchApplications = async () => {
     try {
       const response = await fetch('https://api.finonest.com/api/admin/forms', {
-      const response = await fetch('http://api.finonest.com:4000/api/admin/forms', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -93,7 +91,6 @@ const AdminApplications = () => {
   const updateStatus = async (id: number, status: string) => {
     try {
       const response = await fetch(`https://api.finonest.com/api/admin/forms/${id}`, {
-      const response = await fetch(`http://api.finonest.com:4000/api/admin/forms/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

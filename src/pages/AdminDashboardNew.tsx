@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +19,6 @@ import {
   GraduationCap,
   Image,
   MapPin
-  MessageSquare
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import AdminApplications from "./admin/AdminApplications";
@@ -34,8 +32,6 @@ import AdminEnrollments from "./admin/AdminEnrollments";
 import AdminCareers from "./admin/AdminCareers";
 import AdminLoanOnboarding from "./admin/AdminLoanOnboarding";
 import AdminLoanProducts from "./admin/AdminLoanProducts";
-import AdminSlides from "./admin/AdminSlides";
-import AdminDSAApplications from "@/components/AdminDSAApplications";
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -59,19 +55,10 @@ const AdminDashboard = () => {
     if (path.includes('/careers')) return 'careers';
     if (path.includes('/loan-onboarding')) return 'loan-onboarding';
     if (path.includes('/loan-products')) return 'loan-products';
-    if (path.includes('/dsa-applications')) return 'dsa-applications';
     return 'dashboard';
   };
 
   const activeTab = getActiveTab();
-
-
-const AdminDashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { user, token, logout, isLoading: authLoading } = useAuth();
 
   useEffect(() => {
     if (!authLoading) {
@@ -98,8 +85,6 @@ const AdminDashboard = () => {
     navigate("/auth");
   };
 
-
-
   const renderContent = () => {
     switch(activeTab) {
       case 'dashboard':
@@ -124,8 +109,6 @@ const AdminDashboard = () => {
         return <AdminLoanOnboarding />;
       case 'loan-products':
         return <AdminLoanProducts />;
-      case 'dsa-applications':
-        return <AdminDSAApplications />;
       case 'slides':
         return <AdminSlides />;
       case 'settings':
@@ -167,9 +150,6 @@ const AdminDashboard = () => {
         
         {/* Sidebar */}
         <div className="hidden md:flex w-64 bg-card border-r border-border flex-col fixed h-screen overflow-y-auto">
-      <div className="min-h-screen bg-muted/30 flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-card border-r border-border flex flex-col">
           <div className="p-6">
             <Link to="/">
               <img src={logo} alt="Finonest" className="h-8 object-contain" />
@@ -179,8 +159,6 @@ const AdminDashboard = () => {
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Management</div>
             <Link 
               to="/admin/analytics"
-            <button 
-              onClick={() => setActiveTab('dashboard')}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'dashboard' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
@@ -190,9 +168,6 @@ const AdminDashboard = () => {
             </Link>
             <Link 
               to="/admin/applications"
-            </button>
-            <button 
-              onClick={() => setActiveTab('applications')}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'applications' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
@@ -219,19 +194,7 @@ const AdminDashboard = () => {
               Loan Products
             </Link>
             <Link 
-              to="/admin/dsa-applications"
-              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
-                activeTab === 'dsa-applications' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              DSA Applications
-            </Link>
-            <Link 
               to="/admin/contact-forms"
-            </button>
-            <button 
-              onClick={() => setActiveTab('contacts')}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'contacts' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
@@ -241,9 +204,6 @@ const AdminDashboard = () => {
             </Link>
             <Link 
               to="/admin/users"
-            </button>
-            <button 
-              onClick={() => setActiveTab('users')}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'users' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
@@ -308,10 +268,6 @@ const AdminDashboard = () => {
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
             <Link 
               to="/admin/settings"
-            </button>
-            <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
-            <button 
-              onClick={() => setActiveTab('settings')}
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'settings' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
@@ -319,7 +275,6 @@ const AdminDashboard = () => {
               <Settings className="w-4 h-4" />
               System
             </Link>
-            </button>
           </nav>
           <div className="p-4">
             <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
@@ -340,8 +295,6 @@ const AdminDashboard = () => {
         {/* Main Content */}
         <div className="flex-1 pb-16 md:pb-0 md:ml-64">
           <header className="hidden md:block bg-card border-b border-border p-6">
-        <div className="flex-1">
-          <header className="bg-card border-b border-border p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">
@@ -356,7 +309,6 @@ const AdminDashboard = () => {
                   {activeTab === 'branches' && 'Branch Management'}
                   {activeTab === 'loan-onboarding' && 'Loan Onboarding Management'}
                   {activeTab === 'loan-products' && 'Loan Products Management'}
-                  {activeTab === 'dsa-applications' && 'DSA Applications Management'}
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -371,7 +323,6 @@ const AdminDashboard = () => {
                   {activeTab === 'branches' && 'Manage branch locations and information'}
                   {activeTab === 'loan-onboarding' && 'Manage loan onboarding applications and data'}
                   {activeTab === 'loan-products' && 'Manage loan products, interest rates, and LTV ratios'}
-                  {activeTab === 'dsa-applications' && 'Review and manage DSA partner applications'}
                   {activeTab === 'slides' && 'Manage home page carousel slides and images'}
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>

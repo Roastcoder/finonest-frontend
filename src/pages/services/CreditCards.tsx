@@ -108,13 +108,6 @@ const CreditCards = () => {
                   Find the perfect credit card that matches your lifestyle. Enjoy 
                   No Cost EMI, Airport Lounge Access, and exclusive rewards from 
                   India's top banks with instant approval.
-                  Smart Cards for <span className="text-gradient">Smart Spenders</span>
-                </h1>
-                
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                  Find the perfect credit card that matches your lifestyle. Compare 
-                  rewards, travel, and cashback cards from India's top banks and 
-                  get instant approval.
                 </p>
 
                 <div className="flex flex-wrap gap-4 mb-8">
@@ -220,8 +213,6 @@ const CreditCards = () => {
                     "Expert guidance to choose the right card",
                     "Instant approval and doorstep delivery",
                     "Exclusive welcome offers and bonuses",
-                    "Lifetime free options available",
-                    "Higher credit limits based on profile",
                   ].map((benefit, index) => (
                     <div key={index} className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />

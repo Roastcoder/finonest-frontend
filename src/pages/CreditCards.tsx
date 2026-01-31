@@ -150,14 +150,16 @@ const CreditCards = () => {
                         ? (product.card_image.startsWith('http') 
                           ? product.card_image 
                           : `https://cards.finonest.com/${product.card_image}`)
-                        : `https://cards.finonest.com/assets/cards/default.png`
+                        : "https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Credit+Card"
                       }
                       alt={product.name}
                       className="w-full h-full object-contain"
-                      onLoad={() => console.log('Image loaded:', product.card_image)}
+                      loading="lazy"
+                      onLoad={() => console.log('✅ Image loaded:', product.card_image)}
                       onError={(e) => {
-                        console.log('Image failed to load:', product.card_image);
+                        console.log('❌ Image failed:', product.card_image);
                         console.log('Attempted URL:', e.currentTarget.src);
+                        e.currentTarget.src = "https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Credit+Card";
                       }}
                     />
                   </div>

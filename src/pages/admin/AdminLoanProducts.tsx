@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, Save, X, Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LoanProduct {
   id?: number;
@@ -35,6 +36,7 @@ interface LoanProduct {
 }
 
 const AdminLoanProducts: React.FC = () => {
+  const { user } = useAuth();
   const [products, setProducts] = useState<LoanProduct[]>([]);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -195,10 +197,12 @@ const AdminLoanProducts: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Loan Products Management</h1>
-        <Button onClick={() => { setIsAddingNew(true); resetForm(); }} disabled={loading}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Product
-        </Button>
+        {user?.role !== 'ADVISOR' && (
+          <Button onClick={() => { setIsAddingNew(true); resetForm(); }} disabled={loading}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Product
+          </Button>
+        )}
       </div>
 
       {(isAddingNew || editingId) && (

@@ -43,8 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           // Optional: Validate token with backend in background
           fetch('https://api.finonest.com/api/validate', {
-          // Validate token with backend
-          const response = await fetch('http://api.finonest.com:4000/api/validate', {
             headers: {
               'Authorization': `Bearer ${storedToken}`,
               'Content-Type': 'application/json',
@@ -60,19 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         } catch (error) {
           console.error('Failed to parse stored user:', error);
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setToken(storedToken);
-            setUser(data.user);
-          } else {
-            // Token is invalid, clear storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-          }
-        } catch (error) {
-          console.error('Token validation failed:', error);
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }

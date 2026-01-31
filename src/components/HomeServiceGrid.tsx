@@ -26,10 +26,6 @@ const services = [
     badge: "Lowest EMI Ride",
     description: "Drive away your dream car today.",
     href: "/services/used-car-loan",
-    title: "New Car Loan",
-    badge: "Lowest EMI Ride",
-    description: "Drive away your dream car today.",
-    href: "/services/car-loan",
     badgeColor: "bg-purple-500 text-white",
   },
   {
@@ -38,7 +34,6 @@ const services = [
     badge: "Rewards Unlimited",
     description: "Choose cards from all top banks",
     href: "/credit-cards",
-    href: "/services/credit-cards",
     badgeColor: "bg-orange-500 text-white",
   },
   {

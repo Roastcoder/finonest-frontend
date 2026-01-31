@@ -16,7 +16,6 @@ const CreditScoreSection = () => {
             
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               Get your Credit Report
-              Get your CIBIL Credit Report
             </h2>
             
             <div className="flex items-baseline gap-2">

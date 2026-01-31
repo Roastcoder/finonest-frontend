@@ -13,9 +13,6 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import CallButton from "@/components/CallButton";
 import BottomNavigation from "@/components/BottomNavigation";
 import CreditScoreBanner from "@/components/CreditScoreBanner";
-import DSAPartnerBanner from "@/components/DSAPartnerBanner";
-import BottomNavigation from "@/components/BottomNavigation";
-import CreditScoreBanner from "@/components/CreditScoreBanner";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { AnimateOnScroll } from "@/hooks/useScrollAnimation";
 
@@ -72,17 +69,8 @@ const Index = () => {
         </AnimateOnScroll>
       </div>
       
-      {/* DSA Partner Banner */}
-      <div className="-mt-30">
-        <AnimateOnScroll animation="fade-up">
-          <DSAPartnerBanner />
-        </AnimateOnScroll>
-      </div>
-      
       {/* Banking Partners */}
       <div className="mt-0">
-      {/* Banking Partners */}
-      <div className="-mt-24">
         <AnimateOnScroll animation="fade-up">
           <PartnerBanks />
         </AnimateOnScroll>

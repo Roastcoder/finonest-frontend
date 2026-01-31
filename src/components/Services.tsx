@@ -11,8 +11,6 @@ const services = [{
   title: "Home Loan",
   description: "Turn your dream home into reality with our competitive home loan rates starting at 7.3% p.a.",
   rate: "7.3%",
-  description: "Turn your dream home into reality with our competitive home loan rates starting at 6.5% p.a.",
-  rate: "6.5%",
   highlight: false,
   image: serviceHomeLoan,
   link: "/services/home-loan"
@@ -21,7 +19,6 @@ const services = [{
   title: "Used Car Loan",
   description: "Get the best deals on used car loans with quick approval and minimal documentation. Our specialty!",
   rate: "11.5%",
-  rate: "7.5%",
   highlight: true,
   image: serviceCarLoan,
   link: "/services/used-car-loan"
@@ -30,7 +27,6 @@ const services = [{
   title: "Personal Loan",
   description: "Instant approval up to ₹40 lakhs with minimal documentation required for all your needs.",
   rate: "9.99%",
-  rate: "10.5%",
   highlight: false,
   image: servicePersonalLoan,
   link: "/services/personal-loan"
@@ -39,7 +35,6 @@ const services = [{
   title: "Business Loan",
   description: "Fuel your business growth with flexible business loans up to ₹5 Crore.",
   rate: "14%",
-  rate: "11.0%",
   highlight: false,
   image: serviceBusinessLoan,
   link: "/services/business-loan"
@@ -51,17 +46,11 @@ const services = [{
   highlight: false,
   image: serviceCreditCards,
   link: "/credit-cards"
-  description: "Premium credit cards with exclusive rewards, cashback, and travel benefits.",
-  rate: "0% EMI",
-  highlight: false,
-  image: serviceCreditCards,
-  link: "/services/credit-cards"
 }, {
   icon: Landmark,
   title: "Loan Against Property",
   description: "Unlock the value of your property with our loan against property options.",
   rate: "9%",
-  rate: "9.5%",
   highlight: false,
   image: serviceLap,
   link: "/services/loan-against-property"

@@ -44,7 +44,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUser = async () => {
     try {
       const response = await fetch(`${API_URL}/api/user/me`, {
-      const response = await fetch('http://api.finonest.com:4000/api/user/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -68,7 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
-      const response = await fetch('http://api.finonest.com:4000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +84,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('API returned non-JSON response:', text);
         return false;
       }
-      const data = await response.json();
 
       if (response.ok && data.success) {
         setToken(data.token);
@@ -104,7 +101,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_URL}/api/auth/register`, {
-      const response = await fetch('http://api.finonest.com:4000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

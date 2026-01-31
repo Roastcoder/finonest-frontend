@@ -77,7 +77,6 @@ const Services = () => {
       maxAmount: "₹10 Lakhs",
       tenure: "N/A",
       link: "/credit-cards",
-      link: "/services/credit-cards",
       features: ["Best rewards", "Travel perks", "Welcome bonuses"],
     },
     {

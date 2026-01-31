@@ -28,7 +28,6 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch('https://api.finonest.com/api/admin/users', {
-      const response = await fetch('http://api.finonest.com:4000/api/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -53,7 +52,6 @@ const AdminUsers = () => {
   const updateUserRole = async (id: number, role: string) => {
     try {
       const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
-      const response = await fetch(`http://api.finonest.com:4000/api/admin/users/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,7 +85,6 @@ const AdminUsers = () => {
     
     try {
       const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
-      const response = await fetch(`http://api.finonest.com:4000/api/admin/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -144,8 +141,6 @@ const AdminUsers = () => {
               <div key={user.id} className="border p-4 rounded-lg">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                   <div className="flex-1">
-                <div className="flex justify-between items-center">
-                  <div>
                     <p className="font-semibold">{user.name}</p>
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                     <p className="text-xs text-muted-foreground">
@@ -178,29 +173,6 @@ const AdminUsers = () => {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-                  <div className="flex items-center gap-4">
-                    <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>
-                      {user.role}
-                    </Badge>
-                    <Select
-                      value={user.role}
-                      onValueChange={(value) => updateUserRole(user.id, value)}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="USER">User</SelectItem>
-                        <SelectItem value="ADMIN">Admin</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteUser(user.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
                   </div>
                 </div>
               </div>

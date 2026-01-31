@@ -22,7 +22,6 @@ import { Link } from "react-router-dom";
 const HomeLoan = () => {
   const features = [
     { icon: Percent, title: "Starting 7.3% p.a.", description: "Industry's lowest interest rates" },
-    { icon: Percent, title: "Starting 8.35% p.a.", description: "Industry's lowest interest rates" },
     { icon: Clock, title: "24 Hour Approval", description: "Quick sanction & disbursement" },
     { icon: Shield, title: "100% Transparent", description: "No hidden charges guaranteed" },
     { icon: Users, title: "50+ Bank Partners", description: "Best rates from top lenders" },
@@ -51,10 +50,6 @@ const HomeLoan = () => {
     { range: "₹25L - ₹50L", rate: "7.45%", tenure: "Up to 25 years" },
     { range: "₹50L - ₹1Cr", rate: "7.40%", tenure: "Up to 30 years" },
     { range: "₹1Cr+", rate: "7.30%", tenure: "Up to 30 years" },
-    { range: "₹10L - ₹25L", rate: "8.50%", tenure: "Up to 20 years" },
-    { range: "₹25L - ₹50L", rate: "8.45%", tenure: "Up to 25 years" },
-    { range: "₹50L - ₹1Cr", rate: "8.40%", tenure: "Up to 30 years" },
-    { range: "₹1Cr+", rate: "8.35%", tenure: "Up to 30 years" },
   ];
 
   return (
@@ -93,7 +88,6 @@ const HomeLoan = () => {
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   Get the keys to your dream home with our affordable home loans. 
                   Enjoy competitive interest rates starting at just 7.3% p.a., 
-                  Enjoy competitive interest rates starting at just 8.35% p.a., 
                   flexible tenure up to 30 years, and hassle-free approval process.
                 </p>
 
@@ -146,7 +140,6 @@ const HomeLoan = () => {
                         </div>
                         <div>
                           <div className="text-2xl font-bold text-primary">7.3%</div>
-                          <div className="text-2xl font-bold text-primary">8.35%</div>
                           <div className="text-xs text-muted-foreground">Starting Rate</div>
                         </div>
                       </div>

@@ -13,12 +13,6 @@ import aboutTeam from "@/assets/about-team.jpg";
 const About = () => {
   const [selectedPromoter, setSelectedPromoter] = useState<typeof promoters[0] | null>(null);
 
-import { Heart, CheckCircle, Lightbulb, Shield, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import aboutTeam from "@/assets/about-team.jpg";
-
-const About = () => {
   const values = [
     {
       icon: Shield,
@@ -65,9 +59,6 @@ const About = () => {
       role: "Managing Director & Founder",
       description: "Surya Mohan Roy is the Managing Director & Founder, the visionary leader behind the company's purpose, culture, and long-term strategy. With strong entrepreneurial insight and a commitment to innovation, he established the organization with the goal of delivering excellence, trust, and value in every service. As the Founder, he built the company on core principles of integrity, quality, and customer-centricity. His ability to identify opportunities, adapt to market trends, and lead with clarity has shaped the company's identity and positioned it for sustainable growth. In his role as Managing Director, he oversees strategic planning, business development, and operational execution across all departments.",
       image: "/Director/Surya.jpeg",
-      role: "Managing Director and Founder",
-      description: "Surya Mohan Roy is the Managing Director & Founder, the visionary leader behind the company's purpose, culture, and long-term strategy. With strong entrepreneurial insight and a commitment to innovation, he established the organization with the goal of delivering excellence, trust, and value in every service. As the Founder, he built the company on core principles of integrity, quality, and customer-centricity. His ability to identify opportunities, adapt to market trends, and lead with clarity has shaped the company's identity and positioned it for sustainable growth. In his role as Managing Director, he oversees strategic planning, business development, and operational execution across all departments.",
-      initials: "SMR",
     },
     {
       name: "Sanam Makkar",
@@ -92,19 +83,6 @@ const About = () => {
       role: "Chief Business Officer and Co founder",
       description: "As the Chief Business Officer and Co founder, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
       image: "/Director/Atishey.jpeg",
-      initials: "SM",
-    },
-    {
-      name: "CA Prateek Somani",
-      role: "Chief Financial Officer",
-      description: "As the Chief Financial Officer, Prateek Somani leads the company's financial strategy with precision and vision. He oversees budgeting, financial planning, compliance, and risk management, ensuring the organization operates with transparency and long-term stability. He plays a key role in guiding strategic decisions, optimizing resources, and strengthening the company's financial foundation. His analytical approach and commitment to excellence drive sustainable growth and support the organization's mission at every level.",
-      initials: "PS",
-    },
-    {
-      name: "Atishay Jain",
-      role: "Co-Founder and Director",
-      description: "As the Co-Founder & Director, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
-      initials: "AJ",
     },
   ];
 
@@ -132,7 +110,6 @@ const About = () => {
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6">
                   One of the top <span className="text-gradient">auto loan DSA</span> in India
-                  One of the Top 3 <span className="text-gradient">Used Car Loan</span> Providers in Rajasthan
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   18+ branches, 50K+ happy customers and growing. We specialize in used car loans 
@@ -345,24 +322,6 @@ const About = () => {
                     </p>
                     <div className="mt-3 text-primary text-xs font-medium group-hover:underline">
                       Click to read more →
-            <div className="grid md:grid-cols-2 gap-6">
-              {promoters.map((promoter, index) => (
-                <div 
-                  key={index}
-                  className="bg-card p-6 rounded-xl border border-border hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl font-bold text-primary-foreground">
-                        {promoter.initials}
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-foreground">{promoter.name}</h3>
-                      <div className="text-primary text-sm font-medium mb-3">{promoter.role}</div>
-                      <p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
-                        {promoter.description}
-                      </p>
                     </div>
                   </div>
                 </div>

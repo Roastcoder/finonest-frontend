@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -42,7 +41,6 @@ const Contact = () => {
     setIsSubmitting(true);
     try {
       const response = await fetch('https://api.finonest.com/api/contact', {
-      const response = await fetch('http://api.finonest.com:4000/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +89,6 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-10 md:py-24 bg-gradient-section pb-20 md:pb-24">
-    <section id="contact" className="py-10 md:py-24 bg-gradient-section">
       <div className="container px-4 md:px-6">
         <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-start">
           {/* Left Side - Info (Hidden on mobile) */}
@@ -149,7 +146,6 @@ const Contact = () => {
                 Have questions? We're here to help you with personalized loan solutions.
               </p>
             </div>
-          <div className="bg-card rounded-xl md:rounded-2xl border border-border p-4 md:p-8 shadow-sm">
             <h3 className="font-display text-lg md:text-xl font-semibold text-foreground mb-4 md:mb-6">
               Quick Enquiry
             </h3>
@@ -291,7 +287,6 @@ const Contact = () => {
               </div>
 
               <Button type="submit" variant="hero" className="w-full group text-sm md:text-base py-3 mb-4 md:mb-0" disabled={isSubmitting}>
-              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base" disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>

@@ -67,7 +67,6 @@ const Apply = () => {
 
     try {
       const response = await fetch('https://api.finonest.com/api/forms', {
-      const response = await fetch('http://api.finonest.com:4000/api/forms', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
