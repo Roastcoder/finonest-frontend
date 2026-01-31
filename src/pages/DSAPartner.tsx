@@ -117,7 +117,7 @@ const DSAPartner = () => {
                   <Link to="/dsa-registration">Become Partner</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link to="#benefits">Learn More</Link>
+                  <Link to="/contact">Learn More</Link>
                 </Button>
               </div>
             </div>
