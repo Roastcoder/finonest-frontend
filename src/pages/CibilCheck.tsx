@@ -97,7 +97,11 @@ const CibilCheck = () => {
       setSubmitted(true);
       toast({
         title: "Request Submitted!",
+<<<<<<< HEAD
         description: "Our team will share your credit report within 24 hours.",
+=======
+        description: "Our team will share your CIBIL report within 24 hours.",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       });
     }, 2000);
   };
@@ -105,9 +109,15 @@ const CibilCheck = () => {
   return (
     <>
       <Helmet>
+<<<<<<< HEAD
         <title>Check Credit Score - Finonest | Free Credit Score Check</title>
         <meta name="description" content="Check your credit score for free with Finonest. Get your credit report and understand your credit health. Improve your chances of loan approval." />
         <meta name="keywords" content="credit score, credit score check, free credit report, Finonest, credit rating" />
+=======
+        <title>Check CIBIL Score - Finonest | Free Credit Score Check</title>
+        <meta name="description" content="Check your CIBIL score for free with Finonest. Get your credit report and understand your credit health. Improve your chances of loan approval." />
+        <meta name="keywords" content="CIBIL score, credit score check, free credit report, Finonest, credit rating" />
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <link rel="canonical" href="https://finonest.com/cibil-check" />
       </Helmet>
 
@@ -123,13 +133,21 @@ const CibilCheck = () => {
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
                   <Shield className="w-4 h-4" />
+<<<<<<< HEAD
                   Free Credit Score Check
+=======
+                  Free CIBIL Check
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 </span>
                 <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">
                   Know Your <span className="text-gradient">Credit Score</span>
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8">
+<<<<<<< HEAD
                   Your credit score is the key to getting better loan rates and faster approvals. 
+=======
+                  Your CIBIL score is the key to getting better loan rates and faster approvals. 
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   Check your score for free and understand your credit health.
                 </p>
                 
@@ -154,7 +172,11 @@ const CibilCheck = () => {
                     </div>
                     <h3 className="text-2xl font-semibold text-foreground mb-2">Request Submitted!</h3>
                     <p className="text-muted-foreground mb-6">
+<<<<<<< HEAD
                       Our team will share your credit report on your email/WhatsApp within 24 hours.
+=======
+                      Our team will share your CIBIL report on your email/WhatsApp within 24 hours.
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </p>
                     <Button variant="outline" onClick={() => setSubmitted(false)}>
                       Check Another Score
@@ -163,7 +185,11 @@ const CibilCheck = () => {
                 ) : (
                   <>
                     <h2 className="text-2xl font-display font-bold text-foreground mb-2">
+<<<<<<< HEAD
                       Check Your Credit Score
+=======
+                      Check Your CIBIL Score
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </h2>
                     <p className="text-muted-foreground mb-6">
                       Fill in your details to get your free credit report
@@ -251,7 +277,11 @@ const CibilCheck = () => {
                           <Link to="/privacy-policy" className="text-primary hover:underline">
                             Privacy Policy
                           </Link>
+<<<<<<< HEAD
                           . I consent to Finonest checking my credit score.
+=======
+                          . I consent to Finonest checking my CIBIL score.
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                         </label>
                       </div>
                       
@@ -282,7 +312,11 @@ const CibilCheck = () => {
           <div className="container">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
+<<<<<<< HEAD
                 Understanding Credit Score
+=======
+                Understanding CIBIL
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               </span>
               <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
                 What Affects Your Score?
@@ -314,7 +348,11 @@ const CibilCheck = () => {
               <div className="grid lg:grid-cols-2 gap-8 items-center">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
+<<<<<<< HEAD
                     Tips to Improve Your Credit Score
+=======
+                    Tips to Improve Your CIBIL Score
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   </h2>
                   <div className="space-y-4">
                     {[
@@ -338,7 +376,11 @@ const CibilCheck = () => {
                     <h3 className="text-xl font-semibold text-foreground">Why It Matters</h3>
                   </div>
                   <p className="text-muted-foreground mb-4">
+<<<<<<< HEAD
                     A good credit score (750+) can help you get loan approvals faster and at lower interest rates, 
+=======
+                    A good CIBIL score (750+) can help you get loan approvals faster and at lower interest rates, 
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     saving you thousands of rupees over the loan tenure.
                   </p>
                   <Button variant="hero" asChild>

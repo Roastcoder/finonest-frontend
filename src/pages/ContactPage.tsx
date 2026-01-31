@@ -24,7 +24,11 @@ import {
   ArrowRight
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+<<<<<<< HEAD
 import finonestIcon from "/assets/finonest-icon.jpg";
+=======
+import mascotAdvisor from "@/assets/mascot-advisor.png";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { Link } from "react-router-dom";
 
 const ContactPage = () => {
@@ -44,7 +48,10 @@ const ContactPage = () => {
     communication: false,
     marketing: false
   });
+<<<<<<< HEAD
   const [showConsentDetails, setShowConsentDetails] = useState(false);
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
   const handleAgreeToAll = (checked: boolean) => {
     setConsent({
@@ -53,7 +60,10 @@ const ContactPage = () => {
       communication: checked,
       marketing: consent.marketing
     });
+<<<<<<< HEAD
     setShowConsentDetails(checked);
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -72,7 +82,10 @@ const ContactPage = () => {
     });
     setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     setConsent({ terms: false, dataProcessing: false, communication: false, marketing: false });
+<<<<<<< HEAD
     setShowConsentDetails(false);
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     setShowMobileForm(false);
     setSelectedOption("");
   };
@@ -263,7 +276,11 @@ const ContactPage = () => {
               <div className="bg-card p-5 rounded-xl border border-border shadow-lg animate-fade-in">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-12 h-12">
+<<<<<<< HEAD
                     <img src={finonestIcon} alt="Finonest" className="w-full h-full object-contain rounded-lg" />
+=======
+                    <img src={mascotAdvisor} alt="Finonest Advisor" className="w-full h-full object-contain" />
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   </div>
                   <div>
                     <h2 className="text-lg font-display font-bold text-foreground">{selectedOption}</h2>
@@ -330,6 +347,7 @@ const ContactPage = () => {
                         </span>
                       </label>
                       
+<<<<<<< HEAD
                       {showConsentDetails && (
                         <>
                           <label className="flex items-start gap-3 cursor-pointer">
@@ -384,6 +402,58 @@ const ContactPage = () => {
                           </label>
                         </>
                       )}
+=======
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.terms}
+                          onChange={(e) => setConsent({...consent, terms: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I agree to the <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and acknowledge that FINONEST INDIA PVT LTD is a Direct Sales Agency (DSA) and not a lender.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.dataProcessing}
+                          onChange={(e) => setConsent({...consent, dataProcessing: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I grant explicit consent to Finonest to collect, store, process, and share my Personal Information with Banks, NBFCs, and financial institutions for loan evaluation.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.communication}
+                          onChange={(e) => setConsent({...consent, communication: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I consent to receive communications from Finonest and/or Lenders via phone, SMS, email, and WhatsApp regarding my enquiry, loan products, and promotional materials, regardless of my DNCR/DND registry status.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.marketing}
+                          onChange={(e) => setConsent({...consent, marketing: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          I would like to receive promotional offers and updates from Finonest and partner institutions.
+                        </span>
+                      </label>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
 
                   <Button type="submit" className="w-full h-11" size="lg">
@@ -437,7 +507,11 @@ const ContactPage = () => {
                 <div className="bg-card p-8 rounded-2xl border border-border shadow-lg">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-16 h-16">
+<<<<<<< HEAD
                       <img src={finonestIcon} alt="Finonest" className="w-full h-full object-contain rounded-lg" />
+=======
+                      <img src={mascotAdvisor} alt="Finonest Advisor" className="w-full h-full object-contain" />
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
                     <div>
                       <h2 className="text-2xl font-display font-bold text-foreground">Send Us a Message</h2>
@@ -520,6 +594,7 @@ const ContactPage = () => {
                         </span>
                       </label>
                       
+<<<<<<< HEAD
                       {showConsentDetails && (
                         <>
                           <label className="flex items-start gap-3 cursor-pointer">
@@ -582,6 +657,66 @@ const ContactPage = () => {
                           </div>
                         </>
                       )}
+=======
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.terms}
+                          onChange={(e) => setConsent({...consent, terms: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I agree to the <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and acknowledge that FINONEST INDIA PVT LTD is a Direct Sales Agency (DSA) and not a lender.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.dataProcessing}
+                          onChange={(e) => setConsent({...consent, dataProcessing: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I grant explicit consent to Finonest to collect, store, process, and share my Personal Information with Banks, NBFCs, and financial institutions for loan evaluation.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.communication}
+                          onChange={(e) => setConsent({...consent, communication: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                          required
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          <strong className="text-destructive">*</strong> I consent to receive communications from Finonest and/or Lenders via phone, SMS, email, and WhatsApp regarding my enquiry, loan products, and promotional materials, regardless of my DNCR/DND registry status.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={consent.marketing}
+                          onChange={(e) => setConsent({...consent, marketing: e.target.checked})}
+                          className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm text-muted-foreground">
+                          I would like to receive promotional offers and updates from Finonest and partner institutions.
+                        </span>
+                      </label>
+                      
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+                        <p className="text-xs text-blue-800">
+                          <strong>FINONEST INDIA PVT LTD</strong><br/>
+                          3rd Floor, Besides Jaipur Hospital, BL Tower 1, Tonk Rd, Mahaveer Nagar, Jaipur, Rajasthan 302018<br/>
+                          Email: info@finonest.com
+                        </p>
+                      </div>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
 
                     <Button type="submit" className="w-full" size="lg">

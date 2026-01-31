@@ -77,7 +77,11 @@ export default function Auth() {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
       const API_URL = "https://api.finonest.com";
+=======
+      const API_URL = "http://api.finonest.com:4000";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
 
       const payload = isLogin

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -341,12 +342,29 @@ const AdminSettings = () => {
       </Card>
 
       {/* General Settings */}
+=======
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+const AdminSettings = () => {
+  const [settings, setSettings] = useState({
+    siteName: 'Finonest',
+    maintenanceMode: false,
+    emailNotifications: true,
+    autoApproval: false
+  });
+
+  return (
+    <div className="space-y-6">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <Card>
         <CardHeader>
           <CardTitle>General Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
+<<<<<<< HEAD
             <Label htmlFor="site_name">Site Name</Label>
             <div className="flex gap-2 mt-1">
               <Input
@@ -382,10 +400,59 @@ const AdminSettings = () => {
                 <Save className="w-4 h-4" />
               </Button>
             </div>
+=======
+            <label className="text-sm font-medium">Site Name</label>
+            <input 
+              type="text" 
+              value={settings.siteName}
+              onChange={(e) => setSettings({...settings, siteName: e.target.value})}
+              className="w-full mt-1 px-3 py-2 border rounded-lg"
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Maintenance Mode</p>
+              <p className="text-sm text-muted-foreground">Enable to show maintenance page</p>
+            </div>
+            <button 
+              onClick={() => setSettings({...settings, maintenanceMode: !settings.maintenanceMode})}
+              className={`w-12 h-6 rounded-full ${settings.maintenanceMode ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.maintenanceMode ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Email Notifications</p>
+              <p className="text-sm text-muted-foreground">Send email alerts for new applications</p>
+            </div>
+            <button 
+              onClick={() => setSettings({...settings, emailNotifications: !settings.emailNotifications})}
+              className={`w-12 h-6 rounded-full ${settings.emailNotifications ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.emailNotifications ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Auto Approval</p>
+              <p className="text-sm text-muted-foreground">Automatically approve eligible applications</p>
+            </div>
+            <button 
+              onClick={() => setSettings({...settings, autoApproval: !settings.autoApproval})}
+              className={`w-12 h-6 rounded-full ${settings.autoApproval ? 'bg-primary' : 'bg-gray-300'} relative transition-colors`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.autoApproval ? 'translate-x-6' : 'translate-x-0.5'}`}></div>
+            </button>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </div>
         </CardContent>
       </Card>
 
+<<<<<<< HEAD
       {/* API Credentials Settings */}
       <Card>
         <CardHeader>
@@ -559,6 +626,8 @@ const AdminSettings = () => {
       </Card>
 
       {/* System Information */}
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <Card>
         <CardHeader>
           <CardTitle>System Information</CardTitle>
@@ -581,12 +650,15 @@ const AdminSettings = () => {
               <p className="text-sm text-muted-foreground">Status</p>
               <Badge variant="default">Online</Badge>
             </div>
+<<<<<<< HEAD
             <div>
               <p className="text-sm text-muted-foreground">Last Updated</p>
               <p className="font-medium text-xs">
                 {settings.length > 0 ? new Date(settings[0].updated_at).toLocaleString() : 'N/A'}
               </p>
             </div>
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </div>
         </CardContent>
       </Card>

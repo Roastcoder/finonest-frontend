@@ -9,8 +9,13 @@ import serviceLap from "@/assets/service-lap.jpg";
 const services = [{
   icon: Home,
   title: "Home Loan",
+<<<<<<< HEAD
   description: "Turn your dream home into reality with our competitive home loan rates starting at 7.3% p.a.",
   rate: "7.3%",
+=======
+  description: "Turn your dream home into reality with our competitive home loan rates starting at 6.5% p.a.",
+  rate: "6.5%",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   highlight: false,
   image: serviceHomeLoan,
   link: "/services/home-loan"
@@ -18,7 +23,11 @@ const services = [{
   icon: Car,
   title: "Used Car Loan",
   description: "Get the best deals on used car loans with quick approval and minimal documentation. Our specialty!",
+<<<<<<< HEAD
   rate: "11.5%",
+=======
+  rate: "7.5%",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   highlight: true,
   image: serviceCarLoan,
   link: "/services/used-car-loan"
@@ -26,7 +35,11 @@ const services = [{
   icon: Briefcase,
   title: "Personal Loan",
   description: "Instant approval up to ₹40 lakhs with minimal documentation required for all your needs.",
+<<<<<<< HEAD
   rate: "9.99%",
+=======
+  rate: "10.5%",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   highlight: false,
   image: servicePersonalLoan,
   link: "/services/personal-loan"
@@ -34,23 +47,39 @@ const services = [{
   icon: Building,
   title: "Business Loan",
   description: "Fuel your business growth with flexible business loans up to ₹5 Crore.",
+<<<<<<< HEAD
   rate: "14%",
+=======
+  rate: "11.0%",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   highlight: false,
   image: serviceBusinessLoan,
   link: "/services/business-loan"
 }, {
   icon: CreditCard,
   title: "Credit Cards",
+<<<<<<< HEAD
   description: "No Cost EMI on purchases above ₹2,500 + Airport Lounge Access with exclusive rewards.",
   rate: "No Cost EMI",
   highlight: false,
   image: serviceCreditCards,
   link: "/credit-cards"
+=======
+  description: "Premium credit cards with exclusive rewards, cashback, and travel benefits.",
+  rate: "0% EMI",
+  highlight: false,
+  image: serviceCreditCards,
+  link: "/services/credit-cards"
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 }, {
   icon: Landmark,
   title: "Loan Against Property",
   description: "Unlock the value of your property with our loan against property options.",
+<<<<<<< HEAD
   rate: "9%",
+=======
+  rate: "9.5%",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   highlight: false,
   image: serviceLap,
   link: "/services/loan-against-property"

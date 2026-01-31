@@ -21,7 +21,11 @@ import { Link } from "react-router-dom";
 
 const BusinessLoan = () => {
   const features = [
+<<<<<<< HEAD
     { icon: Percent, title: "From 14% p.a.", description: "Competitive business rates" },
+=======
+    { icon: Percent, title: "From 11.5% p.a.", description: "Competitive business rates" },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     { icon: TrendingUp, title: "Up to ₹5 Crore", description: "Scale your business" },
     { icon: Shield, title: "Collateral Free", description: "Up to ₹75 Lakhs" },
     { icon: Clock, title: "Quick Disbursal", description: "Within 72 hours" },
@@ -138,7 +142,11 @@ const BusinessLoan = () => {
                           <div className="text-xs text-muted-foreground">Collateral Free</div>
                         </div>
                         <div>
+<<<<<<< HEAD
                           <div className="text-2xl font-bold text-primary">14%</div>
+=======
+                          <div className="text-2xl font-bold text-primary">11.5%</div>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                           <div className="text-xs text-muted-foreground">Starting Rate</div>
                         </div>
                       </div>

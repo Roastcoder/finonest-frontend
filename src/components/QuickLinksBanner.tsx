@@ -25,7 +25,11 @@ const quickLinks = [{
 }, {
   icon: CreditCard,
   text: "Best Credit Cards",
+<<<<<<< HEAD
   href: "/credit-cards",
+=======
+  href: "/services/credit-cards",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   color: "bg-pink-500"
 }, {
   icon: Building,

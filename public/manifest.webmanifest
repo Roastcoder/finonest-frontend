@@ -8,6 +8,7 @@
   "theme_color": "#0a3055",
   "icons": [
     {
+<<<<<<< HEAD
       "src": "/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
@@ -22,6 +23,16 @@
       "sizes": "any",
       "type": "image/jpeg",
       "purpose": "any maskable"
+=======
+      "src": "/assets/finonest-icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/assets/finonest-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     }
   ]
 }

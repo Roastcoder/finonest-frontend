@@ -27,7 +27,11 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
+<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/admin/users', {
+=======
+      const response = await fetch('http://api.finonest.com:4000/api/admin/users', {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -51,7 +55,11 @@ const AdminUsers = () => {
 
   const updateUserRole = async (id: number, role: string) => {
     try {
+<<<<<<< HEAD
       const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
+=======
+      const response = await fetch(`http://api.finonest.com:4000/api/admin/users/${id}`, {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -84,7 +92,11 @@ const AdminUsers = () => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
+<<<<<<< HEAD
       const response = await fetch(`https://api.finonest.com/api/admin/users/${id}`, {
+=======
+      const response = await fetch(`http://api.finonest.com:4000/api/admin/users/${id}`, {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -139,14 +151,20 @@ const AdminUsers = () => {
           <div className="space-y-4">
             {users.map((user) => (
               <div key={user.id} className="border p-4 rounded-lg">
+<<<<<<< HEAD
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                   <div className="flex-1">
+=======
+                <div className="flex justify-between items-center">
+                  <div>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     <p className="font-semibold">{user.name}</p>
                     <p className="text-sm text-muted-foreground">{user.email}</p>
                     <p className="text-xs text-muted-foreground">
                       Joined: {new Date(user.created_at).toLocaleDateString()}
                     </p>
                   </div>
+<<<<<<< HEAD
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                     <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'} className="w-fit">
                       {user.role}
@@ -173,6 +191,31 @@ const AdminUsers = () => {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
+=======
+                  <div className="flex items-center gap-4">
+                    <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>
+                      {user.role}
+                    </Badge>
+                    <Select
+                      value={user.role}
+                      onValueChange={(value) => updateUserRole(user.id, value)}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USER">User</SelectItem>
+                        <SelectItem value="ADMIN">Admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteUser(user.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   </div>
                 </div>
               </div>

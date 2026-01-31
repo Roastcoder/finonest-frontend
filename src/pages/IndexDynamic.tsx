@@ -10,10 +10,15 @@ import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+<<<<<<< HEAD
 import CallButton from "@/components/CallButton";
 import BottomNavigation from "@/components/BottomNavigation";
 import CreditScoreBanner from "@/components/CreditScoreBanner";
 import DSAPartnerBanner from "@/components/DSAPartnerBanner";
+=======
+import BottomNavigation from "@/components/BottomNavigation";
+import CreditScoreBanner from "@/components/CreditScoreBanner";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { AnimateOnScroll } from "@/hooks/useScrollAnimation";
 
@@ -70,6 +75,7 @@ const Index = () => {
         </AnimateOnScroll>
       </div>
       
+<<<<<<< HEAD
       {/* DSA Partner Banner */}
       <div className="-mt-30">
         <AnimateOnScroll animation="fade-up">
@@ -79,6 +85,10 @@ const Index = () => {
       
       {/* Banking Partners */}
       <div className="mt-0">
+=======
+      {/* Banking Partners */}
+      <div className="-mt-24">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <AnimateOnScroll animation="fade-up">
           <PartnerBanks />
         </AnimateOnScroll>
@@ -86,7 +96,10 @@ const Index = () => {
       
       <Footer />
       <WhatsAppButton />
+<<<<<<< HEAD
       <CallButton />
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <BottomNavigation />
       <PWAInstallPrompt />
     </div>

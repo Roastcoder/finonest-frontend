@@ -83,7 +83,11 @@ const UsedCarLoan = () => {
         return;
       }
       
+<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/forms', {
+=======
+      const response = await fetch('http://api.finonest.com:4000/api/forms', {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,7 +128,11 @@ const UsedCarLoan = () => {
   };
 
   const features = [
+<<<<<<< HEAD
     { icon: Percent, title: "From 11.5% p.a.", description: "Best market rates" },
+=======
+    { icon: Percent, title: "From 7.5% p.a.", description: "Best market rates" },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     { icon: Zap, title: "24-Hour Approval", description: "Quick disbursal" },
     { icon: Shield, title: "35+ Bank Partners", description: "Maximum options" },
     { icon: Clock, title: "7 Year Tenure", description: "Flexible EMIs" },
@@ -150,7 +158,11 @@ const UsedCarLoan = () => {
 
   const loanDetails = [
     { label: "Loan Amount", value: "₹1 Lakh - ₹1.5 Crore" },
+<<<<<<< HEAD
     { label: "Interest Rate", value: "11.5% - 18% p.a." },
+=======
+    { label: "Interest Rate", value: "7.5% - 14% p.a." },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     { label: "Processing Fee", value: "0.5% - 2%" },
     { label: "Loan Tenure", value: "1 - 7 Years" },
     { label: "Funding", value: "Up to 90% of car value" },
@@ -207,7 +219,11 @@ const UsedCarLoan = () => {
                 
                 <p className="text-base md:text-lg text-muted-foreground mb-6 md:mb-8 leading-relaxed">
                   India's most trusted used car financing partner. Get instant approval 
+<<<<<<< HEAD
                   with rates starting at just 11.5% p.a. Finance up to ₹1.5 Crore 
+=======
+                  with rates starting at just 7.5% p.a. Finance up to ₹1.5 Crore 
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   with minimal documentation.
                 </p>
 
@@ -259,7 +275,11 @@ const UsedCarLoan = () => {
                           <div className="text-xs text-muted-foreground">Max Tenure</div>
                         </div>
                         <div>
+<<<<<<< HEAD
                           <div className="text-lg md:text-2xl font-bold text-primary">11.5%</div>
+=======
+                          <div className="text-lg md:text-2xl font-bold text-primary">7.5%</div>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                           <div className="text-xs text-muted-foreground">Starting</div>
                         </div>
                       </div>

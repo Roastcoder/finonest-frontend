@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn, Users, BarChart3, Settings, MessageSquare, BookOpen } from "lucide-react";
+=======
+import { Home, Calculator, CreditCard, User, Phone, X, Building2, Car, Wallet, Briefcase, FileText, CarFront, GraduationCap, LogIn } from "lucide-react";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
+<<<<<<< HEAD
 const getNavItems = (isLoggedIn: boolean, userRole: string | undefined, isAdminPage: boolean) => {
   if (userRole === 'ADMIN' && isAdminPage) {
     return [
@@ -73,6 +78,39 @@ const adminContentItems = [
   { icon: BookOpen, label: "Blog Posts", href: "/admin/blogs" },
   { icon: GraduationCap, label: "Courses", href: "/admin/courses" },
   { icon: MessageSquare, label: "Contact Forms", href: "/admin/contact-forms" },
+=======
+const getNavItems = (isLoggedIn: boolean) => [
+  {
+    icon: Home,
+    label: "Home",
+    href: "/",
+  },
+  {
+    icon: CreditCard,
+    label: "Services",
+    href: "/services",
+    hasDropdown: true,
+  },
+  {
+    icon: Calculator,
+    label: "EMI",
+    href: "/emi-calculator",
+  },
+  {
+    icon: Phone,
+    label: "Contact",
+    href: "/contact",
+  },
+  isLoggedIn ? {
+    icon: User,
+    label: "Profile",
+    href: "/dashboard",
+  } : {
+    icon: LogIn,
+    label: "Login",
+    href: "/auth",
+  },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 ];
 
 const serviceItems = [
@@ -82,17 +120,27 @@ const serviceItems = [
   { icon: Car, label: "Car Loan", href: "/services/car-loan" },
   { icon: CarFront, label: "Used Car Loan", href: "/services/used-car-loan" },
   { icon: FileText, label: "Loan Against Property", href: "/services/loan-against-property" },
+<<<<<<< HEAD
   { icon: CreditCard, label: "Credit Cards", href: "/credit-cards" },
+=======
+  { icon: CreditCard, label: "Credit Cards", href: "/services/credit-cards" },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   { icon: GraduationCap, label: "Finobizz Learning", href: "/services/finobizz-learning" },
 ];
 
 const BottomNavigation = () => {
   const location = useLocation();
   const [showServices, setShowServices] = useState(false);
+<<<<<<< HEAD
   const [showAdminContent, setShowAdminContent] = useState(false);
   const { user } = useAuth();
 
   const navItems = getNavItems(!!user, user?.role, location.pathname.startsWith('/admin'));
+=======
+  const { user } = useAuth();
+
+  const navItems = getNavItems(!!user);
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
@@ -102,6 +150,7 @@ const BottomNavigation = () => {
   const handleServiceClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setShowServices(!showServices);
+<<<<<<< HEAD
     setShowAdminContent(false);
   };
 
@@ -109,10 +158,13 @@ const BottomNavigation = () => {
     e.preventDefault();
     setShowAdminContent(!showAdminContent);
     setShowServices(false);
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   };
 
   return (
     <>
+<<<<<<< HEAD
       {/* Admin Content Grid Overlay */}
       {showAdminContent && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setShowAdminContent(false)}>
@@ -151,6 +203,8 @@ const BottomNavigation = () => {
         </div>
       )}
 
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       {/* Services Grid Overlay */}
       {showServices && (
         <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setShowServices(false)}>
@@ -197,12 +251,17 @@ const BottomNavigation = () => {
       )}
 
       {/* Bottom Navigation */}
+<<<<<<< HEAD
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
+=======
+      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/95 backdrop-blur-lg border-t border-border shadow-lg">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <div className="flex items-center justify-around py-2 px-2 max-w-md mx-auto">
           {navItems.map((item) => {
             const active = isActive(item.href);
             
             if (item.hasDropdown) {
+<<<<<<< HEAD
               if (user?.role === 'ADMIN' && item.label === 'Content') {
                 return (
                   <button
@@ -220,15 +279,30 @@ const BottomNavigation = () => {
                 );
               }
               
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               return (
                 <button
                   key={item.label}
                   onClick={handleServiceClick}
                   className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-300 ${
+<<<<<<< HEAD
                     showServices || active ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <item.icon className={`w-5 h-5 transition-transform ${showServices || active ? "scale-110" : ""}`} />
+=======
+                    showServices || active
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <item.icon
+                    className={`w-5 h-5 transition-transform ${
+                      showServices || active ? "scale-110" : ""
+                    }`}
+                  />
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   <span className="text-[10px] font-medium">{item.label}</span>
                 </button>
               );
@@ -240,15 +314,32 @@ const BottomNavigation = () => {
                 to={item.href}
                 onClick={() => setShowServices(false)}
                 className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-300 ${
+<<<<<<< HEAD
                   active ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <item.icon className={`w-5 h-5 transition-transform ${active ? "scale-110" : ""}`} />
+=======
+                  active
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <item.icon
+                  className={`w-5 h-5 transition-transform ${
+                    active ? "scale-110" : ""
+                  }`}
+                />
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 <span className="text-[10px] font-medium">{item.label}</span>
               </Link>
             );
           })}
         </div>
+<<<<<<< HEAD
+=======
+        {/* Safe area for notched phones */}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         <div className="h-safe-area-inset-bottom bg-card" />
       </nav>
     </>

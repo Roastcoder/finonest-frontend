@@ -57,7 +57,10 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "input-otp": "^1.4.2",
+<<<<<<< HEAD
     "isomorphic-dompurify": "^2.35.0",
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.462.0",

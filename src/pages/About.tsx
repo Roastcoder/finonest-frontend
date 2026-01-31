@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BottomNavigation from "@/components/BottomNavigation";
+<<<<<<< HEAD
 import { Heart, CheckCircle, Lightbulb, Shield, Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -13,6 +14,14 @@ import aboutTeam from "@/assets/about-team.jpg";
 const About = () => {
   const [selectedPromoter, setSelectedPromoter] = useState<typeof promoters[0] | null>(null);
 
+=======
+import { Heart, CheckCircle, Lightbulb, Shield, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import aboutTeam from "@/assets/about-team.jpg";
+
+const About = () => {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   const values = [
     {
       icon: Shield,
@@ -56,14 +65,21 @@ const About = () => {
   const promoters = [
     {
       name: "Surya Mohan Roy",
+<<<<<<< HEAD
       role: "Managing Director & Founder",
       description: "Surya Mohan Roy is the Managing Director & Founder, the visionary leader behind the company's purpose, culture, and long-term strategy. With strong entrepreneurial insight and a commitment to innovation, he established the organization with the goal of delivering excellence, trust, and value in every service. As the Founder, he built the company on core principles of integrity, quality, and customer-centricity. His ability to identify opportunities, adapt to market trends, and lead with clarity has shaped the company's identity and positioned it for sustainable growth. In his role as Managing Director, he oversees strategic planning, business development, and operational execution across all departments.",
       image: "/Director/Surya.jpeg",
+=======
+      role: "Managing Director and Founder",
+      description: "Surya Mohan Roy is the Managing Director & Founder, the visionary leader behind the company's purpose, culture, and long-term strategy. With strong entrepreneurial insight and a commitment to innovation, he established the organization with the goal of delivering excellence, trust, and value in every service. As the Founder, he built the company on core principles of integrity, quality, and customer-centricity. His ability to identify opportunities, adapt to market trends, and lead with clarity has shaped the company's identity and positioned it for sustainable growth. In his role as Managing Director, he oversees strategic planning, business development, and operational execution across all departments.",
+      initials: "SMR",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     },
     {
       name: "Sanam Makkar",
       role: "Director & Chief Technology Officer (CTO)",
       description: "Sanam Makkar serves as the Director & Chief Technology Officer (CTO), leading the company's technology vision, product innovation, and digital transformation initiatives. With a strong blend of technical expertise and strategic leadership, he ensures the organization stays ahead in a rapidly evolving technological landscape. He oversees all core technology functions including product development, system architecture, cybersecurity, cloud infrastructure, and IT operations. His forward-thinking approach drives the adoption of modern technologies that improve efficiency, enhance user experience, and support scalable business growth.",
+<<<<<<< HEAD
       image: "/Director/Sanam.jpeg",
     },
     {
@@ -83,6 +99,21 @@ const About = () => {
       role: "Chief Business Officer and Co founder",
       description: "As the Chief Business Officer and Co founder, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
       image: "/Director/Atishey.jpeg",
+=======
+      initials: "SM",
+    },
+    {
+      name: "CA Prateek Somani",
+      role: "Chief Financial Officer",
+      description: "As the Chief Financial Officer, Prateek Somani leads the company's financial strategy with precision and vision. He oversees budgeting, financial planning, compliance, and risk management, ensuring the organization operates with transparency and long-term stability. He plays a key role in guiding strategic decisions, optimizing resources, and strengthening the company's financial foundation. His analytical approach and commitment to excellence drive sustainable growth and support the organization's mission at every level.",
+      initials: "PS",
+    },
+    {
+      name: "Atishay Jain",
+      role: "Co-Founder and Director",
+      description: "As the Co-Founder & Director, he plays a pivotal role in shaping the organization's vision, culture, and long-term strategy. With a deep understanding of the industry and a strong entrepreneurial mindset, he oversees key operations, drives innovation, and ensures seamless execution across teams. His leadership focuses on building sustainable growth, nurturing strategic partnerships, and guiding the company toward new opportunities. His commitment to excellence and forward-thinking approach continue to strengthen the foundation and future of the organization.",
+      initials: "AJ",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     },
   ];
 
@@ -109,7 +140,11 @@ const About = () => {
                   Transforming Financial Services Since 2017
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-6">
+<<<<<<< HEAD
                   One of the top <span className="text-gradient">auto loan DSA</span> in India
+=======
+                  One of the Top 3 <span className="text-gradient">Used Car Loan</span> Providers in Rajasthan
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   18+ branches, 50K+ happy customers and growing. We specialize in used car loans 
@@ -298,6 +333,7 @@ const About = () => {
               </p>
             </div>
 
+<<<<<<< HEAD
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
               {promoters.map((promoter, index) => (
                 <div 
@@ -322,6 +358,26 @@ const About = () => {
                     </p>
                     <div className="mt-3 text-primary text-xs font-medium group-hover:underline">
                       Click to read more →
+=======
+            <div className="grid md:grid-cols-2 gap-6">
+              {promoters.map((promoter, index) => (
+                <div 
+                  key={index}
+                  className="bg-card p-6 rounded-xl border border-border hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl font-bold text-primary-foreground">
+                        {promoter.initials}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-foreground">{promoter.name}</h3>
+                      <div className="text-primary text-sm font-medium mb-3">{promoter.role}</div>
+                      <p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
+                        {promoter.description}
+                      </p>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                     </div>
                   </div>
                 </div>
@@ -330,6 +386,7 @@ const About = () => {
           </div>
         </section>
 
+<<<<<<< HEAD
         {/* Promoter Details Modal */}
         <Dialog open={!!selectedPromoter} onOpenChange={() => setSelectedPromoter(null)}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -366,6 +423,8 @@ const About = () => {
           </DialogContent>
         </Dialog>
 
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         {/* CTA Section */}
         <section className="py-16 bg-primary text-primary-foreground">
           <div className="container">

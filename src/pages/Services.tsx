@@ -76,7 +76,11 @@ const Services = () => {
       rate: "Lifetime Free*",
       maxAmount: "₹10 Lakhs",
       tenure: "N/A",
+<<<<<<< HEAD
       link: "/credit-cards",
+=======
+      link: "/services/credit-cards",
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       features: ["Best rewards", "Travel perks", "Welcome bonuses"],
     },
     {

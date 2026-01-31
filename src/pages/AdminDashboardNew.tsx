@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
+<<<<<<< HEAD
 import { useNavigate, Link, useLocation } from "react-router-dom";
+=======
+import { useNavigate, Link } from "react-router-dom";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminContactForms from "./admin/AdminContactForms";
+<<<<<<< HEAD
 import BottomNavigation from "@/components/BottomNavigation";
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 import { 
   LogOut, 
   Loader2,
@@ -14,17 +21,22 @@ import {
   Users,
   BarChart3,
   Settings,
+<<<<<<< HEAD
   MessageSquare,
   BookOpen,
   GraduationCap,
   Image,
   MapPin
+=======
+  MessageSquare
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 } from "lucide-react";
 import logo from "@/assets/logo.png";
 import AdminApplications from "./admin/AdminApplications";
 import AdminUsers from "./admin/AdminUsers";
 import AdminAnalytics from "./admin/AdminAnalytics";
 import AdminSettings from "./admin/AdminSettings";
+<<<<<<< HEAD
 import AdminBlogs from "./admin/AdminBlogs";
 import AdminCourses from "./admin/AdminCourses";
 import AdminBranches from "./admin/AdminBranches";
@@ -63,6 +75,16 @@ const AdminDashboard = () => {
 
   const activeTab = getActiveTab();
 
+=======
+
+const AdminDashboard = () => {
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user, token, logout, isLoading: authLoading } = useAuth();
+
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   useEffect(() => {
     if (!authLoading) {
       if (!token || !user) {
@@ -88,6 +110,11 @@ const AdminDashboard = () => {
     navigate("/auth");
   };
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   const renderContent = () => {
     switch(activeTab) {
       case 'dashboard':
@@ -98,6 +125,7 @@ const AdminDashboard = () => {
         return <AdminContactForms />;
       case 'users':
         return <AdminUsers />;
+<<<<<<< HEAD
       case 'blogs':
         return <AdminBlogs />;
       case 'courses':
@@ -116,6 +144,8 @@ const AdminDashboard = () => {
         return <AdminDSAApplications />;
       case 'slides':
         return <AdminSlides />;
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       case 'settings':
         return <AdminSettings />;
       default:
@@ -137,6 +167,7 @@ const AdminDashboard = () => {
         <title>Admin Dashboard - Finonest</title>
       </Helmet>
 
+<<<<<<< HEAD
       <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
         {/* Mobile Header */}
         <header className="md:hidden bg-card border-b border-border p-4 flex items-center justify-between">
@@ -155,6 +186,11 @@ const AdminDashboard = () => {
         
         {/* Sidebar */}
         <div className="hidden md:flex w-64 bg-card border-r border-border flex-col fixed h-screen overflow-y-auto">
+=======
+      <div className="min-h-screen bg-muted/30 flex">
+        {/* Sidebar */}
+        <div className="w-64 bg-card border-r border-border flex flex-col">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           <div className="p-6">
             <Link to="/">
               <img src={logo} alt="Finonest" className="h-8 object-contain" />
@@ -162,23 +198,35 @@ const AdminDashboard = () => {
           </div>
           <nav className="px-4 space-y-2 flex-1">
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Management</div>
+<<<<<<< HEAD
             <Link 
               to="/admin/analytics"
+=======
+            <button 
+              onClick={() => setActiveTab('dashboard')}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'dashboard' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <BarChart3 className="w-4 h-4" />
               Dashboard
+<<<<<<< HEAD
             </Link>
             <Link 
               to="/admin/applications"
+=======
+            </button>
+            <button 
+              onClick={() => setActiveTab('applications')}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'applications' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <FileText className="w-4 h-4" />
               Applications
+<<<<<<< HEAD
             </Link>
             <Link 
               to="/admin/loan-onboarding"
@@ -209,21 +257,33 @@ const AdminDashboard = () => {
             </Link>
             <Link 
               to="/admin/contact-forms"
+=======
+            </button>
+            <button 
+              onClick={() => setActiveTab('contacts')}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'contacts' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
               Contact Forms
+<<<<<<< HEAD
             </Link>
             <Link 
               to="/admin/users"
+=======
+            </button>
+            <button 
+              onClick={() => setActiveTab('users')}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'users' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <Users className="w-4 h-4" />
               Users
+<<<<<<< HEAD
             </Link>
             <Link 
               to="/admin/blogs"
@@ -282,13 +342,23 @@ const AdminDashboard = () => {
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
             <Link 
               to="/admin/settings"
+=======
+            </button>
+            <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-6">Settings</div>
+            <button 
+              onClick={() => setActiveTab('settings')}
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg ${
                 activeTab === 'settings' ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'
               }`}
             >
               <Settings className="w-4 h-4" />
               System
+<<<<<<< HEAD
             </Link>
+=======
+            </button>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </nav>
           <div className="p-4">
             <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
@@ -307,8 +377,13 @@ const AdminDashboard = () => {
         </div>
 
         {/* Main Content */}
+<<<<<<< HEAD
         <div className="flex-1 pb-16 md:pb-0 md:ml-64">
           <header className="hidden md:block bg-card border-b border-border p-6">
+=======
+        <div className="flex-1">
+          <header className="bg-card border-b border-border p-6">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">
@@ -316,6 +391,7 @@ const AdminDashboard = () => {
                   {activeTab === 'applications' && 'Applications Management'}
                   {activeTab === 'contacts' && 'Contact Forms'}
                   {activeTab === 'users' && 'Users Management'}
+<<<<<<< HEAD
                   {activeTab === 'blogs' && 'Blog Management'}
                   {activeTab === 'courses' && 'Finobizz Learning Management'}
                   {activeTab === 'enrollments' && 'Course Enrollments'}
@@ -324,6 +400,8 @@ const AdminDashboard = () => {
                   {activeTab === 'loan-onboarding' && 'Loan Onboarding Management'}
                   {activeTab === 'loan-products' && 'Loan Products Management'}
                   {activeTab === 'dsa-applications' && 'DSA Applications Management'}
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   {activeTab === 'settings' && 'System Settings'}
                 </h1>
                 <p className="text-muted-foreground">
@@ -331,6 +409,7 @@ const AdminDashboard = () => {
                   {activeTab === 'applications' && 'Manage and review loan applications'}
                   {activeTab === 'contacts' && 'Manage contact form submissions'}
                   {activeTab === 'users' && 'Manage user accounts and permissions'}
+<<<<<<< HEAD
                   {activeTab === 'blogs' && 'Create and manage blog posts with media support'}
                   {activeTab === 'courses' && 'Manage Finobizz Learning courses and content'}
                   {activeTab === 'enrollments' && 'View and manage course enrollments and payments'}
@@ -340,6 +419,8 @@ const AdminDashboard = () => {
                   {activeTab === 'loan-products' && 'Manage loan products, interest rates, and LTV ratios'}
                   {activeTab === 'dsa-applications' && 'Review and manage DSA partner applications'}
                   {activeTab === 'slides' && 'Manage home page carousel slides and images'}
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   {activeTab === 'settings' && 'Configure system settings'}
                 </p>
               </div>
@@ -352,7 +433,10 @@ const AdminDashboard = () => {
           </main>
         </div>
       </div>
+<<<<<<< HEAD
       <BottomNavigation />
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     </>
   );
 };

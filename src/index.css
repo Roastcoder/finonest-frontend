@@ -104,7 +104,11 @@
 
 @layer base {
   * {
+<<<<<<< HEAD
     @apply border-gray-200;
+=======
+    @apply border-border;
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
   }
 
   html {

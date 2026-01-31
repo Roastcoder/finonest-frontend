@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useState } from "react";
+<<<<<<< HEAD
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+=======
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -40,7 +44,11 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
+<<<<<<< HEAD
       const response = await fetch('https://api.finonest.com/api/contact', {
+=======
+      const response = await fetch('http://api.finonest.com:4000/api/contact', {
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +96,11 @@ const Contact = () => {
   };
 
   return (
+<<<<<<< HEAD
     <section id="contact" className="py-10 md:py-24 bg-gradient-section pb-20 md:pb-24">
+=======
+    <section id="contact" className="py-10 md:py-24 bg-gradient-section">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
       <div className="container px-4 md:px-6">
         <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-start">
           {/* Left Side - Info (Hidden on mobile) */}
@@ -137,6 +149,7 @@ const Contact = () => {
           </div>
 
           {/* Right Side - Form */}
+<<<<<<< HEAD
           <div className="bg-card rounded-xl md:rounded-2xl border border-border p-4 md:p-8 shadow-sm w-full">
             <div className="md:hidden mb-4">
               <h2 className="font-display text-xl font-bold text-foreground mb-2">
@@ -146,6 +159,9 @@ const Contact = () => {
                 Have questions? We're here to help you with personalized loan solutions.
               </p>
             </div>
+=======
+          <div className="bg-card rounded-xl md:rounded-2xl border border-border p-4 md:p-8 shadow-sm">
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
             <h3 className="font-display text-lg md:text-xl font-semibold text-foreground mb-4 md:mb-6">
               Quick Enquiry
             </h3>
@@ -286,7 +302,11 @@ const Contact = () => {
                 )}
               </div>
 
+<<<<<<< HEAD
               <Button type="submit" variant="hero" className="w-full group text-sm md:text-base py-3 mb-4 md:mb-0" disabled={isSubmitting}>
+=======
+              <Button type="submit" variant="hero" className="w-full group text-sm md:text-base" disabled={isSubmitting}>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                 {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -300,9 +320,12 @@ const Contact = () => {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Terms and Conditions of Service</DialogTitle>
+<<<<<<< HEAD
             <DialogDescription>
               Please read our terms and conditions carefully before proceeding.
             </DialogDescription>
+=======
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
           </DialogHeader>
           <div className="prose prose-sm max-w-none">
             <p className="text-sm text-muted-foreground mb-4">For FINONEST INDIA PVT LTD - Last Updated: December 25, 2024</p>

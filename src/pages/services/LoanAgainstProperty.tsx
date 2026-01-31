@@ -21,7 +21,11 @@ import { Link } from "react-router-dom";
 
 const LoanAgainstProperty = () => {
   const features = [
+<<<<<<< HEAD
     { icon: Percent, title: "From 9% p.a.", description: "Low interest rates" },
+=======
+    { icon: Percent, title: "From 8.75% p.a.", description: "Low interest rates" },
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
     { icon: TrendingUp, title: "Up to 70% LTV", description: "Of property value" },
     { icon: Shield, title: "Retain Ownership", description: "Property stays yours" },
     { icon: Clock, title: "20 Yr Tenure", description: "Flexible repayment" },
@@ -87,7 +91,11 @@ const LoanAgainstProperty = () => {
                 
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   Convert your property into cash without selling it. Get up to 70% 
+<<<<<<< HEAD
                   of your property value at attractive interest rates starting 9% p.a. 
+=======
+                  of your property value at attractive interest rates starting 8.75% p.a. 
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                   with tenure up to 20 years.
                 </p>
 
@@ -138,7 +146,11 @@ const LoanAgainstProperty = () => {
                           <div className="text-xs text-muted-foreground">Max Tenure</div>
                         </div>
                         <div>
+<<<<<<< HEAD
                           <div className="text-2xl font-bold text-primary">9%</div>
+=======
+                          <div className="text-2xl font-bold text-primary">8.75%</div>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
                           <div className="text-xs text-muted-foreground">Starting Rate</div>
                         </div>
                       </div>

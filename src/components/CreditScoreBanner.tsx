@@ -16,7 +16,11 @@ const CreditScoreBanner = () => {
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-sm md:text-2xl font-bold text-foreground mb-0.5 md:mb-2">
                 Get your{" "}
+<<<<<<< HEAD
                 <span className="text-accent">Credit Report</span>
+=======
+                <span className="text-accent">CIBIL Credit Report</span>
+>>>>>>> e6cabab8aaf7d0749e16dfe9d5ed4b6e94f3e258
               </h3>
               <p className="text-xs md:text-xl font-semibold text-foreground mb-0.5 md:mb-2">
                 worth <span className="line-through opacity-60">₹500</span> for{" "}
