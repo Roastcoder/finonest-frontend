@@ -94,11 +94,18 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
           modal: {
             ondismiss: () => {
               setIsLoading(false);
+              // When payment is dismissed/failed, create a lead instead
+              createLeadForFailedPayment();
             }
           }
         };
         
         const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', function (response: any) {
+          console.error('Payment failed:', response.error);
+          createLeadForFailedPayment();
+          setIsLoading(false);
+        });
         rzp.open();
       } else {
         // Free course, enroll directly
@@ -112,6 +119,45 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const createLeadForFailedPayment = async () => {
+    try {
+      const leadData = {
+        form_type: 'course_enrollment_lead',
+        form_data: {
+          course_id: course.id,
+          course_title: course.title,
+          course_price: course.price,
+          user_name: user?.name || 'Unknown',
+          user_email: user?.email || '',
+          phone: formData.phone,
+          address: formData.address,
+          experience: formData.experience,
+          goals: formData.goals,
+          payment_status: 'failed_or_cancelled',
+          lead_source: 'course_enrollment_page'
+        }
+      };
+
+      const response = await fetch('https://api.finonest.com/api/leads', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(leadData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Interest Recorded",
+          description: "We've noted your interest. Our team will contact you soon with enrollment options.",
+        });
+      }
+    } catch (error) {
+      console.error('Failed to create lead:', error);
     }
   };
 
@@ -227,6 +273,12 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
                       Credit/Debit Card
                     </div>
                   </SelectItem>
+                  <SelectItem value="payu-qr">
+                    <div className="flex items-center gap-2">
+                      <Wallet className="w-4 h-4" />
+                      PayU QR Code
+                    </div>
+                  </SelectItem>
                   <SelectItem value="netbanking">Net Banking</SelectItem>
                 </SelectContent>
               </Select>
@@ -284,6 +336,22 @@ export const CourseEnrollmentForm: React.FC<CourseEnrollmentFormProps> = ({ cour
                   />
                 </div>
               </div>
+            </div>
+          )}
+
+          {course.price > 0 && formData.paymentMethod === 'payu-qr' && (
+            <div className="text-center space-y-4">
+              <Label>Scan QR Code to Pay</Label>
+              <div className="flex justify-center">
+                <img 
+                  src="/assets/image.png" 
+                  alt="PayU QR Code" 
+                  className="w-64 h-64 border rounded-lg"
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Scan this QR code with any UPI app to pay ₹{course.price}
+              </p>
             </div>
           )}
 
