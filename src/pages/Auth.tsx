@@ -1,21 +1,21 @@
-import logo from "@/assets/logo.png";
+import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import {
-  ArrowRight,
-  CheckCircle,
-  Clock,
   Eye,
   EyeOff,
+  ArrowRight,
   Loader2,
-  Shield,
+  CheckCircle,
   Star,
+  Shield,
+  Clock,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import logo from "@/assets/logo.png";
 
 const emailSchema = z.string().email("Please enter a valid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
